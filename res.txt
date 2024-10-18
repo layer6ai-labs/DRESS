@@ -1,0 +1,229 @@
+===============Under seed 1234===============
+2024-09-06 12:10:13.512293
+[SupAll_shapes3d 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 0.00; Std: 0.03
+Meta test accuracy: Mean: 99.91%; Std: 1.70%
+2024-09-06 12:11:24.809172
+[UnsupOrig_shapes3d_dino_to_384D_encSpace 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 0.64; Std: 0.73
+Meta test accuracy: Mean: 80.27%; Std: 18.49%
+2024-09-06 12:12:14.110447
+[UnsupOrig_shapes3d_deepcluster_to_256D_encSpace 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 0.30; Std: 0.37
+Meta test accuracy: Mean: 88.03%; Std: 14.79%
+2024-09-06 12:13:01.766976
+[UnsupLatent_shapes3d_fdae_to_12D_encSpace 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 0.11; Std: 0.17
+Meta test accuracy: Mean: 96.55%; Std: 9.15%
+2024-09-18 17:09:10.149990 under seed 1234
+[shapes3d_fdae_to_12D_encSpace 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 0.20; Std: 0.25
+Meta test accuracy: Mean: 92.54%; Std: 12.82%
+2024-09-06 14:30:21.225367
+[Sup_shapes3d 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 1.70; Std: 1.31
+Meta test accuracy: Mean: 66.39%; Std: 17.04%
+2024-09-06 16:26:10.154591
+[SupOra_shapes3d 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 0.00; Std: 0.01
+Meta test accuracy: Mean: 99.99%; Std: 0.32%
+2024-09-10 12:47:40.647384
+[Sup_mpi3dtoyhard 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 1.29; Std: 0.94
+Meta test accuracy: Mean: 62.11%; Std: 17.18%
+2024-09-10 14:42:58.428175
+[SupAll_mpi3dtoyhard 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 0.29; Std: 0.22
+Meta test accuracy: Mean: 88.37%; Std: 14.23%
+2024-09-10 16:38:28.778492
+[SupOra_mpi3dtoyhard 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 0.02; Std: 0.05
+Meta test accuracy: Mean: 99.32%; Std: 2.67%
+2024-09-10 19:15:38.890431
+[UnsupOrig_mpi3dtoyhard_dino_to_384D_encSpace 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 0.50; Std: 0.55
+Meta test accuracy: Mean: 82.55%; Std: 16.33%
+2024-09-10 21:35:31.137172
+[UnsupOrig_mpi3dtoyhard_deepcluster_to_256D_encSpace 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 0.77; Std: 0.53
+Meta test accuracy: Mean: 71.09%; Std: 18.11%
+2024-09-13 01:04:34.840560
+[UnsupLatent_mpi3dtoyhard_fdae_to_14D_encSpace 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 0.39; Std: 0.34
+Meta test accuracy: Mean: 83.63%; Std: 16.43%
+2024-09-13 13:28:16.081358
+[Sup_mpi3dtoy 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 1.40; Std: 0.82
+Meta test accuracy: Mean: 56.78%; Std: 16.06%
+2024-09-13 15:23:19.472856
+[SupAll_mpi3dtoy 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 0.02; Std: 0.03
+Meta test accuracy: Mean: 99.86%; Std: 1.33%
+2024-09-13 17:18:34.369258
+[SupOra_mpi3dtoy 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 0.00; Std: 0.00
+Meta test accuracy: Mean: 100.00%; Std: 0.00%
+2024-09-13 19:56:01.349307
+[UnsupOrig_mpi3dtoy_dino_to_384D_encSpace 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 0.16; Std: 0.18
+Meta test accuracy: Mean: 94.76%; Std: 7.82%
+2024-09-13 22:16:00.835378
+[UnsupOrig_mpi3dtoy_deepcluster_to_256D_encSpace 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 0.43; Std: 0.40
+Meta test accuracy: Mean: 84.18%; Std: 13.58%
+2024-09-14 00:15:44.351243
+[UnsupLatent_mpi3dtoy_fdae_to_14D_encSpace 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 0.01; Std: 0.02
+Meta test accuracy: Mean: 99.89%; Std: 1.13%
+2024-09-16 17:57:57.636599 under seed 1234
+[shapes3d_scratch 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 2.15; Std: 1.66
+Meta test accuracy: Mean: 63.43%; Std: 15.82%
+2024-09-16 17:58:24.664574 under seed 1234
+[mpi3dtoy_scratch 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 1.16; Std: 0.79
+Meta test accuracy: Mean: 61.19%; Std: 16.85%
+2024-09-16 17:58:52.237524 under seed 1234
+[mpi3dtoyhard_scratch 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 1.42; Std: 1.06
+Meta test accuracy: Mean: 62.57%; Std: 17.24%
+
+=====================================Under seed 1000===============================
+2024-09-15 01:34:16.873259 under seed 1000
+[shapes3d_sup 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 1.88; Std: 1.28
+Meta test accuracy: Mean: 62.60%; Std: 15.62%
+2024-09-15 03:29:37.519135 under seed 1000
+[shapes3d_supall 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 0.00; Std: 0.03
+Meta test accuracy: Mean: 99.86%; Std: 1.41%
+2024-09-15 05:25:21.287598 under seed 1000
+[shapes3d_supora 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 0.00; Std: 0.02
+Meta test accuracy: Mean: 99.96%; Std: 0.63%
+2024-09-15 07:20:39.078761 under seed 1000
+[shapes3d_scratch 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 2.16; Std: 1.72
+Meta test accuracy: Mean: 63.30%; Std: 15.03%
+2024-09-15 09:15:29.295344 under seed 1000
+[mpi3dtoy_sup 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 1.60; Std: 1.00
+Meta test accuracy: Mean: 57.22%; Std: 16.54%
+2024-09-15 11:09:51.468659 under seed 1000
+[mpi3dtoy_supall 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 0.03; Std: 0.06
+Meta test accuracy: Mean: 99.61%; Std: 2.48%
+2024-09-15 13:04:09.778286 under seed 1000
+[mpi3dtoy_supora 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 0.00; Std: 0.00
+Meta test accuracy: Mean: 100.00%; Std: 0.00%
+2024-09-15 14:58:39.889101 under seed 1000
+[mpi3dtoy_scratch 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 1.16; Std: 0.76
+Meta test accuracy: Mean: 60.63%; Std: 16.42%
+2024-09-15 16:53:43.616723 under seed 1000
+[mpi3dtoyhard_sup 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 0.96; Std: 0.75
+Meta test accuracy: Mean: 66.96%; Std: 17.41%
+2024-09-15 18:48:44.040322 under seed 1000
+[mpi3dtoyhard_supall 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 0.34; Std: 0.37
+Meta test accuracy: Mean: 87.38%; Std: 15.33%
+2024-09-15 20:43:48.478103 under seed 1000
+[mpi3dtoyhard_supora 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 0.03; Std: 0.06
+Meta test accuracy: Mean: 99.13%; Std: 3.02%
+2024-09-15 22:38:30.570709 under seed 1000
+[mpi3dtoyhard_scratch 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 1.43; Std: 1.07
+Meta test accuracy: Mean: 62.45%; Std: 17.27%
+2024-09-16 00:33:58.238368 under seed 1000
+[shapes3d_dino_to_384D_encSpace 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 0.56; Std: 0.66
+Meta test accuracy: Mean: 80.40%; Std: 18.90%
+2024-09-16 02:28:59.575930 under seed 1000
+[mpi3dtoy_dino_to_384D_encSpace 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 0.14; Std: 0.18
+Meta test accuracy: Mean: 94.95%; Std: 7.77%
+2024-09-16 04:24:51.148886 under seed 1000
+[mpi3dtoyhard_dino_to_384D_encSpace 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 0.49; Std: 0.44
+Meta test accuracy: Mean: 80.63%; Std: 16.38%
+2024-09-16 06:21:11.918806 under seed 1000
+[shapes3d_deepcluster_to_256D_encSpace 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 0.32; Std: 0.37
+Meta test accuracy: Mean: 86.73%; Std: 16.18%
+2024-09-16 08:16:45.179812 under seed 1000
+[mpi3dtoy_deepcluster_to_256D_encSpace 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 0.37; Std: 0.38
+Meta test accuracy: Mean: 86.27%; Std: 13.88%
+2024-09-16 10:12:20.001775 under seed 1000
+[mpi3dtoyhard_deepcluster_to_256D_encSpace 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 0.77; Std: 0.61
+Meta test accuracy: Mean: 73.47%; Std: 17.87%
+2024-09-16 12:07:40.064086 under seed 1000
+[shapes3d_fdae_to_12D_encSpace 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 0.18; Std: 0.25
+Meta test accuracy: Mean: 93.15%; Std: 12.98%
+2024-09-16 14:03:16.971009 under seed 1000
+[mpi3dtoy_fdae_to_14D_encSpace 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 0.00; Std: 0.00
+Meta test accuracy: Mean: 100.00%; Std: 0.00%
+2024-09-16 15:58:23.544035 under seed 1000
+[mpi3dtoyhard_fdae_to_14D_encSpace 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 0.37; Std: 0.35
+Meta test accuracy: Mean: 84.38%; Std: 15.93%
+
+===============================under seed 2367================================
+2024-09-16 20:51:27.711910 under seed 2367
+[shapes3d_sup 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 2.00; Std: 1.14
+Meta test accuracy: Mean: 57.70%; Std: 13.93%
+2024-09-16 22:47:12.113656 under seed 2367
+[shapes3d_supall 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 0.00; Std: 0.02
+Meta test accuracy: Mean: 99.96%; Std: 0.77%
+2024-09-17 00:43:36.187191 under seed 2367
+[shapes3d_supora 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 0.00; Std: 0.00
+Meta test accuracy: Mean: 100.00%; Std: 0.00%
+2024-09-17 02:38:21.342038 under seed 2367
+[shapes3d_scratch 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 1.16; Std: 1.00
+Meta test accuracy: Mean: 72.79%; Std: 17.76%
+2024-09-17 04:33:12.521351 under seed 2367
+[mpi3dtoy_sup 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 1.58; Std: 0.97
+Meta test accuracy: Mean: 57.79%; Std: 16.33%
+2024-09-17 06:28:23.955256 under seed 2367
+[mpi3dtoy_supall 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 0.05; Std: 0.05
+Meta test accuracy: Mean: 99.35%; Std: 2.62%
+2024-09-17 08:23:17.605316 under seed 2367
+[mpi3dtoy_supora 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 0.00; Std: 0.00
+Meta test accuracy: Mean: 100.00%; Std: 0.00%
+2024-09-17 10:17:28.432147 under seed 2367
+[mpi3dtoy_scratch 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 1.18; Std: 0.79
+Meta test accuracy: Mean: 59.63%; Std: 15.08%
+2024-09-17 12:11:46.988396 under seed 2367
+[mpi3dtoyhard_sup 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 1.40; Std: 1.11
+Meta test accuracy: Mean: 63.85%; Std: 17.25%
+2024-09-17 14:06:33.721282 under seed 2367
+[mpi3dtoyhard_supall 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 0.13; Std: 0.17
+Meta test accuracy: Mean: 95.94%; Std: 8.31%
+2024-09-17 16:01:09.914079 under seed 2367
+[mpi3dtoyhard_supora 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 0.01; Std: 0.03
+Meta test accuracy: Mean: 99.72%; Std: 1.77%
+2024-09-17 17:55:38.148646 under seed 2367
+[mpi3dtoyhard_scratch 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 1.39; Std: 0.96
+Meta test accuracy: Mean: 61.30%; Std: 16.72%
+2024-09-17 20:08:35.220857 under seed 2367
+[shapes3d_dino_to_384D_encSpace 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 0.52; Std: 0.54
+Meta test accuracy: Mean: 81.47%; Std: 17.32%
+2024-09-17 22:46:00.530098 under seed 2367
+[mpi3dtoy_dino_to_384D_encSpace 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 0.21; Std: 0.28
+Meta test accuracy: Mean: 92.87%; Std: 9.78%
+2024-09-18 01:23:03.635372 under seed 2367
+[mpi3dtoyhard_dino_to_384D_encSpace 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 0.47; Std: 0.50
+Meta test accuracy: Mean: 82.47%; Std: 16.07%
+2024-09-18 03:27:48.471706 under seed 2367
+[shapes3d_deepcluster_to_256D_encSpace 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 0.42; Std: 0.52
+Meta test accuracy: Mean: 84.62%; Std: 18.31%
+2024-09-18 05:47:56.865083 under seed 2367
+[mpi3dtoy_deepcluster_to_256D_encSpace 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 0.42; Std: 0.45
+Meta test accuracy: Mean: 85.80%; Std: 14.03%
+2024-09-18 08:08:03.516233 under seed 2367
+[mpi3dtoyhard_deepcluster_to_256D_encSpace 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 0.86; Std: 0.64
+Meta test accuracy: Mean: 70.88%; Std: 17.64%
+2024-09-18 10:04:16.755238 under seed 2367
+[shapes3d_fdae_to_12D_encSpace 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 0.16; Std: 0.22
+Meta test accuracy: Mean: 93.55%; Std: 12.24%
+2024-09-18 12:04:00.418630 under seed 2367
+[mpi3dtoy_fdae_to_14D_encSpace 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 0.00; Std: 0.02
+Meta test accuracy: Mean: 99.89%; Std: 1.22%
+2024-09-18 14:04:06.680327 under seed 2367
+[mpi3dtoyhard_fdae_to_14D_encSpace 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 0.33; Std: 0.29
+Meta test accuracy: Mean: 85.58%; Std: 15.45%
+=======================================
+
+2024-09-27 00:45:18.906092 under seed 1234
+[celebahard_sup 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 0.74; Std: 0.34
+Meta test accuracy: Mean: 64.46%; Std: 17.34%
+2024-09-27 03:30:46.748435 under seed 1234
+[celebahard_supall 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 0.46; Std: 0.24
+Meta test accuracy: Mean: 78.20%; Std: 16.66%
+2024-09-27 06:16:28.886392 under seed 1234
+[celebahard_supora 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 0.30; Std: 0.23
+Meta test accuracy: Mean: 87.16%; Std: 13.68%
+2024-09-27 09:01:27.711530 under seed 1234
+[celebahard_scratch 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 0.75; Std: 0.36
+Meta test accuracy: Mean: 64.69%; Std: 17.71%
+2024-09-27 11:57:09.160079 under seed 1234
+[celebahard_dino_to_384D_encSpace 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 0.80; Std: 0.45
+Meta test accuracy: Mean: 68.24%; Std: 17.69%
+2024-09-27 14:49:51.918418 under seed 1234
+[celebahard_deepcluster_to_256D_encSpace 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 0.85; Std: 0.54
+Meta test accuracy: Mean: 68.38%; Std: 17.38%
+2024-10-06 14:43:26.424762 under seed 1234
+[celebahard_fdae_to_16D_encSpace 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 0.62; Std: 0.27
+Meta test accuracy: Mean: 69.26%; Std: 17.47%
+2024-10-15 14:46:49.393168 under seed 1234
+[celebahard_fdae_to_16D_encSpace 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 0.77; Std: 0.45
+Meta test accuracy: Mean: 67.53%; Std: 17.72%
+2024-10-16 02:07:25.225388 under seed 1234
+[celebahard_fdae_to_16D_encSpace 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 0.78; Std: 0.45
+Meta test accuracy: Mean: 67.02%; Std: 18.40%
+2024-10-18 00:31:40.830358 under seed 1234
+[shapes3d_factorvae_to_20D_encSpace 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 0.25; Std: 0.20
+Meta test accuracy: Mean: 92.61%; Std: 13.61%

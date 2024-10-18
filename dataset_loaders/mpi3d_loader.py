@@ -1,0 +1,186 @@
+#!/usr/bin/env python3
+import os
+import sys
+import numpy as np
+from torch.utils.data import Dataset
+from torchvision import transforms as T
+
+sys.path.append("../")
+from partition_generators import generate_attributes_based_partitions
+from utils import *
+
+
+MPI3D_ATTRIBUTES_NUM_ANGULAR_VALUES = 10
+
+class MPI3D(Dataset):
+    def __init__(self, imgs, attrs, transforms):
+        self.imgs = imgs
+        self.attrs = attrs
+        self.transforms = transforms
+
+    def __len__(self):
+        return np.shape(self.imgs)[0]
+
+    def __getitem__(self, index):
+        return (self.transforms(self.imgs[index]), torch.tensor(self.attrs[index]))
+
+def build_transforms(meta_split, args):
+    img_transforms = [T.ToPILImage()]
+    if args.encoder == "simclrpretrain" and meta_split == "meta_train":
+        # MoCo v2's aug: similar to SimCLR https://arxiv.org/abs/2002.05709
+        img_transforms.extend([
+            T.RandomResizedCrop(40, scale=(0.2, 1.0)),
+            T.RandomApply(
+                [T.ColorJitter(0.4, 0.4, 0.4, 0.1)], p=0.8  # not strengthened
+            ),
+            T.RandomGrayscale(p=0.2),
+            T.RandomApply([GaussianBlur([0.1, 2.0])], p=0.5),
+            T.RandomHorizontalFlip(),
+        ])
+    img_transforms.append(T.ToTensor())
+    img_transforms = T.Compose(img_transforms)
+    if args.encoder == "simclrpretrain" and meta_split == "meta_train":
+        img_transforms=TwoCropsTransform(img_transforms)
+    return img_transforms
+
+
+def _load_mpi3d(args, ds_type, meta_split_type):
+    if ds_type == "toy":
+        datafile_path = os.path.join(DATADIR, "mpi3d", "mpi3d_toy.npz")
+    else:
+        datafile_path = os.path.join(DATADIR, "mpi3d", "real3d_complicated_shapes_ordered.npz")
+    print(f"Loading mpi3d {ds_type} data from {datafile_path}...")
+    mpi3d_imgs = np.load(datafile_path)['images']
+    n_imgs = mpi3d_imgs.shape[0]
+    
+    if ds_type == "toy":
+        assert n_imgs == 1_036_800
+        n_train_imgs = 1_000_000
+        n_val_imgs = 6_800
+        n_test_imgs = 30_000
+        # The data is indexed with the following dimension arrangement, 
+        # corresponding to the seven factors:
+        # 6 X 6 X 2 X 3 X 3 X 40 X 40
+        attrs_counts = [6,6,2,3,3,40,40]
+    else:
+        assert n_imgs == 460_800
+        n_train_imgs = 400_000
+        n_val_imgs = 10_800
+        n_test_imgs = 50_000
+        # The data is indexed with the following dimension arrangement, 
+        # corresponding to the seven factors:
+        # 4 X 4 X 2 X 3 X 3 X 40 X 40
+        attrs_counts = [4,4,2,3,3,40,40]
+    assert n_imgs == n_train_imgs + n_val_imgs + n_test_imgs
+
+    # get the seven factor values of each image by ordered indices
+    idx_bases = np.prod(attrs_counts)/np.cumprod(attrs_counts)
+    mpi3d_attrs = []
+    remainders = np.arange(n_imgs)
+    for i in range(len(attrs_counts)):
+        mpi3d_attrs_one_dim, remainders = np.divmod(remainders, idx_bases[i])
+        mpi3d_attrs.append(np.expand_dims(mpi3d_attrs_one_dim, axis=1))
+    mpi3d_attrs = np.concatenate(mpi3d_attrs,axis=1)
+    assert np.shape(mpi3d_attrs) == (n_imgs, 7)
+
+    # process the last two attributes, robot arm horizontal axis, robot arm vertical axis
+    # originally each of them has 40 values (4.5 degrees interval, too hard to identify even for human eyes, under the camera height variation)
+    if MPI3D_ATTRIBUTES_NUM_ANGULAR_VALUES != 40:
+        assert MPI3D_ATTRIBUTES_NUM_ANGULAR_VALUES < 40
+        mpi3d_attrs[:, -1] *= (MPI3D_ATTRIBUTES_NUM_ANGULAR_VALUES / 40) 
+        mpi3d_attrs[:, -2] *= (MPI3D_ATTRIBUTES_NUM_ANGULAR_VALUES / 40)
+        mpi3d_attrs[:, -1], mpi3d_attrs[:, -2] = \
+            np.floor(mpi3d_attrs[:,-1]), np.floor(mpi3d_attrs[:,-2])
+        
+    attrs_counts[-1], attrs_counts[-2] = \
+        MPI3D_ATTRIBUTES_NUM_ANGULAR_VALUES, MPI3D_ATTRIBUTES_NUM_ANGULAR_VALUES
+    
+    
+    print(f"[MPI3D_{ds_type}_{meta_split_type}] Getting meta splits.....")
+    # get meta split indices
+    perm = np.arange(n_imgs)
+    np.random.shuffle(perm)
+    metatrain_idxs, metavalid_idxs, metatest_idxs = \
+                perm[:n_train_imgs], perm[n_train_imgs:n_train_imgs+n_val_imgs], perm[-n_test_imgs:]
+    
+    # meta training (or pre-training)
+    data_transforms = build_transforms(split="meta_train", args=args)
+    metatrain_dataset = MPI3D(mpi3d_imgs[metatrain_idxs], mpi3d_attrs[metatrain_idxs], data_transforms)
+    # meta validation and meta testing
+    data_transforms = build_transforms(split="meta_valid", args=args)
+    metavalid_dataset = MPI3D(mpi3d_imgs[metavalid_idxs], mpi3d_attrs[metavalid_idxs], data_transforms)
+    data_transforms = build_transforms(split="meta_test", args=args)
+    metatest_dataset = MPI3D(mpi3d_imgs[metatest_idxs], mpi3d_attrs[metatest_idxs], data_transforms)
+    
+    metatrain_attrs_all, metavalid_attrs, metatest_attrs = \
+                mpi3d_attrs[metatrain_idxs], mpi3d_attrs[metavalid_idxs], mpi3d_attrs[metatest_idxs]
+    
+    """
+    The attributes with order: object color, object shape, object size, camera height, background color, horizontal axis, vertical axis
+    """
+    if meta_split_type == "hard":
+        MPI3D_ATTRIBUTES_IDX_META_TRAIN = [0,1,2]
+        MPI3D_ATTRIBUTES_IDX_META_VALID = [3,4] # robot arms granularity is too fine, hard to distinguish, thus not used for training or testing for now
+        MPI3D_ATTRIBUTES_IDX_META_TEST = [5,6]
+    else:
+        MPI3D_ATTRIBUTES_IDX_META_TRAIN = [0,1,2]
+        MPI3D_ATTRIBUTES_IDX_META_VALID = [5,6] # robot arms granularity is too fine, hard to distinguish, thus not used for training or testing for now
+        MPI3D_ATTRIBUTES_IDX_META_TEST = [3,4]
+
+    metatrain_attrs = metatrain_attrs_all[:, MPI3D_ATTRIBUTES_IDX_META_TRAIN]
+    metavalid_attrs = metavalid_attrs[:, MPI3D_ATTRIBUTES_IDX_META_VALID]
+    metatest_attrs = metatest_attrs[:, MPI3D_ATTRIBUTES_IDX_META_TEST]
+
+    metatrain_attrs_oracle = metatrain_attrs_all[:, MPI3D_ATTRIBUTES_IDX_META_TEST]
+
+    # generate partitions with binary classification on celeba attributes
+    metatrain_partitions_supervised = generate_attributes_based_partitions(
+                                        metatrain_attrs, 
+                                        np.array(attrs_counts)[MPI3D_ATTRIBUTES_IDX_META_TRAIN], 
+                                        'meta_train', 
+                                        args)
+    metavalid_partitions = generate_attributes_based_partitions(
+                                        metavalid_attrs, 
+                                        np.array(attrs_counts)[MPI3D_ATTRIBUTES_IDX_META_VALID], 
+                                        'meta_valid', 
+                                        args)
+    metatest_partitions = generate_attributes_based_partitions(
+                                        metatest_attrs, 
+                                        np.array(attrs_counts)[MPI3D_ATTRIBUTES_IDX_META_TEST],
+                                        'meta_test', 
+                                        args)
+    
+    metatrain_partitions_supervised_all = generate_attributes_based_partitions(
+                                        metatrain_attrs_all,
+                                        np.array(attrs_counts),
+                                        'meta_train',
+                                        args)
+
+    metatrain_partitions_supervised_oracle = generate_attributes_based_partitions(
+                                        metatrain_attrs_oracle,
+                                        np.array(attrs_counts)[MPI3D_ATTRIBUTES_IDX_META_TEST],
+                                        'meta_train',
+                                        args)
+
+    return (
+        metatrain_dataset, 
+        metavalid_dataset, 
+        metatest_dataset,  
+        metatrain_partitions_supervised,  
+        metatrain_partitions_supervised_all,
+        metatrain_partitions_supervised_oracle,
+        metavalid_partitions,  
+        metatest_partitions  
+    )
+
+def load_mpi3d_toy(args):
+    return _load_mpi3d(args, ds_type='toy', meta_split_type='easy')
+
+def load_mpi3d_toy_hard(args):
+    return _load_mpi3d(args, ds_type='toy', meta_split_type='hard')
+
+def load_mpi3d_complex(args):
+    return _load_mpi3d(args, ds_type='complex', meta_split_type='easy')
+
+def load_mpi3d_complex_hard(args):
+    return _load_mpi3d(args, ds_type='complex', meta_split_type='hard')

@@ -1,0 +1,260 @@
+import numpy as np
+from torch import nn, optim
+from torch.utils.tensorboard import SummaryWriter
+import learn2learn as l2l
+from learn2learn.algorithms import MAML
+from learn2learn.vision.models import OmniglotCNN, CNN4
+from tqdm import tqdm
+import datetime
+
+from utils import *
+from dataset_loaders import *
+from encoders import *
+from partition_generators import generate_unsupervised_partitions
+from task_generator import TaskGenerator
+from baselines.pretraining_baseline import contrastive_pretrain, test_pretrain
+from baselines.metagmvae_baseline import metagmvae_train, metagmvae_test
+
+
+def accuracy_fn(preds, labels):
+    preds = preds.argmax(dim=1).view(labels.shape)
+    return (preds==labels).sum().float() / labels.size(0)
+
+def fast_adapt(batch, inner_learner, loss_fn, num_adaptation_steps, meta_split, args):
+    if meta_split == "meta_train": 
+        K = args.KShotMetaTr 
+    elif meta_split == "meta_valid":
+        K = args.KShotMetaVa
+    elif meta_split == "meta_test":
+        K = args.KShotMetaTe
+    else:
+        print(f"Invalid split: {meta_split}!")
+        exit(1)
+
+    K_te = args.KQuery
+    train_data, train_labels, _, test_data, test_labels, _ = batch
+    assert train_data.size(0) == K * args.NWay, f"{train_data.size(0)} VS {K * args.NWay}"
+    assert test_data.size(0) == K_te * args.NWay, f"{test_data.size(0)} VS {K_te * args.NWay}"
+    assert torch.numel(torch.unique(train_labels)) == torch.numel(torch.unique(test_labels)) == args.NWay
+    train_data, train_labels, test_data, test_labels =  \
+        train_data.to(DEVICE), train_labels.to(DEVICE), test_data.to(DEVICE), test_labels.to(DEVICE)
+
+    # inner training (no early stopping)
+    for step in range(num_adaptation_steps):
+        train_loss = loss_fn(inner_learner(train_data), train_labels)
+        inner_learner.adapt(train_loss)
+    
+    # inner testing
+    test_preds = inner_learner(test_data)
+    test_loss, test_accur = loss_fn(test_preds, test_labels), \
+                                accuracy_fn(test_preds, test_labels)
+    return test_loss, test_accur
+
+def train(meta_model, task_generator, optimizer, loss_fn, descriptor, args):
+    tb_writer = SummaryWriter(log_dir=os.path.join(LEARNCURVEDIR, descriptor))
+
+    for i in tqdm(range(METATRAIN_OUTER_EPISODES), desc='Training Epochs'):
+        optimizer.zero_grad()
+        meta_train_loss, meta_train_accur = 0.0, 0.0
+        for _ in range(NUM_TASKS_METATRAIN):
+            # start a inner-loop learner from the current initialization parameters
+            inner_learner = meta_model.clone()
+            task_batch = task_generator.sample_task("meta_train", args)
+            
+            # inner training
+            inner_test_loss, inner_test_accur = fast_adapt(task_batch,
+                                                             inner_learner,
+                                                             loss_fn,
+                                                             METATRAIN_INNER_UPDATES,
+                                                             'meta_train',
+                                                             args)
+            
+            # meta training update step
+            inner_test_loss.backward()
+            meta_train_loss += inner_test_loss.item()
+            meta_train_accur += inner_test_accur.item()
+        meta_train_loss /= NUM_TASKS_METATRAIN
+        meta_train_accur /= NUM_TASKS_METATRAIN
+
+        # update the meta-parameters (the initialization parameters for MAML)
+        for p in meta_model.parameters():
+            p.grad.data.mul_(1.0/NUM_TASKS_METATRAIN)
+        optimizer.step()
+
+        # log meta-training metrics
+        tb_writer.add_scalar("Loss/meta_train", meta_train_loss, i)
+        tb_writer.add_scalar("Accuracy/meta_train", meta_train_accur, i)
+
+        # meta validation
+        if (i+1) % METAVALID_OUTER_INTERVAL == 0:
+            meta_valid_loss, meta_valid_accur = 0.0, 0.0
+            for _ in range(NUM_TASKS_METAVALID):
+                inner_learner = meta_model.clone()
+                task_batch = task_generator.sample_task('meta_valid', args)
+                inner_test_loss, inner_test_accur = fast_adapt(task_batch, 
+                                                                inner_learner,
+                                                                loss_fn,
+                                                                METAVALID_INNER_UPDATES,
+                                                                'meta_valid',
+                                                                args)
+                meta_valid_loss += inner_test_loss.item()
+                meta_valid_accur += inner_test_accur.item()
+            meta_valid_loss /= NUM_TASKS_METAVALID
+            meta_valid_accur /= NUM_TASKS_METAVALID
+        
+            # log meta-validation metrics
+            tb_writer.add_scalar("Loss/meta_valid", meta_valid_loss, i)
+            tb_writer.add_scalar("Accuracy/meta_valid", meta_valid_accur, i)
+    
+    # within the call of close(), flush() should also be called upon the tensorboard writer
+    tb_writer.close()
+    print(f"[{descriptor}] Training function completed!")
+    
+    return meta_model 
+
+def test(meta_model, task_generator, loss_fn, descriptor, args):
+    meta_test_losses, meta_test_accurs = [], []
+    for _ in tqdm(range(NUM_TASKS_METATEST), desc='Testing tasks'):
+        inner_learner = meta_model.clone()
+        task_batch = task_generator.sample_task("meta_test", args)
+        inner_test_loss, inner_test_accur = fast_adapt(task_batch,
+                                                       inner_learner,
+                                                       loss_fn,
+                                                       METATEST_INNER_UPDATES,
+                                                       'meta_test',
+                                                       args)
+        meta_test_losses.append(inner_test_loss.item())
+        meta_test_accurs.append(inner_test_accur.item())
+    
+    with open("res.txt", "a") as f:
+        f.write(str(datetime.datetime.now())+f' under seed {args.seed}'+'\n')
+        f.write(f"[{descriptor} {args.NWay}-way {args.KShotMetaTr}-shot meteTrain {args.KShotMetaVa}-shot metaTest]: " + \
+                f"Meta test loss: Mean: {np.mean(meta_test_losses):.2f}; Std: {np.std(meta_test_losses):.2f}\n" + \
+                f"Meta test accuracy: Mean: {np.mean(meta_test_accurs)*100:.2f}%; Std: {np.std(meta_test_accurs)*100:.2f}%\n")
+    print(f"[{descriptor}] testing completed!")
+    return
+
+
+if __name__ == "__main__":
+    parser = get_args_parser()
+    args = parser.parse_args()
+    assert min(args.NWay, args.KShotMetaTr, args.KShotMetaVa, args.KQuery) > 0
+    fix_seed(args.seed)
+
+    # Load train/validation/test datasets
+    (
+        meta_train_set, 
+        meta_valid_set, 
+        meta_test_set, 
+        meta_train_partitions_supervised, 
+        meta_train_partitions_supervised_all,
+        meta_train_partitions_supervised_oracle,
+        meta_valid_partitions, 
+        meta_test_partitions
+    ) = LOAD_DATASET[args.dsName](args)
+    
+    encoder = get_encoder(args, DEVICE)        
+    descriptor = get_descriptor(encoder, args)
+
+    print(f"<<<<<<<<<<Running {descriptor}...>>>>>>>>>")
+    # Supervised meta-learning
+    if args.encoder in ['sup', 'scratch']:
+        meta_train_partitions = meta_train_partitions_supervised
+    elif args.encoder == 'supall':
+        meta_train_partitions = meta_train_partitions_supervised_all
+    elif args.encoder == 'supora':
+        meta_train_partitions = meta_train_partitions_supervised_oracle
+    elif args.encoder in ['simclrpretrain', 'metagmvae']:
+        # not using metatraining
+        # don't let it go through unsupervised partitions generation, as it takes quite a bit of time
+        meta_train_partitions = meta_train_partitions_supervised
+    # Unsupervised meta-learning
+    else: 
+        meta_train_partitions_unsupervised = generate_unsupervised_partitions(
+                                                meta_train_set, 
+                                                encoder,
+                                                descriptor,
+                                                args)   
+        meta_train_partitions = meta_train_partitions_unsupervised  
+
+    if not meta_train_partitions:
+        print(f"Skipping {descriptor}...")
+        exit(0)
+
+    task_generator = TaskGenerator(meta_train_set, 
+                                    meta_valid_set, 
+                                    meta_test_set,
+                                    meta_train_partitions,
+                                    meta_valid_partitions,
+                                    meta_test_partitions,
+                                    args)
+    
+    if args.visualizeTasks:
+        assert args.encoder != "simclrpretrain", "Pretraining and finetuning scheme doesn't have tasks constructed"
+        visualize_constructed_tasks(task_generator, descriptor, args, n_imgs=14)
+        exit(0)
+
+    print("Construct newly initialized neural network model as the base learner...")
+    if args.dsName=="omniglot":
+        base_model = OmniglotCNN(output_size=args.NWay, 
+                                    hidden_size=64, 
+                                    layers=4).to(DEVICE)
+    elif args.dsName.startswith("celeba"):
+        base_model = CNN4(output_size=args.NWay,
+                            hidden_size=32,
+                            layers=4).to(DEVICE)
+    elif args.dsName.startswith("mpi3d"):
+        base_model = CNN4(output_size=args.NWay,
+                            hidden_size=32,
+                            layers=4).to(DEVICE)
+    elif args.dsName=="shapes3d":
+        base_model = CNN4(output_size=args.NWay,
+                            hidden_size=32,
+                            layers=4).to(DEVICE)
+    else:
+        print(f"Unimplemented base model for dataset {args.dsName}")
+        exit(1)
+
+    # wrap around MAML
+    meta_model = MAML(model=base_model, lr=METATRAIN_INNER_LR, first_order=False)
+    opt = optim.Adam(meta_model.parameters(), METATRAIN_OUTER_LR)
+    loss_fn = nn.CrossEntropyLoss(reduction='mean')
+
+    if args.encoder == "Scratch":
+        print(f"{descriptor} Directly adapt the model in meta-test split...")
+    else:
+        model_path = os.path.join(MODELDIR, f"{descriptor}.ckpt")
+        try:
+            if args.encoder in ["simclrpretrain", "metagmvae"]:
+                encoder.load_state_dict(torch.load(model_path))
+            else:
+                meta_model.load_state_dict(torch.load(model_path))
+            print(f"[{descriptor}]: Loaded model from {model_path}!")
+        except FileNotFoundError:
+            print(f"[{descriptor}]: No model at {model_path}. Training from scratch...")
+            if args.encoder == "simclrpretrain":
+                opt = optim.Adam(encoder.parameters(), lr=PRETRAIN_LR)
+                encoder = contrastive_pretrain(encoder, opt, meta_train_set, meta_valid_set, descriptor, args)
+                torch.save(encoder.state_dict(), model_path)
+            elif args.encoder == "metagmvae":
+                opt = optim.Adam(encoder.parameters(), lr=GMVAE_METATRAIN_LR)
+                encoder = metagmvae_train(encoder, opt, meta_train_set, meta_valid_set, descriptor, args)
+                torch.save(encoder.state_dict(), model_path)
+            else:
+                meta_model = train(meta_model, 
+                                    task_generator, 
+                                    opt, 
+                                    loss_fn, 
+                                    descriptor, 
+                                    args)
+                torch.save(meta_model.state_dict(), model_path)
+            print(f"Model saved at {model_path}!")
+
+    if args.encoder == "simclrpretrain":
+        test_pretrain(encoder, task_generator, descriptor, args)
+    elif args.encoder == "metagmvae":
+        metagmvae_test(encoder, task_generator, loss_fn, descriptor, args)
+    else:
+        test(meta_model, task_generator, loss_fn, descriptor, args)
+    
+    print("<<<<<<<<<<<<<<<Main script finished successfully!>>>>>>>>>>>>")
