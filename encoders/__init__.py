@@ -4,6 +4,7 @@ from .vae import *
 from .fdae import *
 from .simclr_pretrain import SimCLR
 from .gmvae import GMVAE
+from .soda import *
 
 def get_encoder(args, device):
     if args.encoder in ['sup', 'supall', 'supora', 'scratch']:
@@ -32,9 +33,9 @@ def get_encoder(args, device):
             levels_per_dim = 200
         elif args.dsName.startswith("celeba"):
             n_semantic_groups = 8
-            code_length = 130
-            code_length_reduced = 30
-            levels_per_dim = 100
+            code_length = 110
+            code_length_reduced = 40
+            levels_per_dim = 200
         elif args.dsName.startswith("mpi3d"):
             # probably would need to increase for mpi3d
             n_semantic_groups = 7
@@ -49,6 +50,10 @@ def get_encoder(args, device):
                        code_length_reduced=code_length_reduced,
                        levels_per_dim=levels_per_dim,
                        args=args).to(device)
+    elif args.encoder == "soda":
+        encoder = SODA(latent_dim=128, 
+                       levels_per_dim=10,
+                       args=args).to(DEVICE)
     elif args.encoder == "simclrpretrain":
         encoder = SimCLR(latent_dim=2048, args=args).to(DEVICE)
     elif args.encoder == "metagmvae":

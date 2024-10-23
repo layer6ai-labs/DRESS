@@ -178,9 +178,10 @@ class FactorVAE(VAE):
         self.levels_per_dim = levels_per_dim
 
     # ATTENTION: This function expects the entire dataset as input
-    # Therefore the input encodings are not put into device
+    # Therefore the input encodings are not put into CUDA device
     def post_encode(self, encodings):
         data_size, n_features = encodings.shape
+        assert n_features == self.latent_dim
         level_interval = data_size / self.levels_per_dim
         encodings_order_tmp = torch.argsort(encodings, dim=0)
         encodings_order = torch.empty(encodings.shape, dtype=torch.long).scatter_(

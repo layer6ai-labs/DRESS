@@ -161,7 +161,8 @@ def get_args_parser():
                                  "vanillavae", 
                                  "factorvae", 
                                  "dlqvae",
-                                 "fdae"],
+                                 "fdae",
+                                 "soda"],
                         required=True)
     parser.add_argument('--numEncodingPartitions',
                         help='number of partitions derived from encoding each containing classes',
