@@ -51,8 +51,8 @@ def get_encoder(args, device):
                        levels_per_dim=levels_per_dim,
                        args=args).to(device)
     elif args.encoder == "soda":
-        encoder = SODA(latent_dim=128, 
-                       levels_per_dim=10,
+        encoder = SODA(latent_dim=32, 
+                       levels_per_dim=100,
                        args=args).to(DEVICE)
     elif args.encoder == "simclrpretrain":
         encoder = SimCLR(latent_dim=2048, args=args).to(DEVICE)

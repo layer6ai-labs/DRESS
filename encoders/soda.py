@@ -1,6 +1,7 @@
 import os
 import torch
 import torch.nn as nn
+import torchvision.transforms as transforms
 from torchvision.models import resnet
 
 import sys
@@ -43,9 +44,17 @@ class SODA(nn.Module):
         checkpoint = torch.load(os.path.join(ENCODERDIR, f"soda_{args.dsName}.pth"))['MODEL']
         # load the trained SODA encoder model
         self.encoder.load_state_dict(checkpoint, strict=False)
+
+        # preprocess the celebA images as when SODA is trained
+        self.data_transform = transforms.Normalize(
+                                    mean=[0.485, 0.456, 0.406],
+                                    std=[0.229, 0.224, 0.225]
+                              )
         print(f"SODA encoder trained for {args.dsName} constructed and loaded successfully!")    
 
     def encode(self, input_data: torch.Tensor) -> torch.Tensor:
+        assert input_data.size(1) == 3, "SODA only takes input with 3 channels!"
+        input_data = self.data_transform(input_data)
         with torch.no_grad():
             encodings = self.encoder(input_data)
         assert encodings.size(1) == self.latent_dim  

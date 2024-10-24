@@ -230,3 +230,9 @@ Meta test accuracy: Mean: 92.61%; Std: 13.61%
 2024-10-23 13:19:42.104723 under seed 1234
 [celebahard_soda_to_128D_encSpace 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 0.70; Std: 0.07
 Meta test accuracy: Mean: 51.31%; Std: 16.42%
+2024-10-23 17:45:21.316710 under seed 1234
+[celebahard_soda_to_128D_encSpace 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 0.70; Std: 0.09
+Meta test accuracy: Mean: 53.23%; Std: 16.47%
+2024-10-24 14:44:41.277235 under seed 1234
+[celebahard_soda_to_32D_encSpace 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 0.68; Std: 0.06
+Meta test accuracy: Mean: 57.65%; Std: 18.22%
