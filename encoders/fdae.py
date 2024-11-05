@@ -2,7 +2,7 @@ import os
 import sys
 import torch
 import torch.nn as nn
-from torchvision.models import resnet18
+from torchvision.models import resnet18, resnet50
 from sklearn.decomposition import PCA
 from sklearn.cluster import KMeans
 
@@ -12,7 +12,6 @@ from utils import *
 """
 The following codes are from repo https://github.com/wuancong/FDAE:
 get_last_layer_output_channels()
-SeperateMaskGenerator
 ContentMaskGenerator
 """
 
@@ -32,50 +31,10 @@ def get_last_layer_output_channels(model):
         return get_last_layer_output_channels(torch.nn.Sequential(*list(model.children())[:-1]))
     else:
         raise ValueError('last_layer value not supported')
-    
-class SeperateMaskGenerator(nn.Module):
-    def __init__(self, latent_dim, num_masks, img_size=64, use_fp16=False, channel_list=[384, 256, 128, 64],
-                 num_groups=32):
-        super(SeperateMaskGenerator, self).__init__()
-        self.dtype = torch.float16 if use_fp16 else torch.float32
-        self.init_size = img_size // 2**4 # 4 times of x2 upsample
-        self.l1 = nn.Sequential(nn.Linear(latent_dim, 384 * self.init_size ** 2))
-        self.num_masks = num_masks
-        self.latent_dim = latent_dim
-        self.conv_blocks = nn.ModuleList()
-        in_dim = 384
-        for out_dim in channel_list:
-            conv_block = nn.Sequential(
-                nn.GroupNorm(num_groups, in_dim),  # 4
-                nn.Upsample(scale_factor=2),
-                nn.Conv2d(in_dim, out_dim, 3, stride=1, padding=1, bias=False),
-                nn.GroupNorm(num_groups, out_dim),
-                nn.SiLU(),  # 8
-            )
-            in_dim = out_dim
-            self.conv_blocks.append(conv_block)
-        self.conv_blocks_img = nn.Conv2d(in_dim, 1, 3, stride=1, padding=1)
-        self.mask_normalize_block = nn.Softmax(dim=1)  # mask
 
-    def forward(self, z):
-        # size of input z: N x num_masks x mask_code
-        # convert z from N x num_masks x mask_code to (N x num_masks) x mask_code
-        N, num_masks, mask_code_dim = z.size()
-        assert self.num_masks == num_masks
-        assert self.latent_dim == mask_code_dim
-        z = z.view(N * num_masks, mask_code_dim)
-        out = self.l1(z)
-        out = out.view(out.shape[0], 384, self.init_size, self.init_size)
-        for block in self.conv_blocks:
-            out = block(out)
-        out = self.conv_blocks_img(out)
-        _, _, H, W = out.size()
-        out = out.view(N, num_masks, H, W)
-        out = self.mask_normalize_block(out)
-        return out
 
 class ContentMaskGenerator(nn.Module):
-    def __init__(self, img_size=64, semantic_group_num=2, semantic_code_dim=80, mask_code_dim=80,
+    def __init__(self, semantic_group_num=2, semantic_code_dim=80, mask_code_dim=80,
                  semantic_code_adjust_dim=80,
                  use_fp16=False, encoder_type='resnet18'):
         '''
@@ -90,8 +49,12 @@ class ContentMaskGenerator(nn.Module):
         self.semantic_code_adjust_dim = semantic_code_adjust_dim
         self.semantic_code_dim = semantic_code_dim
         self.mask_code_dim = mask_code_dim
+        # for resnet, don't use pretrained weights, therefore no
+        # preprocessing (resizing and normalization) done within the encoder
         if encoder_type == 'resnet18':
             self.encoder = resnet18(weights=None)
+        elif encoder_type == 'resnet50':
+            self.encoder = resnet50(weights=None)
         else:
             raise(ValueError('Unsupported encoder type'))
         encoder_out_dim = get_last_layer_output_channels(self.encoder)
@@ -106,9 +69,6 @@ class ContentMaskGenerator(nn.Module):
             self.semantic_decoder2.append(nn.Linear(self.semantic_code_dim, semantic_code_adjust_dim))
 
         self.mask_decoder = nn.Linear(encoder_out_dim, mask_code_dim * semantic_group_num)
-        #self.mask_generator = SeperateMaskGenerator(latent_dim=mask_code_dim, 
-        #                                            num_masks=semantic_group_num,
-        #                                            img_size=img_size)
 
     def forward(self, x, model_kwargs=None):
         swap_info = None  # swap_info is used for image editing by swapping latent codes
@@ -129,7 +89,6 @@ class ContentMaskGenerator(nn.Module):
         layer_semantic_code0_list = [net(code)  # code nxd_group
                                      for code, net in zip(semantic_code_list, self.semantic_decoder2)]
         layer_semantic_code0 = torch.stack(layer_semantic_code0_list, dim=2).unsqueeze(3)  # nxdxgroup_numx1
-        semantic_code_out = semantic_code
 
         if swap_info is not None:
             # layer_semantic_code0: nxdxgroup_numx1
@@ -149,15 +108,12 @@ class ContentMaskGenerator(nn.Module):
             layer_semantic_code0 = layer_semantic_code0_new.reshape(len(source_ind) * len(target_ind), layer_semantic_code0.shape[1],
                                                layer_semantic_code0.shape[2], layer_semantic_code0.shape[3])
 
-        layer_semantic_code_list = [layer_semantic_code0]
 
         mask_code = self.mask_decoder(features)
         mask_code = mask_code.view(mask_code.size(0), self.semantic_group_num, self.mask_code_dim)
-        mask_code_out = [mask_code.view(mask_code.size(0), -1)]
 
         if self.semantic_group_num == 1:
             mask_code = None
-            mask_code_out = []
 
         if swap_info is not None:
             # mask_code nxgroup_numxd
@@ -175,27 +131,8 @@ class ContentMaskGenerator(nn.Module):
                             mask_code_new[i_s, i_t, g, :] = torch.from_numpy(swap_array['mask'][g][:, i_t]).unsqueeze(1).cuda().half()
             mask_code = mask_code_new.reshape(len(source_ind) * len(target_ind), self.semantic_group_num, self.mask_code_dim)
 
-        # if self.semantic_group_num == 1:
-        #     mask_list = [torch.ones(x.shape[0], self.semantic_group_num, x.shape[2], x.shape[3]).cuda()]
-        #     mask_output = mask_list[-1]
-        # else:
-        #     mask_list = [self.mask_generator(mask_code)]
-        #     mask_output = mask_list[-1]
-
-        # condition_map_list = []
-        # for semantic_code_map, mask in zip(layer_semantic_code_list, mask_list):
-        #     N, _, H, W = mask.size()
-        #     # expand maps
-        #     semantic_code_map = semantic_code_map.unsqueeze(-1).expand(
-        #         N, self.semantic_code_adjust_dim, self.semantic_group_num, H, W)
-        #     mask = mask.unsqueeze(1).expand_as(semantic_code_map)
-        #     condition_map = torch.sum(semantic_code_map * mask, dim=2)
-        #     condition_map_list.append(condition_map)
-        return {'mask_code': mask_code, #'mask': mask_output,
-                'semantic_code': semantic_code_list,
-                #'condition_map': condition_map_list,
-                #'feature': torch.cat([semantic_code_out] + mask_code_out, dim=1), 'feature_avg_pool': features
-                }
+        return {'mask_code': mask_code, 
+                'semantic_code': semantic_code_list}
 
  
 class FDAE(nn.Module):
@@ -213,13 +150,12 @@ class FDAE(nn.Module):
         self._code_length = code_length
         self._code_length_reduced = code_length_reduced
         self._levels_per_dim = levels_per_dim
-        self.encoder = ContentMaskGenerator(img_size=args.imgSizeToEncoder,
-                                            semantic_group_num=self.n_semantic_groups,
+        self.encoder = ContentMaskGenerator(semantic_group_num=self.n_semantic_groups,
                                             semantic_code_dim=self._code_length,
                                             semantic_code_adjust_dim=self._code_length,
                                             mask_code_dim=self._code_length,
                                             use_fp16=True,
-                                            encoder_type='resnet18')
+                                            encoder_type='resnet50')
         state_dict = torch.load(os.path.join(ENCODERDIR, f'fdae_{args.dsName}.pt'))
         # With strict=False, other components (diffusion model) are not loaded 
         # for the condition generator

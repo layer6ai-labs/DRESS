@@ -39,7 +39,7 @@ CLUSTERDIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "cluster_i
 LEARNCURVEDIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "train_ps")
 RESULTSDIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "results")
 # The model dir should already be synched within the git repo
-for dirname in [DATADIR, ENCODERDIR, CLUSTERDIR, LEARNCURVEDIR]:
+for dirname in [DATADIR, MODELDIR, ENCODERDIR, CLUSTERDIR, LEARNCURVEDIR]:
     os.makedirs(dirname, exist_ok=True)
 
 

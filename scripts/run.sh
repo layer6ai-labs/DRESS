@@ -117,11 +117,11 @@ cd ~/DRESS
 #                --NWay 2 --KShotMetaTr 5 --KShotMetaVa 5 --KShotMetaTe 5 --KQuery 5   \
 #                --seed $seedval
 
-# python main.py --dsName celebahard  \
-#                --encoder fdae  \
-#                --imgSizeToEncoder 64 --imgSizeToMetaModel 84 \
-#                --NWay 2 --KShotMetaTr 5 --KShotMetaVa 5 --KShotMetaTe 5 --KQuery 5   \
-#                --seed $seedval
+python main.py --dsName celebahard  \
+               --encoder fdae  \
+               --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
+               --NWay 2 --KShotMetaTr 5 --KShotMetaVa 5 --KShotMetaTe 5 --KQuery 5   \
+               --seed $seedval
 
 #######DRESS with SODA########
 # python main.py --dsName shapes3d  \
@@ -142,11 +142,11 @@ cd ~/DRESS
 #                --NWay 2 --KShotMetaTr 5 --KShotMetaVa 5 --KShotMetaTe 5 --KQuery 5   \
 #                --seed $seedval
 
-python main.py --dsName celebahard  \
-               --encoder soda  \
-               --imgSizeToEncoder 64 --imgSizeToMetaModel 84 \
-               --NWay 2 --KShotMetaTr 5 --KShotMetaVa 5 --KShotMetaTe 5 --KQuery 5   \
-               --seed $seedval
+# python main.py --dsName celebahard  \
+#                --encoder soda  \
+#                --imgSizeToEncoder 64 --imgSizeToMetaModel 84 \
+#                --NWay 2 --KShotMetaTr 5 --KShotMetaVa 5 --KShotMetaTe 5 --KQuery 5   \
+#                --seed $seedval
 
 
 ######PreTrain and FineTune######
