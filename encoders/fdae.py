@@ -155,7 +155,7 @@ class FDAE(nn.Module):
                                             semantic_code_adjust_dim=self._code_length,
                                             mask_code_dim=self._code_length,
                                             use_fp16=True,
-                                            encoder_type='resnet50')
+                                            encoder_type='resnet18')
         state_dict = torch.load(os.path.join(ENCODERDIR, f'fdae_{args.dsName}.pt'))
         # With strict=False, other components (diffusion model) are not loaded 
         # for the condition generator
