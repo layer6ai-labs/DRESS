@@ -143,6 +143,7 @@ def get_args_parser():
                         choices=["omniglot", 
                                  "celebarand", 
                                  "celebahard",
+                                 "animals",
                                  "mpi3dtoy",
                                  "mpi3dtoyhard",
                                  "mpi3dcomplex",

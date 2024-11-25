@@ -191,7 +191,7 @@ if __name__ == "__main__":
     
     if args.visualizeTasks:
         assert args.encoder != "simclrpretrain", "Pretraining and finetuning scheme doesn't have tasks constructed"
-        visualize_constructed_tasks(task_generator, descriptor, args, n_imgs=14)
+        visualize_constructed_tasks(task_generator, descriptor, args, n_imgs=20)
         exit(0)
 
     print("Construct newly initialized neural network model as the base learner...")
@@ -203,11 +203,15 @@ if __name__ == "__main__":
         base_model = CNN4(output_size=args.NWay,
                             hidden_size=32,
                             layers=4).to(DEVICE)
+    elif args.dsName == "animals":
+        base_model = CNN4(output_size=args.NWay,
+                            hidden_size=32,
+                            layers=4).to(DEVICE)
     elif args.dsName.startswith("mpi3d"):
         base_model = CNN4(output_size=args.NWay,
                             hidden_size=32,
                             layers=4).to(DEVICE)
-    elif args.dsName=="shapes3d":
+    elif args.dsName == "shapes3d":
         base_model = CNN4(output_size=args.NWay,
                             hidden_size=32,
                             layers=4).to(DEVICE)

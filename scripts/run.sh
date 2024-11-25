@@ -38,6 +38,14 @@ cd ~/DRESS
 #                 --NWay 2 --KShotMetaTr 5 --KShotMetaVa 5 --KShotMetaTe 5 --KQuery 5 \
 #                 --seed $seedval
 # done
+
+for supmethod in "sup" "supall" "supora" "scratch"; do
+    python main.py --dsName animals  \
+                --encoder $supmethod \
+                --imgSizeToEncoder -1 --imgSizeToMetaModel 84 \
+                --NWay 2 --KShotMetaTr 5 --KShotMetaVa 5 --KShotMetaTe 5 --KQuery 5 \
+                --seed $seedval
+done
  
 
 ######### Dino #########
@@ -68,6 +76,13 @@ cd ~/DRESS
 #                --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
 #                --NWay 2 --KShotMetaTr 5 --KShotMetaVa 5 --KShotMetaTe 5 --KQuery 5  \
 #                --seed $seedval
+
+python main.py --dsName animals  \
+               --encoder dino \
+               --numEncodingPartitions 50 \
+               --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
+               --NWay 2 --KShotMetaTr 5 --KShotMetaVa 5 --KShotMetaTe 5 --KQuery 5  \
+               --seed $seedval
 
 #######DeepCluster#######
 # python main.py --dsName shapes3d  \
@@ -118,6 +133,12 @@ cd ~/DRESS
 #                --seed $seedval
 
 python main.py --dsName celebahard  \
+               --encoder fdae  \
+               --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
+               --NWay 2 --KShotMetaTr 5 --KShotMetaVa 5 --KShotMetaTe 5 --KQuery 5   \
+               --seed $seedval
+
+python main.py --dsName animals  \
                --encoder fdae  \
                --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
                --NWay 2 --KShotMetaTr 5 --KShotMetaVa 5 --KShotMetaTe 5 --KQuery 5   \

@@ -46,6 +46,7 @@ def load_celeba_attrs():
 
 
 def _load_celeba(args, meta_split_type):
+    # Resize happens later in the pipeline
     data_transforms = transforms.Compose([
         transforms.ToTensor()
     ])
@@ -74,9 +75,9 @@ def _load_celeba(args, meta_split_type):
     celeba_meta_train_attrs_all, celeba_meta_valid_attrs, celeba_meta_test_attrs = load_celeba_attrs()
 
     if meta_split_type == "rand":
-        CELEBA_ATTRIBUTES_IDX_META_TRAIN = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24]
-        CELEBA_ATTRIBUTES_IDX_META_VALID = [21, 22, 23, 24] # without early stopping, meta validation doesn't matter
-        CELEBA_ATTRIBUTES_IDX_META_TEST = [25,26,27,28,29,30,31,32,33,34,35,36,37,38,39]
+        CELEBA_ATTRIBUTES_IDX_META_TRAIN = np.arange(25)
+        CELEBA_ATTRIBUTES_IDX_META_VALID = np.arange(21,25) # without early stopping, meta validation doesn't matter
+        CELEBA_ATTRIBUTES_IDX_META_TEST = np.arange(25, 40)
     else:
         CELEBA_ATTRIBUTES_IDX_META_TRAIN = [15, 16, 20, 21, 22, 24, 31, 35, 38, 39]
         CELEBA_ATTRIBUTES_IDX_META_VALID = [21, 22, 24, 31] # without early stopping, meta validation doesn't matter
@@ -141,28 +142,25 @@ if __name__ == "__main__":
         transforms.ToTensor()
     ])
     celeba_set = CelebA(DATADIR, 
-                         split='test', 
-                         target_type='identity',
-                         transform=data_transforms,
-                         download=True)
+                        split='valid', 
+                        target_type='identity',
+                        transform=data_transforms,
+                        download=True)
     
     n_samples = 9
     img_idxs = np.random.choice(a=len(celeba_set), size=9, replace=False)
     imgs_orig = torch.stack([celeba_set[i][0] for i in img_idxs],dim=0)
-    dt = transforms.Resize((224,224))
-    imgs_myencoder = torch.stack([dt(celeba_set[i][0]) for i in img_idxs],dim=0)
     dt = transforms.Compose([
-        transforms.Resize(256),
+        transforms.Resize(276),
         transforms.CenterCrop(224)
     ])
-    imgs_deepcluster = torch.stack([dt(celeba_set[i][0]) for i in img_idxs],dim=0)
+    imgs_proc = torch.stack([dt(celeba_set[i][0]) for i in img_idxs],dim=0)
     dt = transforms.Resize((84,84))
     imgs_maml = torch.stack([dt(celeba_set[i][0]) for i in img_idxs],dim=0)
 
     os.makedirs("misc", exist_ok=True)
-    save_image(imgs_orig, "misc/original_imgs.png", nrow=3)
-    save_image(imgs_myencoder, "misc/myencoder_imgs.png", nrow=3)
-    save_image(imgs_deepcluster, "misc/deepcluster_imgs.png", nrow=3)
+    save_image(imgs_orig, "misc/original_celeba_imgs.png", nrow=3)
+    save_image(imgs_proc, "misc/processed_celeba_imgs.png", nrow=3)
     save_image(imgs_maml, "misc/maml_imgs.png", nrow=3)
 
     print("Script finished successfully!")

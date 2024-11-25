@@ -95,7 +95,7 @@ def encode_data(dataset, encoder, args):
         if args.imgSizeToEncoder == 224:
             # take the center portion of the image (where the face is)
             data_transforms_for_encoder = transforms.Compose([
-                transforms.Resize(256),
+                transforms.Resize(276),
                 transforms.CenterCrop(224)
                 ])
         elif args.imgSizeToEncoder == 128:
@@ -116,7 +116,21 @@ def encode_data(dataset, encoder, args):
             encode_batch_size = 32 # due to memory requirement from FDAE
         else:
             encode_batch_size = 512
+    elif args.dsName == "animals":
+        if args.imgSizeToEncoder == 224:
+            data_transforms_for_encoder = transforms.Compose([
+                transforms.Resize(236),
+                transforms.CenterCrop(224)
+                ])
+        else:
+            print(f"Unsupported image size {args.imgSizeToEncoder} for {args.dsName}")
+            exit(1)
+        if args.encoder == "FDAE":
+            encode_batch_size = 32 # due to memory requirement from FDAE
+        else:
+            encode_batch_size = 512
     else:
+        # simply reduce the size for the images
         data_transforms_for_encoder = transforms.Resize((
                                         args.imgSizeToEncoder, 
                                         args.imgSizeToEncoder))
