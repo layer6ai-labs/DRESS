@@ -33,9 +33,9 @@ def get_encoder(args, device):
             levels_per_dim = 200
         elif args.dsName.startswith("celeba"):
             n_semantic_groups = 8
-            code_length = 100
-            code_length_reduced = 30
-            levels_per_dim = 200
+            code_length = 110
+            code_length_reduced = 20
+            levels_per_dim = 1000
         elif args.dsName.startswith("mpi3d"):
             # probably would need to increase for mpi3d
             n_semantic_groups = 7
