@@ -151,7 +151,7 @@ if __name__ == "__main__":
     img_idxs = np.random.choice(a=len(celeba_set), size=9, replace=False)
     imgs_orig = torch.stack([celeba_set[i][0] for i in img_idxs],dim=0)
     dt = transforms.Compose([
-        transforms.Resize(276),
+        transforms.Resize(256),
         transforms.CenterCrop(224)
     ])
     imgs_proc = torch.stack([dt(celeba_set[i][0]) for i in img_idxs],dim=0)
