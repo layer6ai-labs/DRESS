@@ -485,3 +485,21 @@ Meta test accuracy: Mean: 67.53%; Std: 18.06%
 2024-12-03 23:48:01.929770 under seed 1234
 [celebahard_fdae_to_16D_encSpace 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 0.63; Std: 0.31
 Meta test accuracy: Mean: 69.23%; Std: 17.71%
+2024-12-04 03:15:48.996583 under seed 1234
+[celebahard_fdae_to_16D_encSpace 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 0.62; Std: 0.29
+Meta test accuracy: Mean: 69.18%; Std: 17.76%
+2024-12-04 11:05:29.952639 under seed 1234
+[celebahard_fdae_to_16D_encSpace 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 0.65; Std: 0.33
+Meta test accuracy: Mean: 69.03%; Std: 17.75%
+2024-12-04 14:33:37.015244 under seed 1234
+[celebahard_fdae_to_16D_encSpace 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 0.65; Std: 0.28
+Meta test accuracy: Mean: 67.78%; Std: 17.26%
+2024-12-04 17:44:54.778098 under seed 1234
+[celebahard_fdae_to_16D_encSpace 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 0.65; Std: 0.29
+Meta test accuracy: Mean: 67.51%; Std: 17.33%
+2024-12-04 22:58:13.380866 under seed 1234
+[celebahard_fdae_to_16D_encSpace 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 0.64; Std: 0.31
+Meta test accuracy: Mean: 68.66%; Std: 18.06%
+2024-12-05 02:10:05.211174 under seed 1234
+[celebahard_fdae_to_16D_encSpace 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 0.64; Std: 0.29
+Meta test accuracy: Mean: 68.30%; Std: 17.22%
