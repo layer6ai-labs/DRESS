@@ -201,8 +201,11 @@ class FDAE(nn.Module):
         # first, use PCA to reduce the dimension of each code 
         # do PCA separately in the semantic code and mask code space
         semantic_codes, mask_codes = encodings.split(1, dim=2)
-        semantic_codes = self.pca.fit_transform(semantic_codes.view(-1, self._code_length))
-        mask_codes = self.pca.fit_transform(mask_codes.view(-1, self._code_length))
+        semantic_codes = semantic_codes.view(-1, self._code_length)
+        mask_codes = mask_codes.view(-1, self._code_length)
+        if self._code_length_reduced < self._code_length:
+            semantic_codes = self.pca.fit_transform(semantic_codes)
+            mask_codes = self.pca.fit_transform(mask_codes)            
         semantic_codes_quantized = self.kmeans.fit_predict(semantic_codes)
         semantic_codes_quantized = np.reshape(semantic_codes_quantized, [dataset_size, self.n_semantic_groups])
         mask_codes_quantized = self.kmeans.fit_predict(mask_codes)
