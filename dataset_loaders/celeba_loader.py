@@ -78,10 +78,17 @@ def _load_celeba(args, meta_split_type):
         CELEBA_ATTRIBUTES_IDX_META_TRAIN = np.arange(25)
         CELEBA_ATTRIBUTES_IDX_META_VALID = np.arange(21,25) # without early stopping, meta validation doesn't matter
         CELEBA_ATTRIBUTES_IDX_META_TEST = np.arange(25, 40)
-    else:
+    elif meta_split_type == "hair":
         CELEBA_ATTRIBUTES_IDX_META_TRAIN = [15, 16, 20, 21, 22, 24, 31, 35, 38, 39]
         CELEBA_ATTRIBUTES_IDX_META_VALID = [21, 22, 24, 31] # without early stopping, meta validation doesn't matter
         CELEBA_ATTRIBUTES_IDX_META_TEST = [8, 9, 11, 17, 28, 32, 33]
+    elif meta_split_type == "eyes":
+        CELEBA_ATTRIBUTES_IDX_META_TRAIN = [4,6,7,8,9,11,14,16,17,19,20,21,22,24,26,27,32]
+        CELEBA_ATTRIBUTES_IDX_META_VALID = [4,6,7,8] # without early stopping, meta validation doesn't matter
+        CELEBA_ATTRIBUTES_IDX_META_TEST = [1, 3, 12, 15, 23]
+    else:
+        print(f"Invalid meta_split_type for celeba: {meta_split_type}!")
+        exit(1)
 
     # Use disjoint subset of attrs for meta splits
     celeba_meta_train_attrs = celeba_meta_train_attrs_all[:,CELEBA_ATTRIBUTES_IDX_META_TRAIN]
@@ -133,9 +140,11 @@ def _load_celeba(args, meta_split_type):
 def load_celeba_rand(args):
     return _load_celeba(args, meta_split_type='rand')
 
-def load_celeba_hard(args):
-    return _load_celeba(args, meta_split_type='hard')
+def load_celeba_hair(args):
+    return _load_celeba(args, meta_split_type='hair')
 
+def load_celeba_eyes(args):
+    return _load_celeba(args, meta_split_type='eyes')
 
 if __name__ == "__main__":
     data_transforms = transforms.Compose([

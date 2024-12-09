@@ -156,7 +156,13 @@ class FDAE(nn.Module):
                                             mask_code_dim=self._code_length,
                                             use_fp16=True,
                                             encoder_type='resnet18')
-        state_dict = torch.load(os.path.join(ENCODERDIR, f'fdae_{args.dsName}.pt'))
+        if args.dsName.startswith("mpi3d"):
+            dsName_base = "mpi3d"
+        elif args.dsName.startswith("celeba"):
+            dsName_base = "celeba"
+        else:
+            dsName_base = args.dsName
+        state_dict = torch.load(os.path.join(ENCODERDIR, f'fdae_{dsName_base}.pt'))
         # With strict=False, other components (diffusion model) are not loaded 
         # for the condition generator
         self.encoder.load_state_dict(state_dict, strict=False)

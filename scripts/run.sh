@@ -85,7 +85,14 @@ cd ~/DRESS
 #                --NWay 2 --KShotMetaTr 5 --KShotMetaVa 5 --KShotMetaTe 5 --KQuery 5  \
 #                --seed $seedval
 
-# python main.py --dsName celebahard  \
+# python main.py --dsName celebahair  \
+#                --encoder dino \
+#                --numEncodingPartitions 50 \
+#                --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
+#                --NWay 2 --KShotMetaTr 5 --KShotMetaVa 5 --KShotMetaTe 5 --KQuery 5  \
+#                --seed $seedval
+
+# python main.py --dsName celebaeyes  \
 #                --encoder dino \
 #                --numEncodingPartitions 50 \
 #                --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
@@ -160,7 +167,13 @@ cd ~/DRESS
 #                --NWay 2 --KShotMetaTr 5 --KShotMetaVa 5 --KShotMetaTe 5 --KQuery 5   \
 #                --seed $seedval
 
-python main.py --dsName celebahard  \
+# python main.py --dsName celebahair  \
+#                --encoder fdae  \
+#                --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
+#                --NWay 2 --KShotMetaTr 5 --KShotMetaVa 5 --KShotMetaTe 5 --KQuery 5   \
+#                --seed $seedval
+
+python main.py --dsName celebaeyes  \
                --encoder fdae  \
                --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
                --NWay 2 --KShotMetaTr 5 --KShotMetaVa 5 --KShotMetaTe 5 --KQuery 5   \

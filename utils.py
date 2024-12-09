@@ -51,11 +51,21 @@ def fix_seed(seed):
 
 
 def get_descriptor(encoder, args):
+    if args.dsName.startswith("mpi3d"):
+        dsName_base = "mpi3d"
+    elif args.dsName.startswith("celeba"):
+        dsName_base = "celeba"
+    else:
+        dsName_base = args.dsName
     if args.encoder in ['sup', 'supall', 'supora', 'scratch']:
         # not using an encoder for embeddings (and clustering)
         descriptor = f'{args.dsName}_{args.encoder}' 
+    elif args.encoder == "scratch":
+        # for model without meta-training, doesn't matter what attribute splits are
+        descriptor = f'{dsName_base}_{args.encoder}'
     else:
-        descriptor = f'{args.dsName}_{args.encoder}_to_{encoder.latent_dim}D_encSpace'
+        # using self-supervised/unsupervised encoder, doesn't matter what attribute splits are
+        descriptor = f'{dsName_base}_{args.encoder}_to_{encoder.latent_dim}D_encSpace'
     return descriptor
 
 
@@ -142,7 +152,8 @@ def get_args_parser():
                         help='dataset for meta-learning', 
                         choices=["omniglot", 
                                  "celebarand", 
-                                 "celebahard",
+                                 "celebahair",
+                                 "celebaeyes",
                                  "animals",
                                  "mpi3dtoy",
                                  "mpi3dtoyhard",
