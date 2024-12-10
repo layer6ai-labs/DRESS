@@ -156,7 +156,7 @@ def encode_data(dataset, encoder, args):
 def _diversify_encoding_spaces(encodings_origSpace: torch.Tensor, args) -> np.ndarray: 
     encodings_multiSpace = [encodings_origSpace.numpy()]
     # Following CACTUS paper, randomly scale encodings 
-    for _ in range(args.numEncodingPartitions - 1):
+    for _ in range(NUM_ENCODING_PARTITIONS - 1):
         weight_vector = np.random.uniform(low=0.0, high=1.0, size=encodings_origSpace.shape[1])
         encodings_multiSpace.append(np.multiply(encodings_origSpace.numpy(), weight_vector))
     return np.stack(encodings_multiSpace, axis=0)
@@ -202,8 +202,7 @@ def generate_unsupervised_partitions(
             # and use different latent dimension as different partitions
             cluster_idxs = torch.transpose(encodings_origSpace, 0, 1).numpy()   
         else:
-            assert args.numEncodingPartitions > 0
-            n_partitions = args.numEncodingPartitions            
+            n_partitions = NUM_ENCODING_PARTITIONS            
             encodings_multiSpaces = _diversify_encoding_spaces(encodings_origSpace, args)
 
             # for each encoding space, generate a partition through k-means clustering

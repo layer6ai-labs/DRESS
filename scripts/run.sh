@@ -11,102 +11,46 @@ cd ~/DRESS
 #     python main.py --dsName shapes3d  \
 #                 --encoder $supmethod \
 #                 --imgSizeToEncoder -1 --imgSizeToMetaModel 84 \
-#                 --NWay 2 --KShotMetaTr 5 --KShotMetaVa 5 --KShotMetaTe 5 --KQuery 5 \
+#                 --NWay 2 --KShot 5 --KQuery 5 \
 #                 --seed $seedval
 # done
 
 # for supmethod in "sup" "supall" "supora" "scratch"; do
-#     python main.py --dsName mpi3dtoy  \
+#     python main.py --dsName mpi3deasy  \
 #                 --encoder $supmethod \
 #                 --imgSizeToEncoder -1 --imgSizeToMetaModel 84 \
-#                 --NWay 2 --KShotMetaTr 5 --KShotMetaVa 5 --KShotMetaTe 5 --KQuery 5 \
+#                 --NWay 2 --KShot 5 --KQuery 5 \
 #                 --seed $seedval
 # done
 
 # for supmethod in "sup" "supall" "supora" "scratch"; do
-#     python main.py --dsName mpi3dtoyhard  \
+#     python main.py --dsName mpi3dhard  \
 #                 --encoder $supmethod \
 #                 --imgSizeToEncoder -1 --imgSizeToMetaModel 84 \
-#                 --NWay 2 --KShotMetaTr 5 --KShotMetaVa 5 --KShotMetaTe 5 --KQuery 5 \
-#                 --seed $seedval
-# done
-
-# for supmethod in "sup" "supall" "supora" "scratch"; do
-#     python main.py --dsName celebarand  \
-#                 --encoder $supmethod \
-#                 --imgSizeToEncoder -1 --imgSizeToMetaModel 84 \
-#                 --NWay 2 --KShotMetaTr 5 --KShotMetaVa 5 --KShotMetaTe 5 --KQuery 5 \
-#                 --seed $seedval
-# done
-
-# for supmethod in "sup" "supall" "supora" "scratch"; do
-#     python main.py --dsName celebahard  \
-#                 --encoder $supmethod \
-#                 --imgSizeToEncoder -1 --imgSizeToMetaModel 84 \
-#                 --NWay 2 --KShotMetaTr 5 --KShotMetaVa 5 --KShotMetaTe 5 --KQuery 5 \
-#                 --seed $seedval
-# done
-
-# for supmethod in "sup" "supall" "supora" "scratch"; do
-#     python main.py --dsName animals  \
-#                 --encoder $supmethod \
-#                 --imgSizeToEncoder -1 --imgSizeToMetaModel 84 \
-#                 --NWay 2 --KShotMetaTr 5 --KShotMetaVa 5 --KShotMetaTe 5 --KQuery 5 \
+#                 --NWay 2 --KShot 5 --KQuery 5 \
 #                 --seed $seedval
 # done
  
-
-######### Dino #########
+############# Dino #############
 # python main.py --dsName shapes3d  \
 #                --encoder dino \
-#                --numEncodingPartitions 50 \
 #                --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
-#                --NWay 2 --KShotMetaTr 5 --KShotMetaVa 5 --KShotMetaTe 5 --KQuery 5  \
+#                --NWay 2 --KShot 5 --KQuery 5  \
 #                --seed $seedval
 
-# python main.py --dsName mpi3dtoy  \
+# python main.py --dsName mpi3deasy  \
 #                --encoder dino \
-#                --numEncodingPartitions 50 \
 #                --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
-#                --NWay 2 --KShotMetaTr 5 --KShotMetaVa 5 --KShotMetaTe 5 --KQuery 5  \
+#                --NWay 2 --KShot 5 --KQuery 5  \
 #                --seed $seedval
 
-# python main.py --dsName mpi3dtoyhard  \
+# python main.py --dsName mpi3dhard  \
 #                --encoder dino \
-#                --numEncodingPartitions 50 \
 #                --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
-#                --NWay 2 --KShotMetaTr 5 --KShotMetaVa 5 --KShotMetaTe 5 --KQuery 5  \
+#                --NWay 2 --KShot 5 --KQuery 5  \
 #                --seed $seedval
 
-# python main.py --dsName celebarand  \
-#                --encoder dino \
-#                --numEncodingPartitions 50 \
-#                --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
-#                --NWay 2 --KShotMetaTr 5 --KShotMetaVa 5 --KShotMetaTe 5 --KQuery 5  \
-#                --seed $seedval
-
-# python main.py --dsName celebahair  \
-#                --encoder dino \
-#                --numEncodingPartitions 50 \
-#                --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
-#                --NWay 2 --KShotMetaTr 5 --KShotMetaVa 5 --KShotMetaTe 5 --KQuery 5  \
-#                --seed $seedval
-
-# python main.py --dsName celebaeyes  \
-#                --encoder dino \
-#                --numEncodingPartitions 50 \
-#                --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
-#                --NWay 2 --KShotMetaTr 5 --KShotMetaVa 5 --KShotMetaTe 5 --KQuery 5  \
-#                --seed $seedval
-
-# python main.py --dsName animals  \
-#                --encoder dino \
-#                --numEncodingPartitions 50 \
-#                --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
-#                --NWay 2 --KShotMetaTr 5 --KShotMetaVa 5 --KShotMetaTe 5 --KQuery 5  \
-#                --seed $seedval
-
-#######DeepCluster#######
+########### DeepCluster ###########
 # python main.py --dsName shapes3d  \
 #                --encoder deepcluster \
 #                --numEncodingPartitions 50 \
@@ -114,118 +58,52 @@ cd ~/DRESS
 #                --NWay 2 --KShotMetaTr 5 --KShotMetaVa 5 --KShotMetaTe 5 --KQuery 5  \
 #                --seed $seedval
             
-# python main.py --dsName mpi3dtoy  \
+# python main.py --dsName mpi3deasy  \
 #                --encoder deepcluster \
-#                --numEncodingPartitions 50 \
 #                --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
-#                --NWay 2 --KShotMetaTr 5 --KShotMetaVa 5 --KShotMetaTe 5 --KQuery 5  \
+#                --NWay 2 --KShot 5 --KQuery 5  \
 #                --seed $seedval
 
-# python main.py --dsName mpi3dtoyhard  \
+# python main.py --dsName mpi3dhard  \
 #                --encoder deepcluster \
-#                --numEncodingPartitions 50 \
 #                --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
-#                --NWay 2 --KShotMetaTr 5 --KShotMetaVa 5 --KShotMetaTe 5 --KQuery 5  \
+#                --NWay 2 --KShot 5 --KQuery 5  \
 #                --seed $seedval
 
-# python main.py --dsName celebarand  \
-#                --encoder deepcluster \
-#                --numEncodingPartitions 50 \
-#                --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
-#                --NWay 2 --KShotMetaTr 5 --KShotMetaVa 5 --KShotMetaTe 5 --KQuery 5  \
-#                --seed $seedval
-
-# python main.py --dsName celebahard  \
-#                --encoder deepcluster \
-#                --numEncodingPartitions 50 \
-#                --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
-#                --NWay 2 --KShotMetaTr 5 --KShotMetaVa 5 --KShotMetaTe 5 --KQuery 5  \
-#                --seed $seedval
-
-#######DRESS with FDAE########
+############ DRESS with FDAE ############
 # python main.py --dsName shapes3d  \
 #                --encoder fdae  \
 #                --imgSizeToEncoder 64 --imgSizeToMetaModel 84 \
 #                --NWay 2 --KShotMetaTr 5 --KShotMetaVa 5 --KShotMetaTe 5 --KQuery 5  \
 #                --seed $seedval
 
-# python main.py --dsName mpi3dtoy  \
+# python main.py --dsName mpi3deasy  \
 #                --encoder fdae  \
 #                --imgSizeToEncoder 64 --imgSizeToMetaModel 84 \
-#                --NWay 2 --KShotMetaTr 5 --KShotMetaVa 5 --KShotMetaTe 5 --KQuery 5  \
+#                --NWay 2 --KShot 5 --KQuery 5  \
 #                --seed $seedval
 
-# python main.py --dsName mpi3dtoyhard  \
+# python main.py --dsName mpi3dhard  \
 #                --encoder fdae  \
 #                --imgSizeToEncoder 64 --imgSizeToMetaModel 84 \
-#                --NWay 2 --KShotMetaTr 5 --KShotMetaVa 5 --KShotMetaTe 5 --KQuery 5   \
+#                --NWay 2 --KShot 5 --KQuery 5   \
 #                --seed $seedval
 
-# python main.py --dsName celebarand  \
-#                --encoder fdae  \
-#                --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
-#                --NWay 2 --KShotMetaTr 5 --KShotMetaVa 5 --KShotMetaTe 5 --KQuery 5   \
-#                --seed $seedval
-
-# python main.py --dsName celebahair  \
-#                --encoder fdae  \
-#                --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
-#                --NWay 2 --KShotMetaTr 5 --KShotMetaVa 5 --KShotMetaTe 5 --KQuery 5   \
-#                --seed $seedval
-
-python main.py --dsName celebaeyes  \
-               --encoder fdae  \
-               --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
-               --NWay 2 --KShotMetaTr 5 --KShotMetaVa 5 --KShotMetaTe 5 --KQuery 5   \
-               --seed $seedval
-
-# python main.py --dsName animals  \
-#                --encoder fdae  \
-#                --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
-#                --NWay 2 --KShotMetaTr 5 --KShotMetaVa 5 --KShotMetaTe 5 --KQuery 5   \
-#                --seed $seedval
-
-#######DRESS with SODA########
-# python main.py --dsName shapes3d  \
-#                --encoder soda  \
-#                --imgSizeToEncoder 64 --imgSizeToMetaModel 84 \
-#                --NWay 2 --KShotMetaTr 5 --KShotMetaVa 5 --KShotMetaTe 5 --KQuery 5  \
-#                --seed $seedval
-
-# python main.py --dsName mpi3dtoy  \
-#                --encoder soda  \
-#                --imgSizeToEncoder 64 --imgSizeToMetaModel 84 \
-#                --NWay 2 --KShotMetaTr 5 --KShotMetaVa 5 --KShotMetaTe 5 --KQuery 5  \
-#                --seed $seedval
-
-# python main.py --dsName mpi3dtoyhard  \
-#                --encoder soda  \
-#                --imgSizeToEncoder 64 --imgSizeToMetaModel 84 \
-#                --NWay 2 --KShotMetaTr 5 --KShotMetaVa 5 --KShotMetaTe 5 --KQuery 5   \
-#                --seed $seedval
-
-# python main.py --dsName celebahard  \
-#                --encoder soda  \
-#                --imgSizeToEncoder 64 --imgSizeToMetaModel 84 \
-#                --NWay 2 --KShotMetaTr 5 --KShotMetaVa 5 --KShotMetaTe 5 --KQuery 5   \
-#                --seed $seedval
-
-
-######PreTrain and FineTune######
+############ PreTrain and FineTune ############
 # python main.py --dsName shapes3d  \
 #                --encoder simclrpretrain  \
 #                --imgSizeToEncoder 64 --imgSizeToMetaModel 64  \
 #                --NWay 2 --KShotMetaTe 5 --KQuery 5 \
 #                --seed $seedval
 
-# python main.py --dsName mpi3dtoy  \
+# python main.py --dsName mpi3deasy  \
 #                --encoder simclrpretrain  \
 #                --imgSizeToEncoder 64 --imgSizeToMetaModel 64  \
-#                --NWay 2 --KShotMetaTe 5 --KQuery 5 \
+#                --NWay 2 --KShot 5 --KQuery 5 \
 #                --seed $seedval
 
-# python main.py --dsName mpi3dtoyhard  \
+# python main.py --dsName mpi3dhard  \
 #                --encoder simclrpretrain  \
 #                --imgSizeToEncoder 64 --imgSizeToMetaModel 64  \
-#                --NWay 2 --KShotMetaTe 5 --KQuery 5 \
+#                --NWay 2 --KShot 5 --KQuery 5 \
 #                --seed $seedval

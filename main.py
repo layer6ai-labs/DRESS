@@ -138,7 +138,6 @@ def test(meta_model, task_generator, loss_fn, descriptor, args):
 if __name__ == "__main__":
     parser = get_args_parser()
     args = parser.parse_args()
-    assert min(args.NWay, args.KShotMetaTr, args.KShotMetaVa, args.KQuery) > 0
     fix_seed(args.seed)
 
     # Load train/validation/test datasets
@@ -156,7 +155,7 @@ if __name__ == "__main__":
     encoder = get_encoder(args, DEVICE)        
     descriptor = get_descriptor(encoder, args)
 
-    print(f"<<<<<<<<<<Running {descriptor}...>>>>>>>>>")
+    print(f"<<<<<<<<<<Running {descriptor} on {args.dsName}...>>>>>>>>>")
     # Supervised meta-learning
     if args.encoder in ['sup', 'scratch']:
         meta_train_partitions = meta_train_partitions_supervised

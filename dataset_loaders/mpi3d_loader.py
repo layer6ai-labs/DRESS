@@ -44,33 +44,20 @@ def build_transforms(meta_split, args):
     return img_transforms
 
 
-def _load_mpi3d(args, ds_type, meta_split_type):
-    if ds_type == "toy":
-        datafile_path = os.path.join(DATADIR, "mpi3d", "mpi3d_toy.npz")
-    else:
-        datafile_path = os.path.join(DATADIR, "mpi3d", "real3d_complicated_shapes_ordered.npz")
-    print(f"Loading mpi3d {ds_type} data from {datafile_path}...")
+def _load_mpi3d(args, meta_split_type):
+    datafile_path = os.path.join(DATADIR, "mpi3d", "mpi3d_toy.npz")
+    print(f"Loading mpi3d data from {datafile_path}...")
     mpi3d_imgs = np.load(datafile_path)['images']
     n_imgs = mpi3d_imgs.shape[0]
     
-    if ds_type == "toy":
-        assert n_imgs == 1_036_800
-        n_train_imgs = 1_000_000
-        n_val_imgs = 6_800
-        n_test_imgs = 30_000
-        # The data is indexed with the following dimension arrangement, 
-        # corresponding to the seven factors:
-        # 6 X 6 X 2 X 3 X 3 X 40 X 40
-        attrs_counts = [6,6,2,3,3,40,40]
-    else:
-        assert n_imgs == 460_800
-        n_train_imgs = 400_000
-        n_val_imgs = 10_800
-        n_test_imgs = 50_000
-        # The data is indexed with the following dimension arrangement, 
-        # corresponding to the seven factors:
-        # 4 X 4 X 2 X 3 X 3 X 40 X 40
-        attrs_counts = [4,4,2,3,3,40,40]
+    assert n_imgs == 1_036_800
+    n_train_imgs = 1_000_000
+    n_val_imgs = 6_800
+    n_test_imgs = 30_000
+    # The data is indexed with the following dimension arrangement, 
+    # corresponding to the seven factors:
+    # 6 X 6 X 2 X 3 X 3 X 40 X 40
+    attrs_counts = [6,6,2,3,3,40,40]
     assert n_imgs == n_train_imgs + n_val_imgs + n_test_imgs
 
     # get the seven factor values of each image by ordered indices
@@ -96,7 +83,7 @@ def _load_mpi3d(args, ds_type, meta_split_type):
         MPI3D_ATTRIBUTES_NUM_ANGULAR_VALUES, MPI3D_ATTRIBUTES_NUM_ANGULAR_VALUES
     
     
-    print(f"[MPI3D_{ds_type}_{meta_split_type}] Getting meta splits.....")
+    print(f"[MPI3D_{meta_split_type}] Getting meta splits.....")
     # get meta split indices
     perm = np.arange(n_imgs)
     np.random.shuffle(perm)
@@ -173,14 +160,8 @@ def _load_mpi3d(args, ds_type, meta_split_type):
         metatest_partitions  
     )
 
-def load_mpi3d_toy(args):
-    return _load_mpi3d(args, ds_type='toy', meta_split_type='easy')
+def load_mpi3d_easy(args):
+    return _load_mpi3d(args, meta_split_type='easy')
 
-def load_mpi3d_toy_hard(args):
-    return _load_mpi3d(args, ds_type='toy', meta_split_type='hard')
-
-def load_mpi3d_complex(args):
-    return _load_mpi3d(args, ds_type='complex', meta_split_type='easy')
-
-def load_mpi3d_complex_hard(args):
-    return _load_mpi3d(args, ds_type='complex', meta_split_type='hard')
+def load_mpi3d_hard(args):
+    return _load_mpi3d(args, meta_split_type='hard')

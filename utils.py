@@ -13,7 +13,7 @@ if torch.cuda.device_count() > 1:
     print("Let's use", torch.cuda.device_count(), "GPUs!!!")
 # meta-training setup
 METATRAIN_OUTER_EPISODES = 30000 # originally 60000 episodes in cactus paper
-METAVALID_OUTER_INTERVAL = 1000 # runs very rarely. currently not using early stopping. just for code integrity.
+METAVALID_OUTER_INTERVAL = 3000 # runs very rarely. currently not using early stopping. just for code integrity.
 METATRAIN_INNER_UPDATES = 5
 METAVALID_INNER_UPDATES = METATEST_INNER_UPDATES = 5 # reduced from original 50 updates in CACTUS paper
 NUM_TASKS_METATRAIN = 8
@@ -29,7 +29,8 @@ FINETUNE_STEPS = 5
 FINETUNE_LR = 0.05
 # Meta-GMVAE setup
 GMVAE_METATRAIN_LR = 1e-3
-# embedding & clustering setup
+# Dino & deepcluster setup
+NUM_ENCODING_PARTITIONS = 50
 NUM_ENCODING_CLUSTERS = 300 # originally 500 in cactus paper, taking way too long
 # folders for saving results
 DATADIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data")
@@ -42,13 +43,11 @@ RESULTSDIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "results")
 for dirname in [DATADIR, MODELDIR, ENCODERDIR, CLUSTERDIR, LEARNCURVEDIR]:
     os.makedirs(dirname, exist_ok=True)
 
-
 def fix_seed(seed):
     random.seed(seed)
     np.random.seed(seed)
     torch.manual_seed(seed)
     torch.cuda.manual_seed(seed)
-
 
 def get_descriptor(encoder, args):
     if args.dsName.startswith("mpi3d"):
@@ -57,15 +56,14 @@ def get_descriptor(encoder, args):
         dsName_base = "celeba"
     else:
         dsName_base = args.dsName
-    if args.encoder in ['sup', 'supall', 'supora', 'scratch']:
-        # not using an encoder for embeddings (and clustering)
-        descriptor = f'{args.dsName}_{args.encoder}' 
-    elif args.encoder == "scratch":
-        # for model without meta-training, doesn't matter what attribute splits are
+    if args.encoder in ['sup', 'supora']:
+        descriptor = f'{args.dsName}_{args.encoder}'
+    elif args.encoder in ["supall", "scratch"]:
+        # doesn't matter what attribute splits are
         descriptor = f'{dsName_base}_{args.encoder}'
     else:
         # using self-supervised/unsupervised encoder, doesn't matter what attribute splits are
-        descriptor = f'{dsName_base}_{args.encoder}_to_{encoder.latent_dim}D_encSpace'
+        descriptor = f'{dsName_base}_{args.encoder}_{encoder.latent_dim}D_latent'
     return descriptor
 
 
@@ -150,15 +148,8 @@ def get_args_parser():
     parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument('--dsName', 
                         help='dataset for meta-learning', 
-                        choices=["omniglot", 
-                                 "celebarand", 
-                                 "celebahair",
-                                 "celebaeyes",
-                                 "animals",
-                                 "mpi3dtoy",
-                                 "mpi3dtoyhard",
-                                 "mpi3dcomplex",
-                                 "mpi3dcomplexhard",
+                        choices=["mpi3deasy",
+                                 "mpi3dhard",
                                  "shapes3d"],
                         required=True)
     parser.add_argument('--encoder',
@@ -170,16 +161,9 @@ def get_args_parser():
                                  "simclrpretrain",
                                  "dino", 
                                  "deepcluster", 
-                                 "vanillavae", 
-                                 "factorvae", 
-                                 "dlqvae",
                                  "fdae",
                                  "soda"],
                         required=True)
-    parser.add_argument('--numEncodingPartitions',
-                        help='number of partitions derived from encoding each containing classes',
-                        type=int,
-                        default=-1)
     parser.add_argument('--imgSizeToEncoder',
                         help='image size to encoders',
                         type=int,
@@ -192,16 +176,8 @@ def get_args_parser():
                         help='number of classes in each classification task',
                         type=int,
                         required=True)
-    parser.add_argument('--KShotMetaTr',
-                        help='Shots for meta-training tasks (not used for pretrain and finetune)',
-                        type=int,
-                        default=5)
-    parser.add_argument('--KShotMetaVa',
-                        help='Shots for meta-validation tasks (not used for pretrain and finetune)',
-                        type=int,
-                        default=5)
-    parser.add_argument('--KShotMetaTe',
-                        help='Shots for meta-testing tasks',
+    parser.add_argument('--KShot',
+                        help='Shots for each few-shot task (same across all tasks in meta splits)',
                         type=int,
                         required=True)
     parser.add_argument('--KQuery',
