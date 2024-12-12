@@ -32,13 +32,8 @@ def generate_attributes_based_partitions(attributes, code_sizes_per_attributes, 
     assert order <= attributes.shape[1]
 
     num_partitions = 0
-    partitions = []
-    if meta_split == "meta_train":
-        n_samples_minimal = args.KShotMetaTr + args.KQuery 
-    elif meta_split == "meta_valid": 
-        n_samples_minimal = args.KShotMetaVa + args.KQuery
-    else:
-        n_samples_minimal = args.KShotMetaTe + args.KQuery
+    partitions = []   
+    n_samples_minimal = args.KShot + args.KQuery    
  
     for attr_idxs in tqdm(combinations(range(attributes.shape[1]), order), 
                           desc=f'[{args.dsName}] get_task_from_attributes', 
@@ -169,7 +164,7 @@ def _format_partition(list_of_labels, args):
     # trim clusters with insufficient number of samples 
     # this part should only be invoked for meta-training
     labels_to_prune = [label for label, idxs in partition.items() 
-                       if len(idxs) < args.KShotMetaTr+args.KQuery]
+                       if len(idxs) < args.KShot+args.KQuery]
     for label in labels_to_prune:
         del partition[label]
     # ensure there is enough classes with sufficient samples
@@ -216,12 +211,12 @@ def generate_unsupervised_partitions(
                                     n_init=1, 
                                     max_iter=100).fit(encoding)
                     uniques, counts = np.unique(kmeans.labels_, return_counts=True)
-                    num_big_enough_clusters = np.sum(counts > (args.KShotMetaTr+args.KQuery))
+                    num_big_enough_clusters = np.sum(counts > (args.KShot+args.KQuery))
                     if num_big_enough_clusters > args.NWay * 3:
                         break
                     else:
                         tqdm.write("Too few classes ({}) with greater than {} examples.".format(
-                                    num_big_enough_clusters, args.KShotMetaTr+args.KQuery))
+                                    num_big_enough_clusters, args.KShot+args.KQuery))
                         tqdm.write('Frequency: {}'.format(counts))
                 assert max(kmeans.labels_)+1 == NUM_ENCODING_CLUSTERS
                 cluster_idxs.append(np.array(kmeans.labels_))

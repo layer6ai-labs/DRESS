@@ -57,14 +57,14 @@ def _load_mpi3d(args, meta_split_type):
     # The data is indexed with the following dimension arrangement, 
     # corresponding to the seven factors:
     # 6 X 6 X 2 X 3 X 3 X 40 X 40
-    attrs_counts = [6,6,2,3,3,40,40]
+    MPI3D_ATTRIBUTES_COUNTS = [6,6,2,3,3,40,40]
     assert n_imgs == n_train_imgs + n_val_imgs + n_test_imgs
 
     # get the seven factor values of each image by ordered indices
-    idx_bases = np.prod(attrs_counts)/np.cumprod(attrs_counts)
+    idx_bases = np.prod(MPI3D_ATTRIBUTES_COUNTS)/np.cumprod(MPI3D_ATTRIBUTES_COUNTS)
     mpi3d_attrs = []
     remainders = np.arange(n_imgs)
-    for i in range(len(attrs_counts)):
+    for i in range(len(MPI3D_ATTRIBUTES_COUNTS)):
         mpi3d_attrs_one_dim, remainders = np.divmod(remainders, idx_bases[i])
         mpi3d_attrs.append(np.expand_dims(mpi3d_attrs_one_dim, axis=1))
     mpi3d_attrs = np.concatenate(mpi3d_attrs,axis=1)
@@ -79,7 +79,7 @@ def _load_mpi3d(args, meta_split_type):
         mpi3d_attrs[:, -1], mpi3d_attrs[:, -2] = \
             np.floor(mpi3d_attrs[:,-1]), np.floor(mpi3d_attrs[:,-2])
         
-    attrs_counts[-1], attrs_counts[-2] = \
+    MPI3D_ATTRIBUTES_COUNTS[-1], MPI3D_ATTRIBUTES_COUNTS[-2] = \
         MPI3D_ATTRIBUTES_NUM_ANGULAR_VALUES, MPI3D_ATTRIBUTES_NUM_ANGULAR_VALUES
     
     
@@ -123,29 +123,29 @@ def _load_mpi3d(args, meta_split_type):
     # generate partitions with binary classification on celeba attributes
     metatrain_partitions_supervised = generate_attributes_based_partitions(
                                         metatrain_attrs, 
-                                        np.array(attrs_counts)[MPI3D_ATTRIBUTES_IDX_META_TRAIN], 
+                                        np.array(MPI3D_ATTRIBUTES_COUNTS)[MPI3D_ATTRIBUTES_IDX_META_TRAIN], 
                                         'meta_train', 
                                         args)
     metavalid_partitions = generate_attributes_based_partitions(
                                         metavalid_attrs, 
-                                        np.array(attrs_counts)[MPI3D_ATTRIBUTES_IDX_META_VALID], 
+                                        np.array(MPI3D_ATTRIBUTES_COUNTS)[MPI3D_ATTRIBUTES_IDX_META_VALID], 
                                         'meta_valid', 
                                         args)
     metatest_partitions = generate_attributes_based_partitions(
                                         metatest_attrs, 
-                                        np.array(attrs_counts)[MPI3D_ATTRIBUTES_IDX_META_TEST],
+                                        np.array(MPI3D_ATTRIBUTES_COUNTS)[MPI3D_ATTRIBUTES_IDX_META_TEST],
                                         'meta_test', 
                                         args)
     
     metatrain_partitions_supervised_all = generate_attributes_based_partitions(
                                         metatrain_attrs_all,
-                                        np.array(attrs_counts),
+                                        np.array(MPI3D_ATTRIBUTES_COUNTS),
                                         'meta_train',
                                         args)
 
     metatrain_partitions_supervised_oracle = generate_attributes_based_partitions(
                                         metatrain_attrs_oracle,
-                                        np.array(attrs_counts)[MPI3D_ATTRIBUTES_IDX_META_TEST],
+                                        np.array(MPI3D_ATTRIBUTES_COUNTS)[MPI3D_ATTRIBUTES_IDX_META_TEST],
                                         'meta_train',
                                         args)
 

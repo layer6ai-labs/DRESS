@@ -53,9 +53,8 @@ cd ~/DRESS
 ########### DeepCluster ###########
 # python main.py --dsName shapes3d  \
 #                --encoder deepcluster \
-#                --numEncodingPartitions 50 \
 #                --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
-#                --NWay 2 --KShotMetaTr 5 --KShotMetaVa 5 --KShotMetaTe 5 --KQuery 5  \
+#                --NWay 2 --KShot 5 --KQuery 5  \
 #                --seed $seedval
             
 # python main.py --dsName mpi3deasy  \
@@ -74,7 +73,7 @@ cd ~/DRESS
 # python main.py --dsName shapes3d  \
 #                --encoder fdae  \
 #                --imgSizeToEncoder 64 --imgSizeToMetaModel 84 \
-#                --NWay 2 --KShotMetaTr 5 --KShotMetaVa 5 --KShotMetaTe 5 --KQuery 5  \
+#                --NWay 2 --KShot 5 --KQuery 5  \
 #                --seed $seedval
 
 # python main.py --dsName mpi3deasy  \
@@ -89,11 +88,17 @@ cd ~/DRESS
 #                --NWay 2 --KShot 5 --KQuery 5   \
 #                --seed $seedval
 
+python main.py --dsName celebaeyes  \
+               --encoder fdae  \
+               --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
+               --NWay 2 --KShot 5 --KQuery 5   \
+               --seed $seedval
+
 ############ PreTrain and FineTune ############
 # python main.py --dsName shapes3d  \
 #                --encoder simclrpretrain  \
 #                --imgSizeToEncoder 64 --imgSizeToMetaModel 64  \
-#                --NWay 2 --KShotMetaTe 5 --KQuery 5 \
+#                --NWay 2 --KShot 5 --KQuery 5 \
 #                --seed $seedval
 
 # python main.py --dsName mpi3deasy  \

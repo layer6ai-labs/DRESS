@@ -20,18 +20,8 @@ def accuracy_fn(preds, labels):
     preds = preds.argmax(dim=1).view(labels.shape)
     return (preds==labels).sum().float() / labels.size(0)
 
-def fast_adapt(batch, inner_learner, loss_fn, num_adaptation_steps, meta_split, args):
-    if meta_split == "meta_train": 
-        K = args.KShotMetaTr 
-    elif meta_split == "meta_valid":
-        K = args.KShotMetaVa
-    elif meta_split == "meta_test":
-        K = args.KShotMetaTe
-    else:
-        print(f"Invalid split: {meta_split}!")
-        exit(1)
-
-    K_te = args.KQuery
+def fast_adapt(batch, inner_learner, loss_fn, num_adaptation_steps, args):
+    K, K_te = args.KShot, args.KQuery
     train_data, train_labels, _, test_data, test_labels, _ = batch
     assert train_data.size(0) == K * args.NWay, f"{train_data.size(0)} VS {K * args.NWay}"
     assert test_data.size(0) == K_te * args.NWay, f"{test_data.size(0)} VS {K_te * args.NWay}"
@@ -66,7 +56,6 @@ def train(meta_model, task_generator, optimizer, loss_fn, descriptor, args):
                                                              inner_learner,
                                                              loss_fn,
                                                              METATRAIN_INNER_UPDATES,
-                                                             'meta_train',
                                                              args)
             
             # meta training update step
@@ -95,7 +84,6 @@ def train(meta_model, task_generator, optimizer, loss_fn, descriptor, args):
                                                                 inner_learner,
                                                                 loss_fn,
                                                                 METAVALID_INNER_UPDATES,
-                                                                'meta_valid',
                                                                 args)
                 meta_valid_loss += inner_test_loss.item()
                 meta_valid_accur += inner_test_accur.item()
@@ -121,14 +109,13 @@ def test(meta_model, task_generator, loss_fn, descriptor, args):
                                                        inner_learner,
                                                        loss_fn,
                                                        METATEST_INNER_UPDATES,
-                                                       'meta_test',
                                                        args)
         meta_test_losses.append(inner_test_loss.item())
         meta_test_accurs.append(inner_test_accur.item())
     
     with open("res.txt", "a") as f:
         f.write(str(datetime.datetime.now())+f' under seed {args.seed}'+'\n')
-        f.write(f"[{descriptor} on {args.dsName} {args.NWay}-way {args.KShotMetaTr}-shot meteTrain {args.KShotMetaVa}-shot metaTest]: " + \
+        f.write(f"[{descriptor} on {args.dsName} {args.NWay}-way {args.KShot}-shot meteTrain {args.KShot}-shot metaTest]: " + \
                 f"Meta test loss: Mean: {np.mean(meta_test_losses):.2f}; Std: {np.std(meta_test_losses):.2f}\n" + \
                 f"Meta test accuracy: Mean: {np.mean(meta_test_accurs)*100:.2f}%; Std: {np.std(meta_test_accurs)*100:.2f}%\n")
     print(f"[{descriptor} on {args.dsName}] testing completed!")

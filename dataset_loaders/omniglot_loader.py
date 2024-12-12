@@ -16,6 +16,7 @@ def load_omniglot(args):
     """
     data_transforms = transforms.Compose([
         transforms.ToTensor(),
+        transforms.Lambda(lambda x: x.repeat(3,1,1))
         #lambda x: 1.0 - x, # originally was in learn2learn example for omniglot, not sure why
     ])
    # Set up both the background and eval dataset

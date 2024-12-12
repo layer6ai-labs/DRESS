@@ -82,8 +82,8 @@ def visualize_constructed_tasks(task_generator, descriptor, args, n_imgs):
             support_samples = [img for (img, lbl) 
                                       in zip(train_data, train_labels)
                                         if lbl==cls]
-            assert len(support_samples) == args.KShotMetaTr
-            inner_grid = outer_grid[cls*2].subgridspec(1, args.KShotMetaTr, wspace=0.0, hspace=0.0)
+            assert len(support_samples) == args.KShot
+            inner_grid = outer_grid[cls*2].subgridspec(1, args.KShot, wspace=0.0, hspace=0.0)
             for i, img in enumerate(support_samples):
                 ax = fig.add_subplot(inner_grid[i])
                 ax.imshow(torch.permute(img, (1,2,0)))
@@ -106,13 +106,13 @@ def visualize_constructed_tasks(task_generator, descriptor, args, n_imgs):
         all_axes = fig.get_axes()
         # label rows
         for i in range(args.NWay):
-            all_axes[i*(args.KShotMetaTr+args.KQuery)].set_ylabel(f"Class {i}", fontsize=34)
+            all_axes[i*(args.KShot+args.KQuery)].set_ylabel(f"Class {i}", fontsize=34)
         # annotate columns (at bottom of figures)
-        support_col_idx = np.floor(args.KShotMetaTr / 2).astype(int)
-        support_ax_idx = (args.NWay-1)*(args.KShotMetaTr+args.KQuery) + support_col_idx
+        support_col_idx = np.floor(args.KShot / 2).astype(int)
+        support_ax_idx = (args.NWay-1)*(args.KShot+args.KQuery) + support_col_idx
         all_axes[support_ax_idx].set_xlabel("Support Samples", fontsize=36)
-        query_col_idx = args.KShotMetaTr + np.floor(args.KQuery / 2).astype(int)  
-        query_ax_idx = (args.NWay-1)*(args.KShotMetaTr+args.KQuery) + query_col_idx      
+        query_col_idx = args.KShot + np.floor(args.KQuery / 2).astype(int)  
+        query_ax_idx = (args.NWay-1)*(args.KShot+args.KQuery) + query_col_idx      
         all_axes[query_ax_idx].set_xlabel("Query Samples", fontsize=36)
                 
         plt.savefig(os.path.join(ENCODERDIR, 
@@ -150,7 +150,9 @@ def get_args_parser():
                         help='dataset for meta-learning', 
                         choices=["mpi3deasy",
                                  "mpi3dhard",
-                                 "shapes3d"],
+                                 "shapes3d",
+                                 "celebaeyes",
+                                 "norb"],
                         required=True)
     parser.add_argument('--encoder',
                         help='encoder for encodings to be clustered',

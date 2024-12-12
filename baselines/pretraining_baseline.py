@@ -119,7 +119,7 @@ def test_pretrain(model, task_generator, descriptor, args):
     test_accures_logistic = []
     for task_id in tqdm(range(NUM_TASKS_METATEST), desc='Testing tasks'):
         task_batch = task_generator.sample_task("meta_test", args)
-        K = args.KShotMetaTe
+        K = args.KShot
         train_data, train_labels, _, test_data, test_labels, _ = task_batch
         train_data = train_data.to(DEVICE)
         test_data = test_data.to(DEVICE)
@@ -164,10 +164,10 @@ def test_pretrain(model, task_generator, descriptor, args):
     res_path = f'{args.dsName}_{args.method}_{args.backbone}'
     with open(os.path.join(RESULTSDIR, f"{res_path}_results.txt"), 'a') as f:
         f.write(str(datetime.datetime.now())+f' under seed {args.seed}'+'\n')
-        f.write(f"[{res_path} {args.NWay}-{args.KShotMetaTe}-shot metaTest] with linear layer: " + \
+        f.write(f"[{res_path} {args.NWay}-{args.KShot}-shot metaTest] with linear layer: " + \
                 f"Test loss: Mean: {np.mean(test_losses):.2f}; Std: {np.std(test_losses):.2f}\n" + \
                 f"Test accuracy: Mean: {np.mean(test_accures)*100:.2f}%; Std: {np.std(test_accures)*100:.2f}%\n")
-        f.write(f"[{descriptor} {args.NWay}-{args.KShotMetaTe}-shot metaTest] with logistic regression:" + \
+        f.write(f"[{descriptor} {args.NWay}-{args.KShot}-shot metaTest] with logistic regression:" + \
                 f"Test accuracy: Mean: {np.mean(test_accures_logistic)*100:.2f}%; Std: {np.std(test_accures_logistic)*100:.2f}%\n")
     print(f"[{descriptor}] testing completed!")
     return test_losses, test_accures, test_accures_logistic

@@ -12,10 +12,7 @@ class DinoV2(nn.Module):
         print("DinoV2 initialized successfully!")
    
     def encode(self, input_data: torch.Tensor) -> torch.Tensor:
-        if input_data.size(1) != 3:
-            assert input_data.size(1) == 1
-            # for now, just repeat the channels to get three channels
-            input_data = torch.tile(input_data, (1,3,1,1))
+        assert input_data.size(1) == 3
         with torch.no_grad():
             encodings = self.dino_model(input_data)
         assert encodings.size(1) == self.latent_dim
