@@ -30,6 +30,14 @@ cd ~/DRESS
 #                 --NWay 2 --KShot 5 --KQuery 5 \
 #                 --seed $seedval
 # done
+
+for supmethod in "sup" "supall" "supora" "scratch"; do
+    python main.py --dsName norb  \
+                --encoder $supmethod \
+                --imgSizeToEncoder -1 --imgSizeToMetaModel 84 \
+                --NWay 2 --KShot 5 --KQuery 5 \
+                --seed $seedval
+done
  
 ############# Dino #############
 # python main.py --dsName shapes3d  \
@@ -49,6 +57,12 @@ cd ~/DRESS
 #                --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
 #                --NWay 2 --KShot 5 --KQuery 5  \
 #                --seed $seedval
+
+python main.py --dsName norb  \
+               --encoder dino \
+               --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
+               --NWay 2 --KShot 5 --KQuery 5  \
+               --seed $seedval
 
 ########### DeepCluster ###########
 # python main.py --dsName shapes3d  \
@@ -88,11 +102,11 @@ cd ~/DRESS
 #                --NWay 2 --KShot 5 --KQuery 5   \
 #                --seed $seedval
 
-python main.py --dsName celebaeyes  \
-               --encoder fdae  \
-               --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
-               --NWay 2 --KShot 5 --KQuery 5   \
-               --seed $seedval
+# python main.py --dsName norb  \
+#                --encoder fdae  \
+#                --imgSizeToEncoder 96 --imgSizeToMetaModel 84 \
+#                --NWay 2 --KShot 5 --KQuery 5   \
+#                --seed $seedval
 
 ############ PreTrain and FineTune ############
 # python main.py --dsName shapes3d  \

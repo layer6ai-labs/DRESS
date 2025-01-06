@@ -201,6 +201,10 @@ if __name__ == "__main__":
         base_model = CNN4(output_size=args.NWay,
                             hidden_size=32,
                             layers=4).to(DEVICE)
+    elif args.dsName == "norb":
+        base_model = CNN4(output_size=args.NWay,
+                            hidden_size=32,
+                            layers=4).to(DEVICE)
     else:
         print(f"Unimplemented base model for dataset {args.dsName}")
         exit(1)
@@ -210,7 +214,7 @@ if __name__ == "__main__":
     opt = optim.Adam(meta_model.parameters(), METATRAIN_OUTER_LR)
     loss_fn = nn.CrossEntropyLoss(reduction='mean')
 
-    if args.encoder == "Scratch":
+    if args.encoder == "scratch":
         print(f"{descriptor} Directly adapt the model in meta-test split...")
     else:
         model_path = os.path.join(MODELDIR, f"{descriptor}.ckpt")

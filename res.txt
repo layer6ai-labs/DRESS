@@ -1,4 +1,2 @@
 =============Under seed 1234============
-2024-12-10 16:35:46.589161 under seed 1234
-[celeba_fdae_30D_latent on celebaeyes 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 0.97; Std: 0.38
-Meta test accuracy: Mean: 55.16%; Std: 16.11%
+
