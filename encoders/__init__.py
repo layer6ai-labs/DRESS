@@ -42,6 +42,11 @@ def get_encoder(args, device):
             code_length = 100
             code_length_reduced = 40
             levels_per_dim = 200
+        elif args.dsName == "norb":
+            n_semantic_groups = 8
+            code_length = 80
+            code_length_reduced = 40
+            levels_per_dim = 200
         elif args.dsName == "animals":
             n_semantic_groups = 8
             code_length = 100

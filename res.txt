@@ -1,2 +1,20 @@
 =============Under seed 1234============
 
+2025-01-06 13:42:27.541868 under seed 1234
+[norb_sup on norb 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 2.16; Std: 1.70
+Meta test accuracy: Mean: 63.38%; Std: 19.01%
+2025-01-06 16:32:01.542020 under seed 1234
+[norb_supall on norb 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 0.43; Std: 0.47
+Meta test accuracy: Mean: 79.16%; Std: 23.59%
+2025-01-06 19:35:16.020190 under seed 1234
+[norb_supora on norb 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 0.31; Std: 0.35
+Meta test accuracy: Mean: 81.60%; Std: 23.19%
+2025-01-06 19:35:45.059587 under seed 1234
+[norb_scratch on norb 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 0.69; Std: 0.72
+Meta test accuracy: Mean: 74.17%; Std: 25.24%
+2025-01-06 23:04:58.206311 under seed 1234
+[norb_dino_384D_latent on norb 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 1.08; Std: 0.73
+Meta test accuracy: Mean: 64.15%; Std: 18.53%
+2025-01-07 14:00:51.089570 under seed 1234
+[norb_fdae_16D_latent on norb 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 0.49; Std: 0.58
+Meta test accuracy: Mean: 78.70%; Std: 24.37%

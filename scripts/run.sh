@@ -31,13 +31,13 @@ cd ~/DRESS
 #                 --seed $seedval
 # done
 
-for supmethod in "sup" "supall" "supora" "scratch"; do
-    python main.py --dsName norb  \
-                --encoder $supmethod \
-                --imgSizeToEncoder -1 --imgSizeToMetaModel 84 \
-                --NWay 2 --KShot 5 --KQuery 5 \
-                --seed $seedval
-done
+# for supmethod in "sup" "supall" "supora" "scratch"; do
+#     python main.py --dsName norb  \
+#                 --encoder $supmethod \
+#                 --imgSizeToEncoder -1 --imgSizeToMetaModel 84 \
+#                 --NWay 2 --KShot 5 --KQuery 5 \
+#                 --seed $seedval
+# done
  
 ############# Dino #############
 # python main.py --dsName shapes3d  \
@@ -58,11 +58,11 @@ done
 #                --NWay 2 --KShot 5 --KQuery 5  \
 #                --seed $seedval
 
-python main.py --dsName norb  \
-               --encoder dino \
-               --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
-               --NWay 2 --KShot 5 --KQuery 5  \
-               --seed $seedval
+# python main.py --dsName norb  \
+#                --encoder dino \
+#                --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
+#                --NWay 2 --KShot 5 --KQuery 5  \
+#                --seed $seedval
 
 ########### DeepCluster ###########
 # python main.py --dsName shapes3d  \
@@ -83,6 +83,12 @@ python main.py --dsName norb  \
 #                --NWay 2 --KShot 5 --KQuery 5  \
 #                --seed $seedval
 
+python main.py --dsName norb  \
+               --encoder deepcluster \
+               --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
+               --NWay 2 --KShot 5 --KQuery 5  \
+               --seed $seedval
+
 ############ DRESS with FDAE ############
 # python main.py --dsName shapes3d  \
 #                --encoder fdae  \
@@ -102,11 +108,11 @@ python main.py --dsName norb  \
 #                --NWay 2 --KShot 5 --KQuery 5   \
 #                --seed $seedval
 
-# python main.py --dsName norb  \
-#                --encoder fdae  \
-#                --imgSizeToEncoder 96 --imgSizeToMetaModel 84 \
-#                --NWay 2 --KShot 5 --KQuery 5   \
-#                --seed $seedval
+python main.py --dsName norb  \
+               --encoder fdae  \
+               --imgSizeToEncoder 96 --imgSizeToMetaModel 84 \
+               --NWay 2 --KShot 5 --KQuery 5   \
+               --seed $seedval
 
 ############ PreTrain and FineTune ############
 # python main.py --dsName shapes3d  \

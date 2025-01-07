@@ -46,7 +46,7 @@ class Norb(Dataset):
         print("Norb dataset initialized!")
 
     def __len__(self):
-        return len(self.ds_orig)
+        return np.shape(self.attrs)[0]
 
     def __getitem__(self, index):
         img, attrs = self.images[index], self.attrs[index]
