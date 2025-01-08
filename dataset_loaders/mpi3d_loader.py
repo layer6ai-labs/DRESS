@@ -71,7 +71,7 @@ def _load_mpi3d(args, meta_split_type):
     assert np.shape(mpi3d_attrs) == (n_imgs, 7)
 
     # process the last two attributes, robot arm horizontal axis, robot arm vertical axis
-    # originally each of them has 40 values (4.5 degrees interval, too hard to identify even for human eyes, under the camera height variation)
+    # originally each of them has 40 values (4.5 degrees interval, too hard to identify even for human, under the camera height variation)
     if MPI3D_ATTRIBUTES_NUM_ANGULAR_VALUES != 40:
         assert MPI3D_ATTRIBUTES_NUM_ANGULAR_VALUES < 40
         mpi3d_attrs[:, -1] *= (MPI3D_ATTRIBUTES_NUM_ANGULAR_VALUES / 40) 

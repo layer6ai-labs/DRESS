@@ -151,7 +151,7 @@ def get_args_parser():
                         choices=["mpi3deasy",
                                  "mpi3dhard",
                                  "shapes3d",
-                                 "celebaeyes",
+                                 "celebanotable",
                                  "norb"],
                         required=True)
     parser.add_argument('--encoder',

@@ -38,6 +38,14 @@ cd ~/DRESS
 #                 --NWay 2 --KShot 5 --KQuery 5 \
 #                 --seed $seedval
 # done
+
+for supmethod in "sup" "supall" "supora" "scratch"; do
+    python main.py --dsName celebanotable  \
+                --encoder $supmethod \
+                --imgSizeToEncoder -1 --imgSizeToMetaModel 84 \
+                --NWay 2 --KShot 5 --KQuery 5 \
+                --seed $seedval
+done
  
 ############# Dino #############
 # python main.py --dsName shapes3d  \
@@ -64,6 +72,12 @@ cd ~/DRESS
 #                --NWay 2 --KShot 5 --KQuery 5  \
 #                --seed $seedval
 
+python main.py --dsName celebanotable  \
+               --encoder dino \
+               --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
+               --NWay 2 --KShot 5 --KQuery 5  \
+               --seed $seedval
+
 ########### DeepCluster ###########
 # python main.py --dsName shapes3d  \
 #                --encoder deepcluster \
@@ -83,11 +97,17 @@ cd ~/DRESS
 #                --NWay 2 --KShot 5 --KQuery 5  \
 #                --seed $seedval
 
-python main.py --dsName norb  \
-               --encoder deepcluster \
-               --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
-               --NWay 2 --KShot 5 --KQuery 5  \
-               --seed $seedval
+# python main.py --dsName norb  \
+#                --encoder deepcluster \
+#                --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
+#                --NWay 2 --KShot 5 --KQuery 5  \
+#                --seed $seedval
+
+# python main.py --dsName celebanotable  \
+#                --encoder deepcluster \
+#                --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
+#                --NWay 2 --KShot 5 --KQuery 5  \
+#                --seed $seedval
 
 ############ DRESS with FDAE ############
 # python main.py --dsName shapes3d  \
@@ -108,9 +128,15 @@ python main.py --dsName norb  \
 #                --NWay 2 --KShot 5 --KQuery 5   \
 #                --seed $seedval
 
-python main.py --dsName norb  \
+# python main.py --dsName norb  \
+#                --encoder fdae  \
+#                --imgSizeToEncoder 96 --imgSizeToMetaModel 84 \
+#                --NWay 2 --KShot 5 --KQuery 5   \
+#                --seed $seedval
+
+python main.py --dsName celebanotable  \
                --encoder fdae  \
-               --imgSizeToEncoder 96 --imgSizeToMetaModel 84 \
+               --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
                --NWay 2 --KShot 5 --KQuery 5   \
                --seed $seedval
 

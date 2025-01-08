@@ -96,17 +96,22 @@ class DeepCluster(nn.Module):
         self.deepCluster_model.load_state_dict(checkpoint)
 
         # preprocess the celebA images as required by the deepCluster alex net
-        self.data_transform = transforms.Normalize(
+        self.data_transform = None
+        self.dsName = args.dsName
+        if self.dsName.startswith("celeba"):
+            self.data_transform = transforms.Normalize(
                                     mean=[0.485, 0.456, 0.406],
-                                    std=[0.229, 0.224, 0.225]
-                              )
+                                    std=[0.229, 0.224, 0.225])
         self.pca = PCA(self.latent_dim)
 
         print(f"DeepCluster trained alex net for {args.dsName} constructed and loaded successfully!")
     
     def encode(self, input_data: torch.Tensor) -> torch.Tensor:
         assert input_data.size(1) == 3, "deepcluster only takes input with 3 channels!"
-        input_data = self.data_transform(input_data)
+        if self.dsName.startswith("celeba"):
+            # for now only do the color channel normalization on celeba
+            # this should match what's done in training the deepcluster models
+            input_data = self.data_transform(input_data)
         with torch.no_grad():
             encodings = self.deepCluster_model(input_data)
         assert encodings.size(1) == 4096  
