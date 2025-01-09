@@ -97,11 +97,11 @@ cd ~/DRESS
 #                --NWay 2 --KShot 5 --KQuery 5  \
 #                --seed $seedval
 
-python main.py --dsName norb  \
-               --encoder deepcluster \
-               --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
-               --NWay 2 --KShot 5 --KQuery 5  \
-               --seed $seedval
+# python main.py --dsName norb  \
+#                --encoder deepcluster \
+#                --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
+#                --NWay 2 --KShot 5 --KQuery 5  \
+#                --seed $seedval
 
 ############ DRESS with FDAE ############
 # python main.py --dsName shapes3d  \
@@ -127,6 +127,12 @@ python main.py --dsName norb  \
 #                --imgSizeToEncoder 96 --imgSizeToMetaModel 84 \
 #                --NWay 2 --KShot 5 --KQuery 5   \
 #                --seed $seedval
+
+python main.py --dsName celebanotable  \
+               --encoder fdae \
+               --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
+               --NWay 2 --KShot 5 --KQuery 5  \
+               --seed $seedval
 
 ############ PreTrain and FineTune ############
 # python main.py --dsName shapes3d  \

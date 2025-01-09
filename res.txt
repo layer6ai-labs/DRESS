@@ -21,3 +21,6 @@ Meta test accuracy: Mean: 78.70%; Std: 24.37%
 2025-01-08 08:43:03.580019 under seed 1234
 [norb_deepcluster_256D_latent on norb 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 0.89; Std: 1.17
 Meta test accuracy: Mean: 76.77%; Std: 26.71%
+2025-01-09 14:10:48.736401 under seed 1234
+[celeba_fdae_24D_latent on celebanotable 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 0.81; Std: 0.44
+Meta test accuracy: Mean: 64.40%; Std: 18.41%
