@@ -13,12 +13,44 @@ sys.path.append("../")
 from partition_generators import generate_attributes_based_partitions
 from utils import *
 
-[9, 15, 15, 15, 4, 15, 6, 15, 11, 15, 15, 14, 3, 15, 15, 15, 15, 5, 5, 14, 4, 4, 4, 15, 15, 15, 15, 4]
-ATTRIBUTE_BINARY_CORRESPONDANCE = {
-    "bill_shape": [0, 9],
-    "wing_color": [9, 15],
-    "upperparts_color"
-}
+N_IMGS = 11788
+N_BINARY_ATTRS = 312
+ATTR_BINARY_CORRESPONDENCE = [
+    [0, 9], # bill_shape f0
+    [9, 15], # wing_color f1
+    [24, 15], # upperparts_color f2
+    [39, 15], # underparts_color f3
+    [54, 4], # breast pattern f4
+    [58, 15], # back_color f5
+    [73, 6], # tail_shape f6
+    [79, 15], # upper_tail_color f7
+    [94, 11], # head_pattern f8
+    [105, 15], # breast_color f9
+    [120, 15], # throat_color f10
+    [135, 14], # eye_color f11
+    [149, 3], # bill_length f12
+    [152, 15], # forehead_color f13
+    [167, 15], # undertail_color f14
+    [182, 15], # nape_color f15
+    [197, 15], # belly_color f16
+    [212, 5], # wing_shape f17
+    [217, 5], # size f18
+    [222, 14], # shape f19
+    [236, 4], # back_pattern f20
+    [240, 4], # tail_pattern f21
+    [244, 4], # belly_pattern f22
+    [248, 15], # primary_color f23
+    [263, 15], # leg_color f24
+    [278, 15], # bill_color f25
+    [293, 15], # crown_color f26
+    [308, 4], # wing_pattern f27
+]
+ATTR_BINARY_COUNTS = np.array([i[1] for i in ATTR_BINARY_CORRESPONDENCE])
+assert np.sum(ATTR_BINARY_COUNTS) == N_BINARY_ATTRS 
+N_ATTRS = len(ATTR_BINARY_CORRESPONDENCE) # should have 28 processed attributes
+
+BIRDS_DIR = os.path.join(DATADIR, "birds")
+
 
 class Birds(Dataset):
     def __init__(self, imgs, attrs, transforms):
@@ -33,53 +65,43 @@ class Birds(Dataset):
     def __getitem__(self, index):
         return (self.transforms(self.imgs[index]), torch.tensor(self.attrs[index]))
 
-def process_birds_binary_attributes(attrs, n_binaries_per_attr):
+def process_birds_binary_attributes(attrs):
     attrs_processed = []
-    start_counter = 0
-    for n_binaries in n_binaries_per_attr:
+    for start_id, n_binaries in ATTR_BINARY_CORRESPONDENCE:
         template = np.arange(n_binaries)
-        attrs_processed.append(np.dot(attrs[start_counter:start_counter+n_binaries], template))
-        start_counter += n_binaries
+        attrs_processed.append(np.dot(attrs[start_id:start_id+n_binaries], template))
     return attrs_processed
-
 
 def _load_birds(args):
     # Resize happens later in the pipeline
     data_transforms = transforms.Compose([
         transforms.ToTensor()
     ])
-    birds_dir = os.path.join(DATADIR, "birds")
-    n_imgs = 11788
-    n_binary_attrs = 312
-    n_binaries_per_attr = \
-        [9, 15, 15, 15, 4, 15, 6, 15, 11, 15, 15, 14, 3, 15, 15, 15, 15, 5, 5, 14, 4, 4, 4, 15, 15, 15, 15, 4]
-    assert np.sum(n_binaries_per_attr) == n_binary_attrs
-    n_attrs = len(n_binaries_per_attr) # should have 28 general features
     
     print("Loading images and parsing attributes")
     imgs_all, attrs_all = [], []
-    names_lines = open(os.path.join(birds_dir, "images.txt")).readlines()
-    attrs_lines = open(os.path.join(birds_dir, "attributes", "image_attribute_labels.txt")).readlines()
-    for i in trange(n_imgs):
+    names_lines = open(os.path.join(BIRDS_DIR, "images.txt")).readlines()
+    attrs_lines = open(os.path.join(BIRDS_DIR, "attributes", "image_attribute_labels.txt")).readlines()
+    for i in trange(N_IMGS):
         tokens = names_lines[i].split()
         img_idx, img_filename = int(tokens[0]), tokens[1]
         assert img_filename.endswith('.jpg')
-        imgs_all.append(Image.open(os.path.join(birds_dir, "images", img_filename)))
+        imgs_all.append(Image.open(os.path.join(BIRDS_DIR, "images", img_filename)))
         attrs_tmp = []
-        for j in range(i*n_attrs, (i+1)*n_attrs):
+        for j in range(i*N_BINARY_ATTRS, (i+1)*N_BINARY_ATTRS):
             tokens = attrs_lines[j].split()
             assert img_idx == int(tokens[0])
             attr_exist = int(tokens[2]) # binary attribute value
             attrs_tmp.append(attr_exist)
-        assert len(attrs_tmp) == n_binary_attrs
-        attrs_processed = process_birds_binary_attributes(attrs_tmp, n_binaries_per_attr)
-        assert len(attrs_processed) == n_attrs
+        assert len(attrs_tmp) == N_BINARY_ATTRS
+        attrs_processed = process_birds_binary_attributes(attrs_tmp)
+        assert len(attrs_processed) == N_ATTRS
         attrs_all.append(attrs_processed)
              
 
     # read meta split indices
     metatrain_idxs, metatest_idxs = [], []
-    with open(os.path.join(birds_dir, "train_test_split.txt")) as f:
+    with open(os.path.join(BIRDS_DIR, "train_test_split.txt")) as f:
         for split_line in f:
             tokens = split_line.split()
             img_idx, split_idx = int(tokens[0]), int(tokens[1])
@@ -92,60 +114,62 @@ def _load_birds(args):
     metatrain_ds = Birds([imgs_all[i] for i in metatrain_idxs], 
                          [attrs_all[i] for i in metatrain_idxs], 
                          data_transforms)
+    metatrain_attrs_all = metatrain_ds.attrs
     metavalid_ds = metatrain_ds
+    metavalid_attrs = metatrain_attrs_all
     metatest_ds = Birds([imgs_all[i] for i in metatest_idxs], 
                         [attrs_all[i] for i in metatest_idxs], 
                         data_transforms)
+    metatest_attrs = metatest_ds.attrs
 
-    CELEBA_ATTRIBUTES_IDX_META_TRAIN = np.arange()
-    CELEBA_ATTRIBUTES_IDX_META_VALID = np.arange(10) # without early stopping, meta validation doesn't matter
-    CELEBA_ATTRIBUTES_IDX_META_TEST = np.arange(73, n_attrs)
+    ATTRS_IDX_METATRAIN = [1,2,3,4,5,9,17,18,19,22,27]
+    ATTRS_IDX_METAVALID = [1,2,3] # without early stopping, meta validation doesn't matter
+    ATTRS_IDX_METATEST = [0,6,7,8,12,21,25]
 
     # Use disjoint subset of attrs for meta splits
-    celeba_meta_train_attrs = celeba_meta_train_attrs_all[:,CELEBA_ATTRIBUTES_IDX_META_TRAIN]
-    celeba_meta_valid_attrs = celeba_meta_valid_attrs[:,CELEBA_ATTRIBUTES_IDX_META_VALID]
-    celeba_meta_test_attrs = celeba_meta_test_attrs[:,CELEBA_ATTRIBUTES_IDX_META_TEST]
+    metatrain_attrs = metatrain_attrs_all[:,ATTRS_IDX_METATRAIN]
+    metavalid_attrs = metavalid_attrs[:,ATTRS_IDX_METAVALID]
+    metatest_attrs = metatest_attrs[:,ATTRS_IDX_METATEST]
 
-    celeba_meta_train_attrs_oracle = celeba_meta_train_attrs_all[:,CELEBA_ATTRIBUTES_IDX_META_TEST]
+    metatrain_attrs_oracle = metatrain_attrs_all[:,ATTRS_IDX_METATEST]
 
     # generate partitions with binary classification on celeba attrs
-    meta_train_partitions_supervised = generate_attributes_based_partitions(
-                                            celeba_meta_train_attrs, 
-                                            2,
+    metatrain_partitions_supervised = generate_attributes_based_partitions(
+                                            metatrain_attrs, 
+                                            ATTR_BINARY_COUNTS[ATTRS_IDX_METATRAIN],
                                             'meta_train', 
                                             args)
-    meta_valid_partitions = generate_attributes_based_partitions(
-                                            celeba_meta_valid_attrs, 
-                                            2,
+    metavalid_partitions = generate_attributes_based_partitions(
+                                            metavalid_attrs, 
+                                            ATTR_BINARY_COUNTS[ATTRS_IDX_METAVALID],
                                             'meta_valid', 
                                             args)
-    meta_test_partitions = generate_attributes_based_partitions(
-                                            celeba_meta_test_attrs, 
-                                            2,
+    metatest_partitions = generate_attributes_based_partitions(
+                                            metatest_attrs, 
+                                            ATTR_BINARY_COUNTS[ATTRS_IDX_METATEST],
                                             'meta_test', 
                                             args)
-
-    meta_train_partitions_supervised_all = generate_attributes_based_partitions(
-                                            celeba_meta_train_attrs_all, 
-                                            2,
+    metatrain_partitions_supervised_all = generate_attributes_based_partitions(
+                                            metatrain_attrs_all, 
+                                            ATTR_BINARY_COUNTS,
                                             'meta_train', 
                                             args)
     
-    meta_train_partitions_supervised_oracle = generate_attributes_based_partitions(
-                                                celeba_meta_train_attrs_oracle,
-                                                2,
+    metatrain_partitions_supervised_oracle = generate_attributes_based_partitions(
+                                                metatrain_attrs_oracle,
+                                                ATTR_BINARY_COUNTS[ATTRS_IDX_METATEST],
                                                 'meta_train',
                                                 args)
 
     return (
-        celeba_meta_train,  
-        celeba_meta_valid,  
-        celeba_meta_test,   
-        meta_train_partitions_supervised, 
-        meta_train_partitions_supervised_all,
-        meta_train_partitions_supervised_oracle, 
-        meta_valid_partitions,  
-        meta_test_partitions
+        metatrain_ds,  
+        metavalid_ds,  
+        metatest_ds,   
+        metatrain_partitions_supervised, 
+        metatrain_partitions_supervised_all,
+        metatrain_partitions_supervised_oracle, 
+        metavalid_partitions,  
+        metatest_partitions
     )
 
 def load_birds(args):
@@ -153,29 +177,24 @@ def load_birds(args):
 
 
 if __name__ == "__main__":
-    data_transforms = transforms.Compose([
-        transforms.ToTensor()
-    ])
-    celeba_set = CelebA(DATADIR, 
-                        split='valid', 
-                        target_type='identity',
-                        transform=data_transforms,
-                        download=True)
-    
-    n_samples = 9
-    img_idxs = np.random.choice(a=len(celeba_set), size=9, replace=False)
-    imgs_orig = torch.stack([celeba_set[i][0] for i in img_idxs],dim=0)
-    dt = transforms.Compose([
-        transforms.Resize(256),
-        transforms.CenterCrop(224)
-    ])
-    imgs_proc = torch.stack([dt(celeba_set[i][0]) for i in img_idxs],dim=0)
-    dt = transforms.Resize((84,84))
-    imgs_maml = torch.stack([dt(celeba_set[i][0]) for i in img_idxs],dim=0)
+    names_lines = open(os.path.join(BIRDS_DIR, "images.txt")).readlines()
+    n_samples = 16
+    img_idxs = np.random.choice(a=N_IMGS, size=n_samples, replace=False)
+    imgs_orig, imgs_maml = [], []
+    for idx in img_idxs:
+        tokens = names_lines[idx].split()
+        img_idx, img_filename = int(tokens[0]), tokens[1]
+        assert img_filename.endswith('.jpg')
+        img_raw = Image.open(os.path.join(BIRDS_DIR, 'images', img_filename))
+        dt_orig = transforms.Compose([transforms.ToTensor(), 
+                                      transforms.Resize((224,224))])
+        imgs_orig.append(dt_orig(img_raw))
+        dt_maml = transforms.Compose([transforms.ToTensor(), transforms.Resize((84, 84))])
+        imgs_maml.append(dt_maml(img_raw))
+    imgs_orig, imgs_maml = torch.stack(imgs_orig, dim=0), torch.stack(imgs_maml, dim=0)
 
     os.makedirs("misc", exist_ok=True)
-    save_image(imgs_orig, "misc/original_celeba_imgs.png", nrow=3)
-    save_image(imgs_proc, "misc/processed_celeba_imgs.png", nrow=3)
-    save_image(imgs_maml, "misc/maml_imgs.png", nrow=3)
+    save_image(imgs_orig, "misc/original_birds_imgs.png", nrow=4)
+    save_image(imgs_maml, "misc/maml_birds_imgs.png", nrow=4)
 
     print("Script finished successfully!")
