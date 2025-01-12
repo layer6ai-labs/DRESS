@@ -2,6 +2,7 @@ from .mpi3d_loader import load_mpi3d_easy, load_mpi3d_hard
 from .shapes3d_loader import load_shapes3d
 from .celeba_loader import load_celeba_hair, load_celeba_notable
 from .norb_loader import load_norb
+from .birds_loader import load_birds
 
 LOAD_DATASET = {
     'mpi3deasy': load_mpi3d_easy,
@@ -9,5 +10,6 @@ LOAD_DATASET = {
     'shapes3d': load_shapes3d,
     'celebahair': load_celeba_hair,
     'celebanotable': load_celeba_notable,
-    'norb': load_norb
+    'norb': load_norb,
+    'birds': load_birds
 }

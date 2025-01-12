@@ -56,14 +56,16 @@ class Birds(Dataset):
     def __init__(self, imgs, attrs, transforms):
         assert len(imgs) == len(attrs)
         self.imgs = imgs
-        self.attrs = attrs
+        self.attrs = np.array(attrs)
+        assert np.shape(self.attrs) == (len(imgs), N_ATTRS)
         self.transforms = transforms
 
     def __len__(self):
         return len(self.imgs)
 
     def __getitem__(self, index):
-        return (self.transforms(self.imgs[index]), torch.tensor(self.attrs[index]))
+        img_tensor, attrs_tensor = self.transforms(self.imgs[index]), torch.tensor(self.attrs[index])
+        return (img_tensor, attrs_tensor)
 
 def process_birds_binary_attributes(attrs):
     attrs_processed = []
@@ -72,21 +74,31 @@ def process_birds_binary_attributes(attrs):
         attrs_processed.append(np.dot(attrs[start_id:start_id+n_binaries], template))
     return attrs_processed
 
-def _load_birds(args):
-    # Resize happens later in the pipeline
-    data_transforms = transforms.Compose([
-        transforms.ToTensor()
-    ])
-    
+def load_images_attributes():
     print("Loading images and parsing attributes")
     imgs_all, attrs_all = [], []
     names_lines = open(os.path.join(BIRDS_DIR, "images.txt")).readlines()
     attrs_lines = open(os.path.join(BIRDS_DIR, "attributes", "image_attribute_labels.txt")).readlines()
+    bboxes_lines = open(os.path.join(BIRDS_DIR, "bounding_boxes.txt")).readlines()
     for i in trange(N_IMGS):
         tokens = names_lines[i].split()
         img_idx, img_filename = int(tokens[0]), tokens[1]
         assert img_filename.endswith('.jpg')
-        imgs_all.append(Image.open(os.path.join(BIRDS_DIR, "images", img_filename)))
+        img_raw = np.array(Image.open(os.path.join(BIRDS_DIR, "images", img_filename)))
+        tokens = bboxes_lines[i].split()
+        assert img_idx == int(tokens[0])
+        x_bbox, y_bbox, w_bbox, h_bbox = (
+            int(float(tokens[1])), 
+            int(float(tokens[2])), 
+            int(float(tokens[3])), 
+            int(float(tokens[4])))
+        if img_raw.ndim == 2:
+            # strangely, for grayscale image, while loading with transforms.ToTensor() gives 
+            # three channels with 1 being the first dimension
+            # loading with np.array() leads to only two channels
+            img_raw = np.tile(np.expand_dims(img_raw, -1), (1,1,3))
+        img_cropped = img_raw[y_bbox:y_bbox+h_bbox, x_bbox:x_bbox+w_bbox, :]
+        imgs_all.append(img_cropped)
         attrs_tmp = []
         for j in range(i*N_BINARY_ATTRS, (i+1)*N_BINARY_ATTRS):
             tokens = attrs_lines[j].split()
@@ -97,8 +109,19 @@ def _load_birds(args):
         attrs_processed = process_birds_binary_attributes(attrs_tmp)
         assert len(attrs_processed) == N_ATTRS
         attrs_all.append(attrs_processed)
-             
+    return imgs_all, attrs_all
 
+def _load_birds(args):
+    # Resize happens later in the pipeline
+    data_transforms = transforms.Compose([
+        transforms.ToTensor(),
+        # no margin removal, bounding box crop already done at initial loading
+        # initial resize here (at the highest resolution since all images seemingly has the longest length of 500 pixels)
+        transforms.Resize((500, 500))
+    ])
+    
+    imgs_all, attrs_all = load_images_attributes()
+             
     # read meta split indices
     metatrain_idxs, metatest_idxs = [], []
     with open(os.path.join(BIRDS_DIR, "train_test_split.txt")) as f:
@@ -180,16 +203,15 @@ if __name__ == "__main__":
     names_lines = open(os.path.join(BIRDS_DIR, "images.txt")).readlines()
     n_samples = 16
     img_idxs = np.random.choice(a=N_IMGS, size=n_samples, replace=False)
+    imgs_all, _ = load_images_attributes()
     imgs_orig, imgs_maml = [], []
     for idx in img_idxs:
-        tokens = names_lines[idx].split()
-        img_idx, img_filename = int(tokens[0]), tokens[1]
-        assert img_filename.endswith('.jpg')
-        img_raw = Image.open(os.path.join(BIRDS_DIR, 'images', img_filename))
+        img_raw = imgs_all[idx]
         dt_orig = transforms.Compose([transforms.ToTensor(), 
                                       transforms.Resize((224,224))])
         imgs_orig.append(dt_orig(img_raw))
-        dt_maml = transforms.Compose([transforms.ToTensor(), transforms.Resize((84, 84))])
+        dt_maml = transforms.Compose([transforms.ToTensor(), 
+                                      transforms.Resize((84, 84))])
         imgs_maml.append(dt_maml(img_raw))
     imgs_orig, imgs_maml = torch.stack(imgs_orig, dim=0), torch.stack(imgs_maml, dim=0)
 

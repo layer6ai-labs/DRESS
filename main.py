@@ -205,6 +205,10 @@ if __name__ == "__main__":
         base_model = CNN4(output_size=args.NWay,
                             hidden_size=32,
                             layers=4).to(DEVICE)
+    elif args.dsName == "birds":
+        base_model = CNN4(output_size=args.NWay,
+                            hidden_size=32,
+                            layers=4).to(DEVICE)
     else:
         print(f"Unimplemented base model for dataset {args.dsName}")
         exit(1)

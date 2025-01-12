@@ -86,50 +86,15 @@ Unsupervised partition generator methods
 
 def encode_data(dataset, encoder, args):
     assert args.imgSizeToEncoder > 0
-    if args.dsName.startswith("celeba"):
-        if args.imgSizeToEncoder == 224:
-            # take the center portion of the image (where the face is)
-            data_transforms_for_encoder = transforms.Compose([
-                transforms.Resize(276),
-                transforms.CenterCrop(224)
-                ])
-        elif args.imgSizeToEncoder == 128:
-            data_transforms_for_encoder = transforms.Compose([
-                transforms.Resize(140),
-                transforms.CenterCrop(128)
-                ])
-        elif args.imgSizeToEncoder == 64:
-            data_transforms_for_encoder = transforms.Compose([
-                transforms.Resize(75),
-                transforms.CenterCrop(64)
-            ])
-        else:
-            print(f"Unsupported image size {args.imgSizeToEncoder} for {args.dsName}")
-            exit(1)
-
+    encode_batch_size = 512
+    if args.dsName.startswith("celeba") or args.dsName=="animals":
         if args.encoder == "FDAE":
             encode_batch_size = 32 # due to memory requirement from FDAE
-        else:
-            encode_batch_size = 512
-    elif args.dsName == "animals":
-        if args.imgSizeToEncoder == 224:
-            data_transforms_for_encoder = transforms.Compose([
-                transforms.Resize(236),
-                transforms.CenterCrop(224)
-                ])
-        else:
-            print(f"Unsupported image size {args.imgSizeToEncoder} for {args.dsName}")
-            exit(1)
-        if args.encoder == "FDAE":
-            encode_batch_size = 32 # due to memory requirement from FDAE
-        else:
-            encode_batch_size = 512
-    else:
-        # simply reduce the size for the images
-        data_transforms_for_encoder = transforms.Resize((
-                                        args.imgSizeToEncoder, 
-                                        args.imgSizeToEncoder))
-        encode_batch_size = 512
+        
+    # simply reduce the size for the images
+    data_transforms_for_encoder = transforms.Resize((
+                                    args.imgSizeToEncoder, 
+                                    args.imgSizeToEncoder))
         
     dl = DataLoader(dataset, 
                     batch_size=encode_batch_size,

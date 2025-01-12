@@ -39,7 +39,10 @@ class Animals(Dataset):
 def load_animals(args):
     # Resize happens later in the pipeline
     data_transforms = T.Compose([
-        T.ToTensor()
+        T.ToTensor(),
+        # remove margins in images
+        T.Resize(236),
+        T.CenterCrop(224)
     ])
     datadir_path = os.path.join(DATADIR, "animals", "JPEGImages")
     attr_by_cls_filename = os.path.join(DATADIR, "animals", "predicate-matrix-binary.txt")

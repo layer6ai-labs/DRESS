@@ -155,7 +155,7 @@ class FDAE(nn.Module):
                                             semantic_code_adjust_dim=self._code_length,
                                             mask_code_dim=self._code_length,
                                             use_fp16=True,
-                                            encoder_type='resnet50')
+                                            encoder_type='resnet18')
         if args.dsName.startswith("mpi3d"):
             dsName_base = "mpi3d"
         elif args.dsName.startswith("celeba"):

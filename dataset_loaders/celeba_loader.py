@@ -148,7 +148,10 @@ def load_celeba_notable(args):
 
 if __name__ == "__main__":
     data_transforms = transforms.Compose([
-        transforms.ToTensor()
+        transforms.ToTensor(),
+        # remove margins
+        transforms.Resize(256),
+        transforms.CenterCrop(224)
     ])
     celeba_set = CelebA(DATADIR, 
                         split='valid', 

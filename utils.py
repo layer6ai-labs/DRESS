@@ -152,7 +152,8 @@ def get_args_parser():
                                  "mpi3dhard",
                                  "shapes3d",
                                  "celebanotable",
-                                 "norb"],
+                                 "norb",
+                                 "birds"],
                         required=True)
     parser.add_argument('--encoder',
                         help='encoder for encodings to be clustered',
