@@ -24,9 +24,15 @@ Meta test accuracy: Mean: 76.77%; Std: 26.71%
 2025-01-09 14:10:48.736401 under seed 1234
 [celeba_fdae_24D_latent on celebanotable 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 0.81; Std: 0.44
 Meta test accuracy: Mean: 64.40%; Std: 18.41%
-2025-01-11 01:15:52.358287 under seed 1234
-[birds_dino_384D_latent on birds 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 1.05; Std: 0.58
-Meta test accuracy: Mean: 61.99%; Std: 17.87%
-2025-01-11 17:47:23.336911 under seed 1234
-[birds_fdae_16D_latent on birds 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 1.07; Std: 0.46
-Meta test accuracy: Mean: 53.17%; Std: 16.78%
+2025-01-12 00:25:21.269305 under seed 1234
+[birds_dino_384D_latent on birds 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 1.14; Std: 0.64
+Meta test accuracy: Mean: 62.19%; Std: 17.88%
+2025-01-12 15:04:23.841147 under seed 1234
+[birds_fdae_16D_latent on birds 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 1.26; Std: 0.66
+Meta test accuracy: Mean: 54.84%; Std: 17.80%
+2025-01-13 13:33:48.715588 under seed 1234
+[birds_fdae_14D_latent on birds 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 1.55; Std: 0.98
+Meta test accuracy: Mean: 54.86%; Std: 16.96%
+2025-01-14 15:28:32.052466 under seed 1234
+[celeba_fdae_24D_latent on celebanotable 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 1.00; Std: 0.54
+Meta test accuracy: Mean: 60.45%; Std: 16.91%

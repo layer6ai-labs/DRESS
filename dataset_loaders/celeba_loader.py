@@ -85,7 +85,7 @@ def _load_celeba(args, meta_split_type):
     elif meta_split_type == "notable":
         CELEBA_ATTRIBUTES_IDX_META_TRAIN = [3, 12, 16, 23, 28, 30, 31, 34]
         CELEBA_ATTRIBUTES_IDX_META_VALID = [3, 12, 16, 23] # without early stopping, meta validation doesn't matter
-        CELEBA_ATTRIBUTES_IDX_META_TEST = [4, 7, 9, 13, 15, 20, 35]
+        CELEBA_ATTRIBUTES_IDX_META_TEST = [4, 5, 9, 13, 20, 25, 26, 33, 35]
     else:
         print(f"Invalid meta_split_type for celeba: {meta_split_type}!")
         exit(1)

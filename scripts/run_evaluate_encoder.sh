@@ -4,9 +4,9 @@ seedval=2367
 # Assume the project repo is cloned directly under the user home directory
 cd ~/DRESS
 
-python main.py  --dsName norb  \
+python main.py  --dsName celebanotable  \
                 --encoder fdae  \
-                --imgSizeToEncoder 96 --imgSizeToMetaModel 84 \
+                --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
                 --NWay 2 --KShot 5 --KQuery 5  \
                 --seed $seedval \
                 --visualizeTasks

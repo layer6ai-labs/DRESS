@@ -72,11 +72,11 @@ cd ~/DRESS
 #                --NWay 2 --KShot 5 --KQuery 5  \
 #                --seed $seedval
 
-python main.py --dsName birds  \
-               --encoder dino \
-               --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
-               --NWay 2 --KShot 5 --KQuery 5  \
-               --seed $seedval
+# python main.py --dsName birds  \
+#                --encoder dino \
+#                --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
+#                --NWay 2 --KShot 5 --KQuery 5  \
+#                --seed $seedval
 
 # python main.py --dsName celebanotable  \
 #                --encoder dino \
@@ -140,11 +140,11 @@ python main.py --dsName birds  \
 #                --NWay 2 --KShot 5 --KQuery 5   \
 #                --seed $seedval
 
-# python main.py --dsName celebanotable  \
-#                --encoder fdae \
-#                --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
-#                --NWay 2 --KShot 5 --KQuery 5  \
-#                --seed $seedval
+python main.py --dsName celebanotable  \
+               --encoder fdae \
+               --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
+               --NWay 2 --KShot 5 --KQuery 5  \
+               --seed $seedval
 
 ############ PreTrain and FineTune ############
 # python main.py --dsName shapes3d  \

@@ -33,7 +33,7 @@ def get_encoder(args, device):
             levels_per_dim = 200
         elif args.dsName.startswith("celeba"):
             n_semantic_groups = 12
-            code_length = 100
+            code_length = 90
             code_length_reduced = 40
             levels_per_dim = 200
         elif args.dsName.startswith("mpi3d"):
@@ -48,8 +48,8 @@ def get_encoder(args, device):
             code_length_reduced = 40
             levels_per_dim = 200
         elif args.dsName == "birds":
-            n_semantic_groups = 8
-            code_length = 80
+            n_semantic_groups = 7
+            code_length = 60
             code_length_reduced = 40
             levels_per_dim = 200
         elif args.dsName == "animals":
