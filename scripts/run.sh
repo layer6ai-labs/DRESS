@@ -72,6 +72,12 @@ cd ~/DRESS
 #                --NWay 2 --KShot 5 --KQuery 5  \
 #                --seed $seedval
 
+python main.py --dsName causal3d  \
+               --encoder dino \
+               --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
+               --NWay 2 --KShot 5 --KQuery 5  \
+               --seed $seedval
+
 # python main.py --dsName birds  \
 #                --encoder dino \
 #                --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \

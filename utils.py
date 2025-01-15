@@ -153,6 +153,7 @@ def get_args_parser():
                                  "shapes3d",
                                  "celebanotable",
                                  "norb",
+                                 "causal3d",
                                  "birds"],
                         required=True)
     parser.add_argument('--encoder',
