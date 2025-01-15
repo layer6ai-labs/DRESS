@@ -68,7 +68,7 @@ def _load_causal3d(args):
             assert np.shape(attrs_raw_onecls) == (N_IMGS_PER_SUBDIR[split], N_ATTRS)
             for i in range(N_IMGS_PER_SUBDIR[split]):
                 img_filename = f"{i:05d}.png" if split=="train" else f"{i:04d}.png"
-                imgs_all.append(Image.open(os.path.join(img_dir, img_filename)))
+                imgs_all.append(Image.open(os.path.join(img_dir, img_filename)).convert('RGB'))
                 attrs_raw_all.append(attrs_raw_onecls[i])
         attrs_raw_all = np.array(attrs_raw_all)
         attrs_all = discretize_causal3d_attrs(attrs_raw_all)
