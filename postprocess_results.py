@@ -18,21 +18,21 @@ results = {
         'mpi3deasy': [99.86, 99.61, 99.35, 98.34],
         'mpi3dhard': [88.37, 87.38, 95.94, 92.41],
         'smallnorb': [79.16],
-        'causal3d': []
+        'causal3d': [86.97]
     },
     'Supervised-Oracle': {
         'shapes3d': [99.99, 99.96, 100.00, 99.92],
         'mpi3deasy': [100.00, 100.00, 100.00, 100.00],
         'mpi3dhard': [99.32, 99.13, 99.72, 99.50],
         'smallnorb': [81.60],
-        'causal3d': []
+        'causal3d': [93.37]
     },
     'Few-Shot Direct Adaptation': {
         'shapes3d': [63.43, 63.30, 72.79, 63.28],
         'mpi3deasy': [61.19, 60.63, 59.63, 60.90],
         'mpi3dhard': [62.57, 62.45, 61.30, 62.74],
         'smallnorb': [74.17],
-        'causal3d': []
+        'causal3d': [66.38]
     },
     'Pre-Training and Fine-Tuning': {
         'shapes3d': [65.35, 56.26, 55.77, 54.15],
@@ -83,7 +83,7 @@ if __name__ == "__main__":
     print(f"Processing results...")
 
     latex_table = "\\toprule \n"
-    latex_table += "Method & Shapes3D & MPI3D-Easy & MPI3D-Hard & smallNORB & Causal3D \\\\ \n\midrule \n"
+    latex_table += "Method & Shapes3D & MPI3D-Easy & MPI3D-Hard & SmallNORB & Causal3D \\\\ \n\midrule \n"
 
     for method, res_dict in results.items():
         if method == 'Few-Shot Direct Adaptation':

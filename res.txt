@@ -48,3 +48,12 @@ Meta test accuracy: Mean: 65.64%; Std: 20.46%
 2025-01-15 14:12:00.487632 under seed 1234
 [causal3d_sup on causal3d 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 0.72; Std: 0.12
 Meta test accuracy: Mean: 52.26%; Std: 16.99%
+2025-01-15 17:11:07.415641 under seed 1234
+[causal3d_supall on causal3d 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 0.22; Std: 0.28
+Meta test accuracy: Mean: 86.97%; Std: 20.29%
+2025-01-15 20:09:50.678676 under seed 1234
+[causal3d_supora on causal3d 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 0.14; Std: 0.24
+Meta test accuracy: Mean: 93.37%; Std: 13.32%
+2025-01-15 20:17:50.505416 under seed 1234
+[causal3d_scratch on causal3d 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 0.82; Std: 0.54
+Meta test accuracy: Mean: 66.38%; Std: 20.22%
