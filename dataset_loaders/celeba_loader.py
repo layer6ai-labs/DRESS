@@ -4,6 +4,7 @@ import os
 import random
 from torch.utils.data import Dataset, ConcatDataset
 from torchvision import transforms
+import torchvision.transforms.functional as F
 from torchvision.datasets.celeba import CelebA
 from torchvision.utils import save_image
 
@@ -44,10 +45,17 @@ def load_celeba_attrs():
     print("CelebA attributes collected!")
     return attrs_meta_train, attrs_meta_valid, attrs_meta_test
 
+# the cropping did in original DiTi paper. 
+# Aggressive but focus on face and eliminates background noise
+class CropCelebA(object):
+    def __call__(self, img):
+        new_img = F.crop(img, 57, 25, 128, 128)
+        return new_img
 
 def _load_celeba(args, meta_split_type):
     # Resize happens later in the pipeline
     data_transforms = transforms.Compose([
+        CropCelebA(),
         transforms.ToTensor()
     ])
    # Set up both the background and eval dataset

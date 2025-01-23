@@ -166,6 +166,7 @@ def get_args_parser():
                                  "dino", 
                                  "deepcluster", 
                                  "fdae",
+                                 "diti",
                                  "soda"],
                         required=True)
     parser.add_argument('--imgSizeToEncoder',

@@ -109,6 +109,13 @@ done
 #                --NWay 2 --KShot 5 --KQuery 5   \
 #                --seed $seedval
 
+############ DRESS with DiTi ############
+python main.py --dsName celebanotable  \
+               --encoder diti  \
+               --imgSizeToEncoder 64 --imgSizeToMetaModel 84 \
+               --NWay 2 --KShot 5 --KQuery 5  \
+               --seed $seedval
+
 ########### DeepCluster ###########
 # python main.py --dsName shapes3d  \
 #                --encoder deepcluster \

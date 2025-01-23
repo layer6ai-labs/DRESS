@@ -5,8 +5,8 @@ seedval=2367
 cd ~/DRESS
 
 python main.py  --dsName celebanotable  \
-                --encoder fdae  \
-                --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
+                --encoder diti  \
+                --imgSizeToEncoder 64 --imgSizeToMetaModel 84 \
                 --NWay 2 --KShot 5 --KQuery 5  \
                 --seed $seedval \
                 --visualizeTasks

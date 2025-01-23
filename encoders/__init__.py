@@ -2,6 +2,7 @@ from .dino import DinoV2
 from .deep_cluster import DeepCluster
 from .vae import *
 from .fdae import *
+from .diti import *
 from .simclr_pretrain import SimCLR
 from .gmvae import GMVAE
 from .soda import *
@@ -70,6 +71,8 @@ def get_encoder(args, device):
                        code_length_reduced=code_length_reduced,
                        levels_per_dim=levels_per_dim,
                        args=args).to(device)
+    elif args.encoder == "diti":
+        encoder = DiTi(levels_per_dim=200, args=args).to(DEVICE)
     elif args.encoder == "soda":
         encoder = SODA(latent_dim=32, 
                        levels_per_dim=100,

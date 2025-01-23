@@ -86,7 +86,7 @@ Unsupervised partition generator methods
 
 def encode_data(dataset, encoder, args):
     assert args.imgSizeToEncoder > 0
-    encode_batch_size = 512
+    encode_batch_size = 1024
     if args.dsName.startswith("celeba") or args.dsName=="animals":
         if args.encoder == "FDAE":
             encode_batch_size = 32 # due to memory requirement from FDAE
@@ -156,7 +156,7 @@ def generate_unsupervised_partitions(
         print(f"[{descriptor}] No pre-computed clusters exist. Compute from beginning...")
         encodings_origSpace = encode_data(dataset, encoder, args)
 
-        if args.encoder in ["factorvae", "fdae", "dlqvae", "soda"]:
+        if args.encoder in ["factorvae", "fdae", "dlqvae", "diti"]:
             n_partitions = encoder.latent_dim
             # simply use the index of the quantized latent code as the cluster identity
             # and use different latent dimension as different partitions
