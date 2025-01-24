@@ -39,13 +39,13 @@ cd ~/DRESS
 #                 --seed $seedval
 # done
 
-for supmethod in "sup" "supall" "supora" "scratch"; do
-    python main.py --dsName causal3d  \
-                --encoder $supmethod \
-                --imgSizeToEncoder -1 --imgSizeToMetaModel 84 \
-                --NWay 2 --KShot 5 --KQuery 5 \
-                --seed $seedval
-done
+# for supmethod in "sup" "supall" "supora" "scratch"; do
+#     python main.py --dsName causal3d  \
+#                 --encoder $supmethod \
+#                 --imgSizeToEncoder -1 --imgSizeToMetaModel 84 \
+#                 --NWay 2 --KShot 5 --KQuery 5 \
+#                 --seed $seedval
+# done
  
 ############# Dino #############
 # python main.py --dsName shapes3d  \
@@ -77,6 +77,12 @@ done
 #                --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
 #                --NWay 2 --KShot 5 --KQuery 5  \
 #                --seed $seedval
+
+python main.py --dsName celebanotable  \
+               --encoder dino \
+               --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
+               --NWay 2 --KShot 5 --KQuery 5  \
+               --seed $seedval
 
 ############ DRESS with FDAE ############
 # python main.py --dsName shapes3d  \
@@ -110,11 +116,11 @@ done
 #                --seed $seedval
 
 ############ DRESS with DiTi ############
-python main.py --dsName celebanotable  \
-               --encoder diti  \
-               --imgSizeToEncoder 64 --imgSizeToMetaModel 84 \
-               --NWay 2 --KShot 5 --KQuery 5  \
-               --seed $seedval
+# python main.py --dsName celebanotable  \
+#                --encoder diti  \
+#                --imgSizeToEncoder 64 --imgSizeToMetaModel 84 \
+#                --NWay 2 --KShot 5 --KQuery 5  \
+#                --seed $seedval
 
 ########### DeepCluster ###########
 # python main.py --dsName shapes3d  \
@@ -146,6 +152,12 @@ python main.py --dsName celebanotable  \
 #                --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
 #                --NWay 2 --KShot 5 --KQuery 5  \
 #                --seed $seedval
+
+python main.py --dsName celebanotable \
+               --encoder deepcluster \
+               --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
+               --NWay 2 --KShot 5 --KQuery 5  \
+               --seed $seedval
 
 ############ PreTrain and FineTune ############
 # python main.py --dsName shapes3d  \

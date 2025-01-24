@@ -13,7 +13,7 @@ if torch.cuda.device_count() > 1:
     print("Let's use", torch.cuda.device_count(), "GPUs!!!")
 # meta-training setup
 METATRAIN_OUTER_EPISODES = 30000 # originally 60000 episodes in cactus paper
-METAVALID_OUTER_INTERVAL = 3000 # runs very rarely. currently not using early stopping. just for code integrity.
+METAVALID_OUTER_INTERVAL = 5000 # runs very rarely. currently not using early stopping. just for code integrity.
 METATRAIN_INNER_UPDATES = 5
 METAVALID_INNER_UPDATES = METATEST_INNER_UPDATES = 5 # reduced from original 50 updates in CACTUS paper
 NUM_TASKS_METATRAIN = 8

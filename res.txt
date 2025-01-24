@@ -57,3 +57,9 @@ Meta test accuracy: Mean: 93.37%; Std: 13.32%
 2025-01-15 20:17:50.505416 under seed 1234
 [causal3d_scratch on causal3d 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 0.82; Std: 0.54
 Meta test accuracy: Mean: 66.38%; Std: 20.22%
+2025-01-23 18:33:57.738421 under seed 1234
+[celeba_diti_64D_latent on celebanotable 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 0.53; Std: 0.15
+Meta test accuracy: Mean: 74.11%; Std: 16.91%
+2025-01-23 22:13:36.387357 under seed 1234
+[celeba_dino_384D_latent on celebanotable 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 0.53; Std: 0.42
+Meta test accuracy: Mean: 79.59%; Std: 15.89%

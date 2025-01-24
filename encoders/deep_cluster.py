@@ -86,7 +86,13 @@ class DeepCluster(nn.Module):
         # wrap feature layers with nn.DataParallel to load the weights correctly
         self.deepCluster_model.features = torch.nn.DataParallel(self.deepCluster_model.features)
         # load the checkpoint from deepCluster training run
-        checkpoint = torch.load(os.path.join(ENCODERDIR, f"deepcluster_{args.dsName}.pth.tar"))['state_dict']
+        if args.dsName.startswith("mpi3d"):
+            dsName_base = "mpi3d"
+        elif args.dsName.startswith("celeba"):
+            dsName_base = "celeba"
+        else:
+            dsName_base = args.dsName
+        checkpoint = torch.load(os.path.join(ENCODERDIR, f"deepcluster_{dsName_base}.pth.tar"))['state_dict']
         # remove top_layer parameters from checkpoint
         # have to cast the retured odict_keys into list to prevent "mutated during iteration" error
         lyr_keys = list(checkpoint.keys())
