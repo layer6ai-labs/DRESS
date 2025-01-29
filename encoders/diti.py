@@ -185,29 +185,32 @@ class AttentionBlock(nn.Module):
         h = self.proj_out(h)
         return (x + h).reshape(b, c, *spatial)
 
-class DiTiCELEBA64Encoder(nn.Module):
-    def __init__(self, latent_dim):
+class DiTiCELEBAEncoder(nn.Module):
+    def __init__(self, **kwargs):
         super().__init__()
-        self.latent_dim = latent_dim
+        self.latent_dim = kwargs["latent_dim"]
         self.encoder = nn.Sequential(
-            nn.Conv2d(3, 64, (3, 3), (2, 2), 1),          # batch_size x 64 x 32 x 32
+            nn.Conv2d(3, 64, (3, 3), (2, 2), 1),          # batch_size x 64 x 64 x 64
             normalization(64),
             nn.SiLU(True),
-            nn.Conv2d(64, 128, (3, 3), (2, 2), 1),          # batch_size x 128 x 16 x 16
-            AttentionBlock(128, 4, -1, False),
+            nn.Conv2d(64, 128, (3, 3), (2, 2), 1),          # batch_size x 128 x 32 x 32
             normalization(128),
             nn.SiLU(True),
-            nn.Conv2d(128, 128, (3, 3), (2, 2), 1),          # batch_size x 128 x 8 x 8
-            normalization(128),
+            nn.Conv2d(128, 256, (3, 3), (2, 2), 1),         # batch_size x 256 x 16 x 16
+            AttentionBlock(256, 4, -1, False),
+            normalization(256),
             nn.SiLU(True),
-            nn.Conv2d(128, 128, (3, 3), (2, 2), 1),          # batch_size x 128 x 4 x 4
-            normalization(128),
+            nn.Conv2d(256, 256, (3, 3), (2, 2), 1),          # batch_size x 256 x 8 x 8
+            normalization(256),
             nn.SiLU(True),
-            View((-1, 128 * 4 * 4)),                  # batch_size x 2048
-            nn.Linear(2048, self.latent_dim)
+            nn.Conv2d(256, 256, (3, 3), (2, 2), 1),          # batch_size x 256 x 4 x 4
+            normalization(256),
+            nn.SiLU(True),
+            View((-1, 256 * 4 * 4)),                  # batch_size x 4096
+            nn.Linear(4096, self.latent_dim)
         )
 
-    # x: batch_size x 3 x 64 x 64
+    # x: batch_size x 3 x 128 x 128
     def forward(self, x):
         # batch_size x latent_dim
         return self.encoder(x)
@@ -221,7 +224,7 @@ class DiTi(nn.Module):
         self.latent_dim = LATENT_DIM # k in the original DiTi model
         self.latent_dim_raw = LATENT_DIM_RAW
         self._levels_per_dim = levels_per_dim
-        self.encoder = DiTiCELEBA64Encoder(latent_dim=self.latent_dim_raw) # length of the latent space to be partitioned into k subsets
+        self.encoder = DiTiCELEBAEncoder(latent_dim=self.latent_dim_raw) # length of the latent space to be partitioned into k subsets
         if args.dsName.startswith("mpi3d"):
             dsName_base = "mpi3d"
         elif args.dsName.startswith("celeba"):

@@ -6,7 +6,7 @@ cd ~/DRESS
 
 python main.py  --dsName celebanotable  \
                 --encoder diti  \
-                --imgSizeToEncoder 64 --imgSizeToMetaModel 84 \
+                --imgSizeToEncoder 128 --imgSizeToMetaModel 84 \
                 --NWay 2 --KShot 5 --KQuery 5  \
                 --seed $seedval \
                 --visualizeTasks
