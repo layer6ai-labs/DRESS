@@ -6,6 +6,7 @@ from .diti import *
 from .simclr_pretrain import SimCLR
 from .gmvae import GMVAE
 from .soda import *
+from .lsd import LSD
 
 def get_encoder(args, device):
     if args.encoder in ['sup', 'supall', 'supora', 'scratch']:
@@ -32,11 +33,6 @@ def get_encoder(args, device):
             code_length = 80
             code_length_reduced = 40
             levels_per_dim = 200
-        elif args.dsName.startswith("celeba"):
-            n_semantic_groups = 12
-            code_length = 90
-            code_length_reduced = 40
-            levels_per_dim = 200
         elif args.dsName.startswith("mpi3d"):
             # probably would need to increase for mpi3d
             n_semantic_groups = 7
@@ -53,16 +49,6 @@ def get_encoder(args, device):
             code_length = 80
             code_length_reduced = 40
             levels_per_dim = 200
-        elif args.dsName == "birds":
-            n_semantic_groups = 7
-            code_length = 60
-            code_length_reduced = 40
-            levels_per_dim = 200
-        elif args.dsName == "animals":
-            n_semantic_groups = 8
-            code_length = 100
-            code_length_reduced = 40
-            levels_per_dim = 200
         else:
             print(f"FDAE unprepared for {args.dsName}!")
             exit(1)
@@ -71,6 +57,8 @@ def get_encoder(args, device):
                        code_length_reduced=code_length_reduced,
                        levels_per_dim=levels_per_dim,
                        args=args).to(device)
+    elif args.encoder == "lsd":
+        encoder = LSD(levels_per_dim=200, args=args).to(DEVICE)
     elif args.encoder == "diti":
         encoder = DiTi(levels_per_dim=200, args=args).to(DEVICE)
     elif args.encoder == "soda":

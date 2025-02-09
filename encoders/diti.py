@@ -16,10 +16,14 @@ from utils import *
 Code adapted from repo https://github.com/yue-zhongqi/diti
 """
 LATENT_DIM = 64
-LATENT_DIM_RAW = 512
-DITI_STAGES = [50,100,300,500,1000]    # last number must be 1000. E.g., t1,t2 means 2 stages: 0->t1, t1->t2
-DITI_DIMS_PER_STAGE = [10,25,327,100,50] # adds up to 512
+LATENT_DIM_RAW = 256
+N_DIFFUSION_STEPS = 500
+DITI_STAGES = [100,200,300,400,500]    # last number must be the total diffusion steps. E.g., t1,t2 means 2 stages: 0->t1, t1->t2
+DITI_DIMS_PER_STAGE = [50,50,50,50,56] 
+assert DITI_STAGES[-1] == N_DIFFUSION_STEPS
+assert len(DITI_STAGES) == len(DITI_DIMS_PER_STAGE)
 assert sum(DITI_DIMS_PER_STAGE) == LATENT_DIM_RAW
+
 
 def _get_mask_end_dim(idx, t_to_idx):
         if idx >= LATENT_DIM:
@@ -43,9 +47,9 @@ def _get_mask_end_dim(idx, t_to_idx):
             return sum(DITI_DIMS_PER_STAGE[0:stage]) + int(float(stage_total_dim) / float(stage_num_blocks)) * (stage_prev_blocks+1)
 
 def construct_latent_groups():
-    t_to_idx = torch.zeros(1000).long()        
-    for t in range(1000):
-        t_to_idx[t] = int(float(t) / (1000.0 / 64))
+    t_to_idx = torch.zeros(N_DIFFUSION_STEPS).long()        
+    for t in range(N_DIFFUSION_STEPS):
+        t_to_idx[t] = int(float(t) / (float(N_DIFFUSION_STEPS) / 64))
     latent_groups = torch.zeros(LATENT_DIM, LATENT_DIM_RAW)
     for i in range(LATENT_DIM):
         current_dim = _get_mask_end_dim(i, t_to_idx)
@@ -265,6 +269,8 @@ class DiTi(nn.Module):
         dataset_size = encodings_raw.shape[0]
         assert encodings_raw.shape == (dataset_size, self.latent_dim_raw)
         latent_groups = construct_latent_groups()
+        assert latent_groups.sum().item() == LATENT_DIM_RAW
+        print("Number of dimensions per latent group: ", latent_groups.sum(1))
         encodings_quantized = []
         for i in trange(self.latent_dim):
             latent_group_mask = latent_groups[i] > 0

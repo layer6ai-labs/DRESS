@@ -81,3 +81,28 @@ Meta test accuracy: Mean: 61.49%; Std: 17.38%
 2025-01-29 14:03:58.993754 under seed 1234
 [celeba_diti_64D_latent on celebaminor 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 0.68; Std: 0.13
 Meta test accuracy: Mean: 59.86%; Std: 16.47%
+
+2025-01-31 19:09:05.231753 under seed 1234
+[celeba_diti_34D_latent on celebanotable 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 0.54; Std: 0.17
+Meta test accuracy: Mean: 73.37%; Std: 16.34%
+2025-01-31 19:56:52.514279 under seed 1234
+[celeba_diti_34D_latent on celebahair 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 0.60; Std: 0.17
+Meta test accuracy: Mean: 68.28%; Std: 17.01%
+2025-01-31 19:58:12.838253 under seed 1234
+[celeba_diti_34D_latent on celebaeyes 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 0.67; Std: 0.17
+Meta test accuracy: Mean: 61.75%; Std: 16.43%
+2025-01-31 19:59:34.663277 under seed 1234
+[celeba_diti_34D_latent on celebaminor 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 0.65; Std: 0.15
+Meta test accuracy: Mean: 62.78%; Std: 16.13%
+2025-02-02 18:40:15.756176 under seed 1234
+[celeba_scratch on celebanotable 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 0.77; Std: 0.43
+Meta test accuracy: Mean: 66.87%; Std: 17.38%
+2025-02-02 18:44:34.164989 under seed 1234
+[celeba_scratch on celebahair 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 0.88; Std: 0.45
+Meta test accuracy: Mean: 62.93%; Std: 16.47%
+2025-02-02 18:45:50.384533 under seed 1234
+[celeba_scratch on celebaeyes 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 1.08; Std: 0.42
+Meta test accuracy: Mean: 55.15%; Std: 14.20%
+2025-02-02 18:47:07.644236 under seed 1234
+[celeba_scratch on celebaminor 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 1.08; Std: 0.43
+Meta test accuracy: Mean: 55.48%; Std: 13.93%

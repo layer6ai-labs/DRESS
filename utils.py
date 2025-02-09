@@ -169,6 +169,7 @@ def get_args_parser():
                                  "dino", 
                                  "deepcluster", 
                                  "fdae",
+                                 "lsd",
                                  "diti",
                                  "soda"],
                         required=True)
