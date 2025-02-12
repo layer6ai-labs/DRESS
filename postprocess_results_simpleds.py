@@ -118,7 +118,7 @@ if __name__ == "__main__":
     latex_table += "\\bottomrule \n" 
     
     # write the results to a file 
-    latex_table_filename = "res_table.tex"
+    latex_table_filename = "res_table_simpleds.tex"
     with open(latex_table_filename, "w") as f:
         f.write(latex_table)
     

@@ -86,7 +86,7 @@ Unsupervised partition generator methods
 
 def encode_data(dataset, encoder, args):
     assert args.imgSizeToEncoder > 0
-    encode_batch_size = 1024
+    encode_batch_size = 512
     if args.dsName.startswith("celeba") or args.dsName=="animals":
         if args.encoder == "FDAE":
             encode_batch_size = 32 # due to memory requirement from FDAE

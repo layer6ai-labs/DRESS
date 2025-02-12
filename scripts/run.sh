@@ -48,7 +48,7 @@ cd ~/DRESS
 # done
 
 # for supmethod in "scratch"; do
-#     python main.py --dsName celebanotable  \
+#     python main.py --dsName celebaprimary  \
 #                 --encoder $supmethod \
 #                 --imgSizeToEncoder -1 --imgSizeToMetaModel 84 \
 #                 --NWay 2 --KShot 5 --KQuery 5 \
@@ -64,20 +64,13 @@ cd ~/DRESS
 # done
 
 # for supmethod in "scratch"; do
-#     python main.py --dsName celebaeyes  \
+#     python main.py --dsName celebarand  \
 #                 --encoder $supmethod \
 #                 --imgSizeToEncoder -1 --imgSizeToMetaModel 84 \
 #                 --NWay 2 --KShot 5 --KQuery 5 \
 #                 --seed $seedval
 # done
 
-# for supmethod in "scratch"; do
-#     python main.py --dsName celebaminor  \
-#                 --encoder $supmethod \
-#                 --imgSizeToEncoder -1 --imgSizeToMetaModel 84 \
-#                 --NWay 2 --KShot 5 --KQuery 5 \
-#                 --seed $seedval
-# done
  
 ############# Dino #############
 # python main.py --dsName shapes3d  \
@@ -110,29 +103,25 @@ cd ~/DRESS
 #                --NWay 2 --KShot 5 --KQuery 5  \
 #                --seed $seedval
 
-# python main.py --dsName celebanotable  \
+# python main.py --dsName celebaprimary  \
 #                --encoder dino \
 #                --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
 #                --NWay 2 --KShot 5 --KQuery 5  \
 #                --seed $seedval
 
-# python main.py --dsName celebahair  \
+python main.py --dsName celebahair  \
+               --encoder dino \
+               --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
+               --NWay 2 --KShot 5 --KQuery 5  \
+               --seed $seedval
+
+
+# python main.py --dsName celebarand  \
 #                --encoder dino \
 #                --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
 #                --NWay 2 --KShot 5 --KQuery 5  \
 #                --seed $seedval
 
-# python main.py --dsName celebaeyes  \
-#                --encoder dino \
-#                --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
-#                --NWay 2 --KShot 5 --KQuery 5  \
-#                --seed $seedval
-
-# python main.py --dsName celebaminor  \
-#                --encoder dino \
-#                --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
-#                --NWay 2 --KShot 5 --KQuery 5  \
-#                --seed $seedval
 
 ############ DRESS with FDAE ############
 # python main.py --dsName shapes3d  \
@@ -165,19 +154,25 @@ cd ~/DRESS
 #                --NWay 2 --KShot 5 --KQuery 5   \
 #                --seed $seedval
 
-############ DRESS with DiTi ############
-# python main.py --dsName celebanotable  \
-#                --encoder diti  \
+########### DRESS with LSD ############
+# python main.py --dsName celebaprimary  \
+#                --encoder lsd  \
 #                --imgSizeToEncoder 128 --imgSizeToMetaModel 84 \
 #                --NWay 2 --KShot 5 --KQuery 5  \
 #                --seed $seedval
 
-############ DRESS with LSD ############
 python main.py --dsName celebahair  \
                --encoder lsd  \
                --imgSizeToEncoder 128 --imgSizeToMetaModel 84 \
                --NWay 2 --KShot 5 --KQuery 5  \
                --seed $seedval
+
+# python main.py --dsName celebarand  \
+#                --encoder lsd  \
+#                --imgSizeToEncoder 128 --imgSizeToMetaModel 84 \
+#                --NWay 2 --KShot 5 --KQuery 5  \
+#                --seed $seedval
+
 
 ########### DeepCluster ###########
 # python main.py --dsName shapes3d  \
@@ -210,7 +205,7 @@ python main.py --dsName celebahair  \
 #                --NWay 2 --KShot 5 --KQuery 5  \
 #                --seed $seedval
 
-# python main.py --dsName celebanotable \
+# python main.py --dsName celebaprimary \
 #                --encoder deepcluster \
 #                --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
 #                --NWay 2 --KShot 5 --KQuery 5  \

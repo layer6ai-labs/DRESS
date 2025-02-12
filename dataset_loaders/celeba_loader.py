@@ -45,17 +45,18 @@ def load_celeba_attrs():
     print("CelebA attributes collected!")
     return attrs_meta_train, attrs_meta_valid, attrs_meta_test
 
-# the cropping did in original DiTi paper. 
+# more strict than the cropping did in original DiTi paper. 
 # Aggressive but focus on face and eliminates background noise
 class CropCelebA(object):
     def __call__(self, img):
-        new_img = F.crop(img, 57, 25, 128, 128)
+        new_img = F.crop(img, 57, 35, 128, 100)
         return new_img
 
 def _load_celeba(args, meta_split_type):
     # Resize happens later in the pipeline
     data_transforms = transforms.Compose([
         CropCelebA(),
+        transforms.Resize(size=(128,128)),
         transforms.ToTensor()
     ])
    # Set up both the background and eval dataset
@@ -83,25 +84,17 @@ def _load_celeba(args, meta_split_type):
     celeba_meta_train_attrs_all, celeba_meta_valid_attrs, celeba_meta_test_attrs = load_celeba_attrs()
 
     if meta_split_type == "rand":
-        CELEBA_ATTRIBUTES_IDX_META_TRAIN = np.arange(25)
-        CELEBA_ATTRIBUTES_IDX_META_VALID = np.arange(21,25) # without early stopping, meta validation doesn't matter
-        CELEBA_ATTRIBUTES_IDX_META_TEST = np.arange(25, 40)
+        CELEBA_ATTRIBUTES_IDX_META_TRAIN = [0, 1, 2, 10, 11, 12, 13, 14, 15, 21, 22]
+        CELEBA_ATTRIBUTES_IDX_META_VALID = [0, 1, 2] # without early stopping, meta validation doesn't matter
+        CELEBA_ATTRIBUTES_IDX_META_TEST = [3, 7, 9, 16, 17, 19, 20, 23, 24, 36]
     elif meta_split_type == "hair":
         CELEBA_ATTRIBUTES_IDX_META_TRAIN = [15, 16, 20, 21, 22, 24, 31, 35, 38, 39]
         CELEBA_ATTRIBUTES_IDX_META_VALID = [21, 22, 24, 31] # without early stopping, meta validation doesn't matter
-        CELEBA_ATTRIBUTES_IDX_META_TEST = [8, 9, 11, 17, 28, 32, 33]
-    elif meta_split_type == "eyes":
-        CELEBA_ATTRIBUTES_IDX_META_TRAIN = [2, 4, 5, 6, 7, 8, 10, 20, 30]
-        CELEBA_ATTRIBUTES_IDX_META_VALID = [2, 4, 5] # without early stopping, meta validation doesn't matter
-        CELEBA_ATTRIBUTES_IDX_META_TEST = [1, 3, 12, 15, 23]
-    elif meta_split_type == "notable":
+        CELEBA_ATTRIBUTES_IDX_META_TEST = [4, 5, 8, 9, 11, 17, 28, 32, 33]
+    elif meta_split_type == "primary":
         CELEBA_ATTRIBUTES_IDX_META_TRAIN = [3, 12, 16, 23, 28, 30, 31, 34]
         CELEBA_ATTRIBUTES_IDX_META_VALID = [3, 12, 16, 23] # without early stopping, meta validation doesn't matter
-        CELEBA_ATTRIBUTES_IDX_META_TEST = [4, 5, 9, 13, 20, 25, 26, 33, 35]
-    elif meta_split_type == "minor":
-        CELEBA_ATTRIBUTES_IDX_META_TRAIN = [1, 2, 3, 4, 5]
-        CELEBA_ATTRIBUTES_IDX_META_VALID = [1, 2, 3] # without early stopping, meta validation doesn't matter
-        CELEBA_ATTRIBUTES_IDX_META_TEST = [12, 14, 18, 21, 31, 34, 36]
+        CELEBA_ATTRIBUTES_IDX_META_TEST = [4, 5, 9, 18, 26, 33]
     else:
         print(f"Invalid meta_split_type for celeba: {meta_split_type}!")
         exit(1)
@@ -159,14 +152,9 @@ def load_celeba_rand(args):
 def load_celeba_hair(args):
     return _load_celeba(args, meta_split_type='hair')
 
-def load_celeba_eyes(args):
-    return _load_celeba(args, meta_split_type='eyes')
+def load_celeba_primary(args):
+    return _load_celeba(args, meta_split_type='primary')
 
-def load_celeba_notable(args):
-    return _load_celeba(args, meta_split_type='notable')
-
-def load_celeba_minor(args):
-    return _load_celeba(args, meta_split_type="minor")
 
 if __name__ == "__main__":
     data_transforms = transforms.Compose([

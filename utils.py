@@ -147,17 +147,7 @@ class TwoCropsTransform:
 def get_args_parser():
     parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument('--dsName', 
-                        help='dataset for meta-learning', 
-                        choices=["mpi3deasy",
-                                 "mpi3dhard",
-                                 "shapes3d",
-                                 "celebahair",
-                                 "celebaeyes",
-                                 "celebanotable",
-                                 "celebaminor",
-                                 "norb",
-                                 "causal3d",
-                                 "birds"],
+                        help='dataset for meta-learning',
                         required=True)
     parser.add_argument('--encoder',
                         help='encoder for encodings to be clustered',

@@ -9,10 +9,9 @@ LOAD_DATASET = {
     'mpi3deasy': load_mpi3d_easy,
     'mpi3dhard': load_mpi3d_hard,
     'shapes3d': load_shapes3d,
+    'celebarand': load_celeba_rand,
     'celebahair': load_celeba_hair,
-    'celebaeyes': load_celeba_eyes,
-    'celebanotable': load_celeba_notable,
-    'celebaminor': load_celeba_minor,
+    'celebaprimary': load_celeba_primary,
     'norb': load_norb,
     'causal3d': load_causal3d,
     'birds': load_birds

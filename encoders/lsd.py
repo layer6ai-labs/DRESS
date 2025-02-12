@@ -21,8 +21,9 @@ from utils import *
 """
 Code adapted from repo https://github.com/JindongJiang/latent-slot-diffusion
 """
-LATENT_DIM = 12 # the number of attention slots in LSD model
+LATENT_DIM = 10 # the number of attention slots in LSD model
 DIM_PER_SLOT = 192 # the length of vector for each slot in LSD model
+ATTN_MAP_CLUSTERS = 32
 
 class CartesianPositionalEmbedding(nn.Module):
     def __init__(self, channels, image_size):
@@ -260,7 +261,7 @@ class LSD(nn.Module):
         self.img_size = args.imgSizeToEncoder
 
         # for clustering attention maps
-        self.attn_kmeans_model = KMeans(n_clusters=64,
+        self.attn_kmeans_model = KMeans(n_clusters=ATTN_MAP_CLUSTERS,
                                   init="k-means++",
                                   n_init=1,
                                   max_iter=100)
@@ -270,6 +271,8 @@ class LSD(nn.Module):
                                         init='k-means++', 
                                         n_init=1, 
                                         max_iter=100)
+        
+        print(f"Created LSD model with {self.latent_dim} latent dimensions!")
 
     def encode(self, input_data: torch.Tensor) -> torch.Tensor:
         batch_size = input_data.shape[0]
@@ -283,6 +286,8 @@ class LSD(nn.Module):
         slots = slots[:, 0]
         attn = attn[:, 0, 0]
         attn = rearrange(attn, 'b l s -> b s l')
+        # normalize attn so the 4096-dim map lives in a unit sphere
+        attn = attn / attn.sum(dim=2, keepdim=True)
         if not self.attn_kmeans_fitted:
             self.attn_kmeans_model = self.attn_kmeans_model.fit(attn.reshape(-1, 4096).cpu())
             self.attn_kmeans_fitted = True
@@ -298,7 +303,7 @@ class LSD(nn.Module):
         dataset_size = encodings_raw.shape[0]
         assert encodings_raw.shape == (dataset_size, self.latent_dim, self.dim_per_slot)
         encodings_quantized = [self.postencode_kmeans_model.fit_predict(encodings_raw[:,i])
-                                for i in range(self.latent_dim)]
+                                for i in trange(self.latent_dim)]
         encodings_quantized = np.stack(encodings_quantized, axis=1)
         encodings_quantized = torch.from_numpy(encodings_quantized) 
         assert encodings_quantized.shape == (dataset_size, self.latent_dim)
