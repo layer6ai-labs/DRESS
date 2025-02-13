@@ -21,7 +21,7 @@ from utils import *
 """
 Code adapted from repo https://github.com/JindongJiang/latent-slot-diffusion
 """
-LATENT_DIM = 10 # the number of attention slots in LSD model
+LATENT_DIM = 14 # the number of attention slots in LSD model
 DIM_PER_SLOT = 192 # the length of vector for each slot in LSD model
 ATTN_MAP_CLUSTERS = 32
 
@@ -248,12 +248,12 @@ class LSD(nn.Module):
             dsName_base = args.dsName
 
         self.img_to_latent_encoder.load_state_dict(
-            load_file(os.path.join(ENCODERDIR, f'lsd_{dsName_base}_backbone.safetensors')), strict=True)
+            load_file(os.path.join(ENCODERDIR, f'lsd_{dsName_base}_backbone_{self.latent_dim}D_latent.safetensors')), strict=True)
         self.img_to_latent_encoder.to(DEVICE)
         self.img_to_latent_encoder.eval()
         self.img_to_latent_encoder.requires_grad_(False)
         self.slot_attention_encoder.load_state_dict(
-            load_file(os.path.join(ENCODERDIR, f'lsd_{dsName_base}_slta.safetensors')), strict=True)
+            load_file(os.path.join(ENCODERDIR, f'lsd_{dsName_base}_slta_{self.latent_dim}D_latent.safetensors')), strict=True)
         self.slot_attention_encoder.to(DEVICE)
         self.slot_attention_encoder.eval()
         self.slot_attention_encoder.requires_grad_(False)

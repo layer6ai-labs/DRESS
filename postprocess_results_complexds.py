@@ -24,7 +24,7 @@ results = {
     'Few-Shot Direct Adaptation': {
         'celebahair': [62.93],
         'celebaprimary': [71.56],
-        'celebarand': [61.44]
+        'celebarand': []
     },
     'Pre-Training and Fine-Tuning': {
         'celebahair': [],
@@ -47,14 +47,14 @@ results = {
         'celebarand': []
     },
     'CACTUS-DinoV2': {
-        'celebahair': [68.22],
-        'celebaprimary': [76.53],
-        'celebarand': [81.13]
+        'celebahair': [69.85],
+        'celebaprimary': [78.63],
+        'celebarand': [79.90]
     },
     'DRESS': {
-        'celebahair': [71.16],
-        'celebaprimary': [77.33],
-        'celebarand': [69.87]
+        'celebahair': [74.17],
+        'celebaprimary': [75.22],
+        'celebarand': [71.54]
     }
 }
 
@@ -81,7 +81,7 @@ if __name__ == "__main__":
             else:
                 res_avg = np.mean(res_vals)
                 res_std = np.std(res_vals) / np.sqrt(len(res_vals))
-                if method == "DRESS" and ds in ['celebahair', 'celebaprimary']:
+                if method == "DRESS" and ds in ['celebahair']:
                     # bold font
                     latex_table += f"\\textbf{{{res_avg:.2f}}}\% $\pm$ \\textbf{{{res_std:.2f}}}\%"
                 else:
