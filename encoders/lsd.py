@@ -5,6 +5,7 @@ from typing import Any, Dict, List, Optional, Tuple, Union
 import torch
 import torch.nn as nn
 import torch.nn.functional as F 
+import torchvision
 from safetensors.torch import load_file
 from sklearn.decomposition import PCA
 from sklearn.cluster import KMeans
@@ -24,6 +25,7 @@ Code adapted from repo https://github.com/JindongJiang/latent-slot-diffusion
 LATENT_DIM = 14 # the number of attention slots in LSD model
 DIM_PER_SLOT = 192 # the length of vector for each slot in LSD model
 ATTN_MAP_CLUSTERS = 32
+WHETHER_VISUALIZE_ATTN_MAP_CLUSTERS = True
 
 class CartesianPositionalEmbedding(nn.Module):
     def __init__(self, channels, image_size):
@@ -286,13 +288,15 @@ class LSD(nn.Module):
         slots = slots[:, 0]
         attn = attn[:, 0, 0]
         attn = rearrange(attn, 'b l s -> b s l')
-        # normalize attn so the 4096-dim map lives in a unit sphere
+        # normalize attn so the 4096-dim map lives in a simplex
         attn = attn / attn.sum(dim=2, keepdim=True)
         if not self.attn_kmeans_fitted:
             self.attn_kmeans_model = self.attn_kmeans_model.fit(attn.reshape(-1, 4096).cpu())
             self.attn_kmeans_fitted = True
         slots_cluster_ids = np.reshape(self.attn_kmeans_model.predict(attn.reshape(-1, 4096).cpu()), 
-                                 [batch_size, self.latent_dim])    
+                                 [batch_size, self.latent_dim]) 
+        if WHETHER_VISUALIZE_ATTN_MAP_CLUSTERS:
+            self._visualize_attn_map_clusters(attn, slots_cluster_ids)
         slots_order = torch.tensor(np.argsort(slots_cluster_ids, axis=1))
         slots_order = slots_order.unsqueeze(2).repeat(1,1,self.dim_per_slot).to(DEVICE)
         slots = torch.gather(slots, dim=1, index=slots_order)
@@ -309,3 +313,19 @@ class LSD(nn.Module):
         assert encodings_quantized.shape == (dataset_size, self.latent_dim)
         print("LSD post_encode computed successfully!")
         return encodings_quantized
+    
+    def _visualize_attn_map_clusters(self, attn, attn_cluster_ids):
+        batch_size = attn.shape[0]
+        assert attn.shape == (batch_size, self.latent_dim, 4096)
+        assert attn_cluster_ids.shape == (batch_size, self.latent_dim)
+        # flatten them and inspect all attention masks across all images within a batch
+        attn = attn.reshape(-1, 1, 64, 64)
+        attn_cluster_ids = attn_cluster_ids.flatten()
+        for i in range(ATTN_MAP_CLUSTERS):
+            img_filename = os.path.join(SANITYCHECKDIR, f"cluster_{i+1}.jpg")
+            attn_per_cluster = attn[attn_cluster_ids == i]
+            torchvision.utils.save_image(attn_per_cluster, fp=img_filename, nrow=10, normalize=True, scale_each=True)
+        return
+
+
+

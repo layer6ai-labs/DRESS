@@ -39,6 +39,7 @@ ENCODERDIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "trained_e
 CLUSTERDIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "cluster_identities")
 LEARNCURVEDIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "train_ps")
 RESULTSDIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "results")
+SANITYCHECKDIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "visualizationn_checks")
 # The model dir should already be synched within the git repo
 for dirname in [DATADIR, MODELDIR, ENCODERDIR, CLUSTERDIR, LEARNCURVEDIR]:
     os.makedirs(dirname, exist_ok=True)
@@ -115,7 +116,7 @@ def visualize_constructed_tasks(task_generator, descriptor, args, n_imgs):
         query_ax_idx = (args.NWay-1)*(args.KShot+args.KQuery) + query_col_idx      
         all_axes[query_ax_idx].set_xlabel("Query Samples", fontsize=36)
                 
-        plt.savefig(os.path.join(ENCODERDIR, 
+        plt.savefig(os.path.join(SANITYCHECKDIR, 
                                  f"{descriptor}_constructed_tasks_eg{visual_id+1}.pdf"), 
                     format="pdf",
                     bbox_inches='tight')
