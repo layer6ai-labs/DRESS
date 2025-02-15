@@ -9,7 +9,7 @@
   "mlp_hidden_size": 192,
   "num_heads": 1,
   "num_iterations": 5,
-  "num_slots": 14,
+  "num_slots": 12,
   "slot_size": 192,
   "out_size": 192
 }

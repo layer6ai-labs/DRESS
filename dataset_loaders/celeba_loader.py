@@ -90,7 +90,7 @@ def _load_celeba(args, meta_split_type):
     elif meta_split_type == "primary":
         CELEBA_ATTRIBUTES_IDX_META_TRAIN = [3, 12, 16, 23, 28, 30, 31, 34]
         CELEBA_ATTRIBUTES_IDX_META_VALID = [3, 12, 16, 23] # without early stopping, meta validation doesn't matter
-        CELEBA_ATTRIBUTES_IDX_META_TEST = [4, 9, 15, 24, 26, 32, 35]
+        CELEBA_ATTRIBUTES_IDX_META_TEST = [4, 6, 7, 9, 15, 26, 32, 35]
     elif meta_split_type == "rand":
         CELEBA_ATTRIBUTES_IDX_META_TRAIN = [0, 1, 2, 10, 11, 12, 13, 14, 15, 21, 22]
         CELEBA_ATTRIBUTES_IDX_META_VALID = [0, 1, 2] # without early stopping, meta validation doesn't matter

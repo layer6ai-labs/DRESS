@@ -60,25 +60,26 @@ Meta test accuracy: Mean: 66.38%; Std: 20.22%
 2025-01-23 22:13:36.387357 under seed 1234
 
 
-2025-02-13 12:15:40.037114 under seed 1234
+2025-02-15 01:24:05.137967 under seed 1234
+[celeba_lsd_12D_latent on celebahair 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 0.54; Std: 0.27
+Meta test accuracy: Mean: 73.86%; Std: 16.65%
+2025-02-15 11:10:23.556594 under seed 1234
+[celeba_lsd_12D_latent on celebaprimary 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 0.48; Std: 0.27
+Meta test accuracy: Mean: 77.12%; Std: 16.90%
+2025-02-15 01:26:15.690725 under seed 1234
+[celeba_lsd_12D_latent on celebarand 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 0.53; Std: 0.27
+Meta test accuracy: Mean: 74.37%; Std: 17.11%
+
+2025-02-15 10:33:06.831962 under seed 1234
 [celeba_dino_384D_latent on celebahair 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 0.76; Std: 0.49
 Meta test accuracy: Mean: 69.85%; Std: 17.49%
-2025-02-13 12:24:14.141132 under seed 1234
-[celeba_lsd_14D_latent on celebahair 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 0.52; Std: 0.23
-Meta test accuracy: Mean: 74.17%; Std: 17.30%
-2025-02-13 13:41:06.579310 under seed 1234
-[celeba_dino_384D_latent on celebaprimary 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 0.55; Std: 0.46
-Meta test accuracy: Mean: 78.63%; Std: 17.86%
-2025-02-13 13:43:21.072705 under seed 1234
-[celeba_lsd_14D_latent on celebaprimary 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 0.51; Std: 0.24
-Meta test accuracy: Mean: 75.22%; Std: 17.98%
-2025-02-13 13:55:25.943497 under seed 1234
+2025-02-15 11:09:17.499516 under seed 1234
+[celeba_dino_384D_latent on celebaprimary 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 0.57; Std: 0.43
+Meta test accuracy: Mean: 77.04%; Std: 16.81%
+2025-02-15 10:35:20.525136 under seed 1234
 [celeba_dino_384D_latent on celebarand 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 0.50; Std: 0.41
 Meta test accuracy: Mean: 79.90%; Std: 16.35%
-2025-02-13 13:56:34.402285 under seed 1234
-[celeba_lsd_14D_latent on celebarand 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 0.55; Std: 0.22
-Meta test accuracy: Mean: 71.54%; Std: 17.27%
 
-2025-02-13 15:25:04.064770 under seed 1234
-[celeba_lsd_14D_latent on celebaprimary 2-way 5-shot meteTrain 5-shot metaTest]: Meta test loss: Mean: 0.45; Std: 0.21
-Meta test accuracy: Mean: 78.85%; Std: 15.80%
+
+
+
