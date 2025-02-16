@@ -92,9 +92,9 @@ def _load_celeba(args, meta_split_type):
         CELEBA_ATTRIBUTES_IDX_META_VALID = [3, 12, 16, 23] # without early stopping, meta validation doesn't matter
         CELEBA_ATTRIBUTES_IDX_META_TEST = [4, 6, 7, 9, 15, 26, 32, 35]
     elif meta_split_type == "rand":
-        CELEBA_ATTRIBUTES_IDX_META_TRAIN = [0, 1, 2, 10, 11, 12, 13, 14, 15, 21, 22]
-        CELEBA_ATTRIBUTES_IDX_META_VALID = [0, 1, 2] # without early stopping, meta validation doesn't matter
-        CELEBA_ATTRIBUTES_IDX_META_TEST = [4, 13, 17, 18, 21, 24, 26, 34, 36, 37]
+        CELEBA_ATTRIBUTES_IDX_META_TRAIN = [1, 2, 10, 12, 13, 14, 15, 21, 22]
+        CELEBA_ATTRIBUTES_IDX_META_VALID = [1, 2] # without early stopping, meta validation doesn't matter
+        CELEBA_ATTRIBUTES_IDX_META_TEST = [0, 3, 4, 10, 12, 14, 16, 21]
     else:
         print(f"Invalid meta_split_type for celeba: {meta_split_type}!")
         exit(1)

@@ -109,17 +109,17 @@ cd ~/DRESS
 #                --NWay 2 --KShot 5 --KQuery 5  \
 #                --seed $seedval
 
-python main.py --dsName celebaprimary  \
-               --encoder dino \
-               --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
-               --NWay 2 --KShot 5 --KQuery 5  \
-               --seed $seedval
-
-# python main.py --dsName celebarand  \
+# python main.py --dsName celebaprimary  \
 #                --encoder dino \
 #                --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
 #                --NWay 2 --KShot 5 --KQuery 5  \
 #                --seed $seedval
+
+python main.py --dsName celebarand  \
+               --encoder dino \
+               --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
+               --NWay 2 --KShot 5 --KQuery 5  \
+               --seed $seedval
 
 
 ############ DRESS with FDAE ############
@@ -160,17 +160,17 @@ python main.py --dsName celebaprimary  \
 #                --NWay 2 --KShot 5 --KQuery 5  \
 #                --seed $seedval
 
-python main.py --dsName celebaprimary  \
-               --encoder lsd  \
-               --imgSizeToEncoder 128 --imgSizeToMetaModel 84 \
-               --NWay 2 --KShot 5 --KQuery 5  \
-               --seed $seedval
-
-# python main.py --dsName celebarand  \
+# python main.py --dsName celebaprimary  \
 #                --encoder lsd  \
 #                --imgSizeToEncoder 128 --imgSizeToMetaModel 84 \
 #                --NWay 2 --KShot 5 --KQuery 5  \
 #                --seed $seedval
+
+python main.py --dsName celebarand  \
+               --encoder lsd  \
+               --imgSizeToEncoder 128 --imgSizeToMetaModel 84 \
+               --NWay 2 --KShot 5 --KQuery 5  \
+               --seed $seedval
 
 
 ########### DeepCluster ###########
