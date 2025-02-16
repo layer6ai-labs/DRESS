@@ -22,8 +22,8 @@ results = {
         'celebarand': []
     },
     'Few-Shot Direct Adaptation': {
-        'celebahair': [62.93],
-        'celebaprimary': [71.56],
+        'celebahair': [],
+        'celebaprimary': [],
         'celebarand': []
     },
     'Pre-Training and Fine-Tuning': {
@@ -42,19 +42,19 @@ results = {
         'celebarand': []
     },
     'CACTUS-DeepCluster': {
-        'celebahair': [],
-        'celebaprimary': [],
-        'celebarand': []
+        'celebahair': [70.57],
+        'celebaprimary': [71.59],
+        'celebarand': [65.87]
     },
     'CACTUS-DinoV2': {
         'celebahair': [69.85],
-        'celebaprimary': [78.63],
-        'celebarand': [79.90]
+        'celebaprimary': [77.04],
+        'celebarand': [74.59]
     },
     'DRESS': {
-        'celebahair': [74.17],
-        'celebaprimary': [75.22],
-        'celebarand': [71.54]
+        'celebahair': [73.86],
+        'celebaprimary': [77.12],
+        'celebarand': [70.01]
     }
 }
 
