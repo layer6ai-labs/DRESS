@@ -47,29 +47,29 @@ cd ~/DRESS
 #                 --seed $seedval
 # done
 
-# for supmethod in "scratch"; do
-#     python main.py --dsName celebaprimary  \
-#                 --encoder $supmethod \
-#                 --imgSizeToEncoder -1 --imgSizeToMetaModel 84 \
-#                 --NWay 2 --KShot 5 --KQuery 5 \
-#                 --seed $seedval
-# done
+for supmethod in "sup"; do #"supall" "supora" "scratch"; do
+    python main.py --dsName celebahair  \
+                --encoder $supmethod \
+                --imgSizeToEncoder -1 --imgSizeToMetaModel 84 \
+                --NWay 2 --KShot 5 --KQuery 5 \
+                --seed $seedval
+done
 
-# for supmethod in "scratch"; do
-#     python main.py --dsName celebahair  \
-#                 --encoder $supmethod \
-#                 --imgSizeToEncoder -1 --imgSizeToMetaModel 84 \
-#                 --NWay 2 --KShot 5 --KQuery 5 \
-#                 --seed $seedval
-# done
+for supmethod in "sup"; do #"supall" "supora" "scratch"; do
+    python main.py --dsName celebaprimary  \
+                --encoder $supmethod \
+                --imgSizeToEncoder -1 --imgSizeToMetaModel 84 \
+                --NWay 2 --KShot 5 --KQuery 5 \
+                --seed $seedval
+done
 
-# for supmethod in "scratch"; do
-#     python main.py --dsName celebarand  \
-#                 --encoder $supmethod \
-#                 --imgSizeToEncoder -1 --imgSizeToMetaModel 84 \
-#                 --NWay 2 --KShot 5 --KQuery 5 \
-#                 --seed $seedval
-# done
+for supmethod in "sup"; do #"supall" "supora" "scratch"; do
+    python main.py --dsName celebarand  \
+                --encoder $supmethod \
+                --imgSizeToEncoder -1 --imgSizeToMetaModel 84 \
+                --NWay 2 --KShot 5 --KQuery 5 \
+                --seed $seedval
+done
 
  
 ############# Dino #############
@@ -204,23 +204,23 @@ cd ~/DRESS
 #                --NWay 2 --KShot 5 --KQuery 5  \
 #                --seed $seedval
 
-python main.py --dsName celebahair  \
-               --encoder deepcluster  \
-               --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
-               --NWay 2 --KShot 5 --KQuery 5  \
-               --seed $seedval
+# python main.py --dsName celebahair  \
+#                --encoder deepcluster  \
+#                --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
+#                --NWay 2 --KShot 5 --KQuery 5  \
+#                --seed $seedval
 
-python main.py --dsName celebaprimary  \
-               --encoder deepcluster  \
-               --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
-               --NWay 2 --KShot 5 --KQuery 5  \
-               --seed $seedval
+# python main.py --dsName celebaprimary  \
+#                --encoder deepcluster  \
+#                --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
+#                --NWay 2 --KShot 5 --KQuery 5  \
+#                --seed $seedval
 
-python main.py --dsName celebarand  \
-               --encoder deepcluster  \
-               --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
-               --NWay 2 --KShot 5 --KQuery 5  \
-               --seed $seedval
+# python main.py --dsName celebarand  \
+#                --encoder deepcluster  \
+#                --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
+#                --NWay 2 --KShot 5 --KQuery 5  \
+#                --seed $seedval
 
 ############ PreTrain and FineTune ############
 # python main.py --dsName shapes3d  \

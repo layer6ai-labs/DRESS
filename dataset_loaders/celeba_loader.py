@@ -83,21 +83,20 @@ def _load_celeba(args, meta_split_type):
     # collect attributes for creating supervised partitions
     celeba_meta_train_attrs_all, celeba_meta_valid_attrs, celeba_meta_test_attrs = load_celeba_attrs()
 
-    if meta_split_type == "hair":
-        CELEBA_ATTRIBUTES_IDX_META_TRAIN = [15, 16, 20, 21, 22, 24, 31, 35, 38, 39]
-        CELEBA_ATTRIBUTES_IDX_META_VALID = [21, 22, 24, 31] # without early stopping, meta validation doesn't matter
+    if meta_split_type == "hair": 
         CELEBA_ATTRIBUTES_IDX_META_TEST = [5, 8, 9, 11, 17, 28, 32, 33]
     elif meta_split_type == "primary":
-        CELEBA_ATTRIBUTES_IDX_META_TRAIN = [3, 12, 16, 23, 28, 30, 31, 34]
-        CELEBA_ATTRIBUTES_IDX_META_VALID = [3, 12, 16, 23] # without early stopping, meta validation doesn't matter
         CELEBA_ATTRIBUTES_IDX_META_TEST = [4, 6, 7, 9, 15, 26, 32, 35]
     elif meta_split_type == "rand":
-        CELEBA_ATTRIBUTES_IDX_META_TRAIN = [1, 2, 10, 12, 13, 14, 15, 21, 22]
-        CELEBA_ATTRIBUTES_IDX_META_VALID = [1, 2] # without early stopping, meta validation doesn't matter
         CELEBA_ATTRIBUTES_IDX_META_TEST = [0, 3, 4, 10, 12, 14, 16, 21]
     else:
         print(f"Invalid meta_split_type for celeba: {meta_split_type}!")
         exit(1)
+
+    # for supervised benchmark, the labels are for attributes different from that for meta-test tasks
+    CELEBA_ATTRIBUTES_IDX_META_TRAIN = [i for i in range(40) if i not in CELEBA_ATTRIBUTES_IDX_META_TEST]    
+    # without early stopping, meta validation doesn't matter
+    CELEBA_ATTRIBUTES_IDX_META_VALID = CELEBA_ATTRIBUTES_IDX_META_TRAIN[:10]
 
     # Use disjoint subset of attrs for meta splits
     celeba_meta_train_attrs = celeba_meta_train_attrs_all[:,CELEBA_ATTRIBUTES_IDX_META_TRAIN]

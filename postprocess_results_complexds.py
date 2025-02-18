@@ -7,24 +7,24 @@ from utils import *
 
 results = {
     'Supervised-Original': {
-        'celebahair': [],
-        'celebaprimary': [],
-        'celebarand': []
+        'celebahair': [67.95],
+        'celebaprimary': [73.26],
+        'celebarand': [81.28]
     },
     'Supervised-All': {
-        'celebahair': [],
-        'celebaprimary': [],
-        'celebarand': []
+        'celebahair': [79.74],
+        'celebaprimary': [87.62],
+        'celebarand': [85.33]
     },
     'Supervised-Oracle': {
-        'celebahair': [],
-        'celebaprimary': [],
-        'celebarand': []
+        'celebahair': [87.07],
+        'celebaprimary': [91.08],
+        'celebarand': [90.57]
     },
     'Few-Shot Direct Adaptation': {
-        'celebahair': [],
-        'celebaprimary': [],
-        'celebarand': []
+        'celebahair': [64.00],
+        'celebaprimary': [69.12],
+        'celebarand': [57.82]
     },
     'Pre-Training and Fine-Tuning': {
         'celebahair': [],
@@ -81,7 +81,7 @@ if __name__ == "__main__":
             else:
                 res_avg = np.mean(res_vals)
                 res_std = np.std(res_vals) / np.sqrt(len(res_vals))
-                if method == "DRESS" and ds in ['celebahair']:
+                if method == "DRESS" and ds in ['celebahair', 'celebaprimary']:
                     # bold font
                     latex_table += f"\\textbf{{{res_avg:.2f}}}\% $\pm$ \\textbf{{{res_std:.2f}}}\%"
                 else:

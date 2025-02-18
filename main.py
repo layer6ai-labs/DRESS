@@ -115,9 +115,8 @@ def test(meta_model, task_generator, loss_fn, descriptor, args):
     
     with open("res.txt", "a") as f:
         f.write(str(datetime.datetime.now())+f' under seed {args.seed}'+'\n')
-        f.write(f"[{descriptor} on {args.dsName} {args.NWay}-way {args.KShot}-shot meteTrain {args.KShot}-shot metaTest]: " + \
-                f"Meta test loss: Mean: {np.mean(meta_test_losses):.2f}; Std: {np.std(meta_test_losses):.2f}\n" + \
-                f"Meta test accuracy: Mean: {np.mean(meta_test_accurs)*100:.2f}%; Std: {np.std(meta_test_accurs)*100:.2f}%\n")
+        f.write(f"[{descriptor} on {args.dsName} {args.NWay}-way {args.KShot}-shot meteTrain {args.KShot}-shot metaTest]: \n" + \
+                f"Mean meta test accuracy: {np.mean(meta_test_accurs)*100:.2f}%\n")
     print(f"[{descriptor} on {args.dsName}] testing completed!")
     return
 
