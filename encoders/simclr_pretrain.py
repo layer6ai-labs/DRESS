@@ -17,9 +17,9 @@ class SimCLR(nn.Module):
         pred_dim: hidden dimension of the predictor (default: 512)
         """
         super(SimCLR, self).__init__()
-
+        self.latent_dim = latent_dim
         # create the encoder
-        model =  torchvision.models.__dict__[args.backbone](pretrained=False, 
+        model =  torchvision.models.__dict__["resnet18"](pretrained=False, 
                                                         num_classes=latent_dim, 
                                                         zero_init_residual=True)
         # add projection head

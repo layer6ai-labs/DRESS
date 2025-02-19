@@ -102,6 +102,7 @@ def encode_data(dataset, encoder, args):
                     drop_last=False)
     encodings_origSpace_tmp = []
     for data_batch, _ in tqdm(dl, desc="encoding batches"):
+        # resize transform actually can be applied to batches of images
         encodings_origSpace_tmp.append(
             encoder.encode(data_transforms_for_encoder(data_batch).to(DEVICE)).cpu())
     encodings_origSpace_tmp = torch.concat(encodings_origSpace_tmp, dim=0)

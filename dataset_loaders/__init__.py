@@ -3,7 +3,6 @@ from .shapes3d_loader import load_shapes3d
 from .celeba_loader import *
 from .norb_loader import load_norb
 from .causal3d_loader import load_causal3d
-from .birds_loader import load_birds
 
 LOAD_DATASET = {
     'mpi3deasy': load_mpi3d_easy,
@@ -14,5 +13,4 @@ LOAD_DATASET = {
     'celebaprimary': load_celeba_primary,
     'norb': load_norb,
     'causal3d': load_causal3d,
-    'birds': load_birds
 }

@@ -38,10 +38,9 @@ MODELDIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "trained_mod
 ENCODERDIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "trained_encoders")
 CLUSTERDIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "cluster_identities")
 LEARNCURVEDIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "train_ps")
-RESULTSDIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "results")
 SANITYCHECKDIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "visualization_checks")
 # The model dir should already be synched within the git repo
-for dirname in [DATADIR, MODELDIR, ENCODERDIR, CLUSTERDIR, LEARNCURVEDIR]:
+for dirname in [DATADIR, MODELDIR, ENCODERDIR, CLUSTERDIR, LEARNCURVEDIR, SANITYCHECKDIR]:
     os.makedirs(dirname, exist_ok=True)
 
 def fix_seed(seed):
@@ -67,6 +66,9 @@ def get_descriptor(encoder, args):
         descriptor = f'{dsName_base}_{args.encoder}_{encoder.latent_dim}D_latent'
     return descriptor
 
+def accuracy_fn(preds, labels):
+    preds = preds.argmax(dim=1).view(labels.shape)
+    return (preds==labels).sum().float() / labels.size(0)
 
 def visualize_constructed_tasks(task_generator, descriptor, args, n_imgs):    
     for visual_id in range(n_imgs):
