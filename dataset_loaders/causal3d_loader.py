@@ -67,10 +67,11 @@ def _load_causal3d(args):
                 attrs_raw_all.append(attrs_raw_onecls[i])
         attrs_raw_all = np.array(attrs_raw_all)
         attrs_all = discretize_causal3d_attrs(attrs_raw_all)
-        data_transforms = build_initial_img_transforms(split, args)
         if split=="train":
+            data_transforms = build_initial_img_transforms("meta_train", args)
             ds_train = Causal3D(imgs_all, attrs_all, data_transforms)
         else:
+            data_transforms = build_initial_img_transforms("meta_test", args)
             ds_test = Causal3D(imgs_all, attrs_all, data_transforms)
 
     # just a placeholder
