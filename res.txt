@@ -3,3 +3,6 @@
 2025-02-20 11:23:52.423956 under seed 1234
 [norb_simclrpretrain_2048D_latent on norb 2-way 5-shot meteTrain 5-shot metaTest]: 
 Mean meta test accuracy: 53.84%
+2025-02-20 13:21:58.474233 under seed 1234
+[causal3d_simclrpretrain_2048D_latent on causal3d 2-way 5-shot meteTrain 5-shot metaTest]: 
+Mean meta test accuracy: 56.03%

@@ -158,8 +158,10 @@ class TwoCropsTransform:
 def build_initial_img_transforms(meta_split, args):
     # Resize happens later in the pipeline
     img_transforms = []
-    if args.dsName != "causal3d":
-        # for causal3D, images loaded are already in PIL format
+    if args.dsName == "causal3d" or args.dsName.startswith("celeba"):
+        # for these datasets, images loaded are already in PIL format
+        pass
+    else:
         img_transforms.append(T.ToPILImage())
     if args.dsName.startswith("celeba"):
         img_transforms.append(CropCelebA())
