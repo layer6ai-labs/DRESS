@@ -24,24 +24,6 @@ class MPI3D(Dataset):
     def __getitem__(self, index):
         return (self.transforms(self.imgs[index]), torch.tensor(self.attrs[index]))
 
-def build_transforms(meta_split, args):
-    img_transforms = [T.ToPILImage()]
-    if args.encoder == "simclrpretrain" and meta_split == "meta_train":
-        # MoCo v2's aug: similar to SimCLR https://arxiv.org/abs/2002.05709
-        img_transforms.extend([
-            T.RandomResizedCrop(40, scale=(0.2, 1.0)),
-            T.RandomApply(
-                [T.ColorJitter(0.4, 0.4, 0.4, 0.1)], p=0.8  # not strengthened
-            ),
-            T.RandomGrayscale(p=0.2),
-            T.RandomApply([GaussianBlur([0.1, 2.0])], p=0.5),
-            T.RandomHorizontalFlip(),
-        ])
-    img_transforms.append(T.ToTensor())
-    img_transforms = T.Compose(img_transforms)
-    if args.encoder == "simclrpretrain" and meta_split == "meta_train":
-        img_transforms=TwoCropsTransform(img_transforms)
-    return img_transforms
 
 
 def _load_mpi3d(args, meta_split_type):
@@ -90,13 +72,10 @@ def _load_mpi3d(args, meta_split_type):
     metatrain_idxs, metavalid_idxs, metatest_idxs = \
                 perm[:n_train_imgs], perm[n_train_imgs:n_train_imgs+n_val_imgs], perm[-n_test_imgs:]
     
-    # meta training (or pre-training)
-    data_transforms = build_transforms(split="meta_train", args=args)
+    data_transforms = build_initial_img_transforms(split="meta_train", args=args)
     metatrain_dataset = MPI3D(mpi3d_imgs[metatrain_idxs], mpi3d_attrs[metatrain_idxs], data_transforms)
-    # meta validation and meta testing
-    data_transforms = build_transforms(split="meta_valid", args=args)
     metavalid_dataset = MPI3D(mpi3d_imgs[metavalid_idxs], mpi3d_attrs[metavalid_idxs], data_transforms)
-    data_transforms = build_transforms(split="meta_test", args=args)
+    data_transforms = build_initial_img_transforms(split="meta_test", args=args)
     metatest_dataset = MPI3D(mpi3d_imgs[metatest_idxs], mpi3d_attrs[metatest_idxs], data_transforms)
     
     metatrain_attrs_all, metavalid_attrs, metatest_attrs = \

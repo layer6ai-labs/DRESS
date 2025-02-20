@@ -4,6 +4,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 from PIL import ImageFilter
 import torch
+from torchvision import transforms as T
+import torchvision.transforms.functional as F
 import os
 
 # Hardware setup
@@ -136,6 +138,13 @@ class GaussianBlur(object):
         x = x.filter(ImageFilter.GaussianBlur(radius=sigma))
         return x
 
+# Croping CelebA: more strict than the cropping did in original DiTi paper. 
+# Aggressive but focus on face and eliminates background noise
+class CropCelebA(object):
+    def __call__(self, img):
+        new_img = F.crop(img, 57, 35, 128, 100)
+        return new_img
+
 class TwoCropsTransform:
     """Take two random crops of one image as the query and key."""
     def __init__(self, base_transform):
@@ -145,6 +154,35 @@ class TwoCropsTransform:
         q = self.base_transform(x)
         k = self.base_transform(x)
         return [q, k]
+    
+def build_initial_img_transforms(meta_split, args):
+    # Resize happens later in the pipeline
+    img_transforms = []
+    if args.dsName != "causal3d":
+        # for causal3D, images loaded are already in PIL format
+        img_transforms.append(T.ToPILImage())
+    if args.dsName.startswith("celeba"):
+        img_transforms.append(CropCelebA())
+        img_transforms.append(T.Resize(size=(128,128)))
+    if args.encoder == "simclrpretrain" and meta_split == "meta_train":
+        # MoCo v2's aug: similar to SimCLR https://arxiv.org/abs/2002.05709
+        img_transforms.extend([
+            T.RandomResizedCrop(64, scale=(0.2, 1.0)),
+            T.RandomApply(
+                [T.ColorJitter(0.4, 0.4, 0.4, 0.1)], p=0.8  # not strengthened
+            ),
+            T.RandomGrayscale(p=0.2),
+            T.RandomApply([GaussianBlur([0.1, 2.0])], p=0.5),
+            T.RandomHorizontalFlip(),
+        ])
+    img_transforms.append(T.ToTensor())
+    if args.dsName == "norb":
+        # turn gray-scale single channel into 3 channels
+        img_transforms.append(T.Lambda(lambda x: x.repeat(3,1,1)))
+    img_transforms = T.Compose(img_transforms)
+    if args.encoder == "simclrpretrain" and meta_split == "meta_train":
+        img_transforms=TwoCropsTransform(img_transforms)
+    return img_transforms
 
 
 def get_args_parser():

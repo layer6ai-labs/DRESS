@@ -4,10 +4,8 @@ import os
 import random
 from tqdm import tqdm
 import tensorflow_datasets as tfds
-from torch.utils.data import Dataset, ConcatDataset
-from torchvision import transforms
-from torchvision.datasets.celeba import CelebA
-from torchvision.utils import save_image
+from torch.utils.data import Dataset
+from torchvision import transforms as T
 
 sys.path.append("../")
 from partition_generators import generate_attributes_based_partitions
@@ -51,6 +49,7 @@ class Norb(Dataset):
     def __getitem__(self, index):
         img, attrs = self.images[index], self.attrs[index]
         return (self.img_transforms(img), torch.tensor(attrs))
+    
 
 def load_norb(args):
     ds_tf_train = tfds.as_numpy(
@@ -72,15 +71,11 @@ def load_norb(args):
                               split='test',
                               shuffle_files=False))
     instance_label_transform_test = {0:0, 1:1, 2:2, 3:3, 5:4}
-    # Resize happens later in the pipeline
-    img_transforms = transforms.Compose([
-        transforms.ToTensor(),
-        transforms.Lambda(lambda x: x.repeat(3,1,1))
-    ])
-    ds_train, ds_valid, ds_test = (
-        Norb(ds_tf_train, img_transforms, instance_label_transform_train),
-        Norb(ds_tf_valid, img_transforms, instance_label_transform_valid),
-        Norb(ds_tf_test, img_transforms, instance_label_transform_test))
+    data_transforms = build_initial_img_transforms(meta_split="meta_train", args=args)
+    ds_train, ds_valid = (Norb(ds_tf_train, data_transforms, instance_label_transform_train),
+                          Norb(ds_tf_valid, data_transforms, instance_label_transform_valid))
+    data_transforms = build_initial_img_transforms(meta_split="meta_test", args=args)
+    ds_test = Norb(ds_tf_test, data_transforms, instance_label_transform_test)
 
     NORB_ATTRIBUTES_COUNTS = [5,5,18,9,6]
     NORB_ATTRIBUTES_IDX_META_TRAIN = [0,1] # about object identity

@@ -4,7 +4,6 @@ import os
 import random
 from torch.utils.data import Dataset, ConcatDataset
 from torchvision import transforms
-import torchvision.transforms.functional as F
 from torchvision.datasets.celeba import CelebA
 from torchvision.utils import save_image
 
@@ -45,21 +44,11 @@ def load_celeba_attrs():
     print("CelebA attributes collected!")
     return attrs_meta_train, attrs_meta_valid, attrs_meta_test
 
-# more strict than the cropping did in original DiTi paper. 
-# Aggressive but focus on face and eliminates background noise
-class CropCelebA(object):
-    def __call__(self, img):
-        new_img = F.crop(img, 57, 35, 128, 100)
-        return new_img
+
 
 def _load_celeba(args, meta_split_type):
-    # Resize happens later in the pipeline
-    data_transforms = transforms.Compose([
-        CropCelebA(),
-        transforms.Resize(size=(128,128)),
-        transforms.ToTensor()
-    ])
-   # Set up both the background and eval dataset
+    data_transforms = build_initial_img_transforms("meta_train", args)
+    # Set up both the background and eval dataset
     celeba_meta_train = CelebA(DATADIR, 
                           split='train', 
                           target_type='attr',
@@ -71,14 +60,13 @@ def _load_celeba(args, meta_split_type):
                           target_type='attr',
                           transform=data_transforms,
                           download=True)
-    
+
+    data_transforms = build_initial_img_transforms("meta_test", args)    
     celeba_meta_test = CelebA(DATADIR, 
                          split='test', 
                          target_type='attr',
                          transform=data_transforms,
                          download=True)
-
-    #TODO: validate that the attributes loaded automatically match the attributes loaded by load_celeba_attrs()
 
     # collect attributes for creating supervised partitions
     celeba_meta_train_attrs_all, celeba_meta_valid_attrs, celeba_meta_test_attrs = load_celeba_attrs()

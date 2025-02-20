@@ -33,6 +33,9 @@ class BindedDataset(Dataset):
         return enc, attr
     
 
+def compute_disentanglement_scores():
+    pass
+
 def compute_completeness_scores(meta_train_set, encoder, descriptor, args):
     encodings = encode_data(meta_train_set, encoder, args)
 
@@ -63,31 +66,5 @@ def compute_completeness_scores(meta_train_set, encoder, descriptor, args):
     print(f"[Compute_completeness_scores] finished for {descriptor}!")
     return
 
-if __name__ == "__main__":
-    parser = get_args_parser()
-    args = parser.parse_args()
-    assert min(args.NWay, args.KShotMetaTr, args.KShotMetaVa, args.KQuery) > 0
-    fix_seed(args.seed)
-
-    # load data (no need to compute the partitions)
-    (
-        meta_train_set, 
-        meta_valid_set, 
-        meta_test_set, 
-        _, 
-        _,
-        _,
-        meta_valid_partitions, 
-        meta_test_partitions
-    ) = LOAD_DATASET[args.dsName](args)
-
-
-    encoder = get_encoder(args, DEVICE)
-    descriptor = get_descriptor(encoder, args)    
-
-    if EVALUATE_COMPLETENESS:
-        compute_completeness_scores(meta_train_set, encoder, descriptor, args)
-        
-    
-    print(f"[evaluate_encoder] {args.encoder} encodings evaluation completed!")
+def compute_informativeness_scores()
       

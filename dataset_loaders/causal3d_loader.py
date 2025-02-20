@@ -53,11 +53,6 @@ def discretize_causal3d_attrs(attrs_raw):
     return attrs_quantized
 
 def _load_causal3d(args):
-    # Resize happens later in the pipeline
-    img_transforms = transforms.Compose([
-        transforms.ToTensor()
-    ])
-
     ds_train, ds_test = None, None
     for split in ["train", "test"]:
         print(f"[Causal3D] loading meta-{split} data and attributes...")
@@ -72,10 +67,11 @@ def _load_causal3d(args):
                 attrs_raw_all.append(attrs_raw_onecls[i])
         attrs_raw_all = np.array(attrs_raw_all)
         attrs_all = discretize_causal3d_attrs(attrs_raw_all)
+        data_transforms = build_initial_img_transforms(split, args)
         if split=="train":
-            ds_train = Causal3D(imgs_all, attrs_all, img_transforms)
+            ds_train = Causal3D(imgs_all, attrs_all, data_transforms)
         else:
-            ds_test = Causal3D(imgs_all, attrs_all, img_transforms)
+            ds_test = Causal3D(imgs_all, attrs_all, data_transforms)
 
     # just a placeholder
     ds_valid = ds_train

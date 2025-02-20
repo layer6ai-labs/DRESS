@@ -38,7 +38,7 @@ results = {
         'shapes3d': [65.35, 56.26, 55.77, 54.15],
         'mpi3deasy': [91.30, 93.13, 93.73, 93.54],
         'mpi3dhard': [81.98, 79.52, 78.40, 78.10],
-        'smallnorb': [],
+        'smallnorb': [53.84],
         'causal3d': []
     },
     'Meta-GMVAE': {

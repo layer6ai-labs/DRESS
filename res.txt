@@ -1,2 +1,5 @@
 =============Under seed 1234============
 
+2025-02-20 11:23:52.423956 under seed 1234
+[norb_simclrpretrain_2048D_latent on norb 2-way 5-shot meteTrain 5-shot metaTest]: 
+Mean meta test accuracy: 53.84%

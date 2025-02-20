@@ -26,9 +26,8 @@ def contrastive_pretrain(model, optimizer, train_set, valid_set, descriptor, arg
         model.train()
         train_loss = []
         for i, (images, _) in enumerate(train_loader): 
-            images = data_transforms_for_encoder(images)
-            x1 = images[0].to(DEVICE, non_blocking=True, dtype=torch.float)
-            x2 = images[1].to(DEVICE, non_blocking=True, dtype=torch.float)
+            x1 = data_transforms_for_encoder(images[0]).to(DEVICE, non_blocking=True, dtype=torch.float)
+            x2 = data_transforms_for_encoder(images[1]).to(DEVICE, non_blocking=True, dtype=torch.float)
             # compute output and loss
             z1, z2 = model(x1, x2)
             logits, labels = model.info_nce_loss(z1, z2, DEVICE, temperature= 0.5)
