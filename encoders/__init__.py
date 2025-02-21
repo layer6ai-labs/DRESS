@@ -70,7 +70,7 @@ def get_encoder(args, device):
     elif args.encoder == "metagmvae":
         encoder = GMVAE(input_size=[args.channels, args.imgSizeToEncoder, args.imgSizeToEncoder],
                         hidden_size=64,
-                        component_size=20,        
+                        component_size=args.NWay,        
                         latent_size=64, 
                         args=args).to(DEVICE)
     else:
