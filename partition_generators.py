@@ -84,7 +84,7 @@ def generate_label_based_partition(dataset):
 Unsupervised partition generator methods
 '''
 
-def encode_data(dataset, encoder, args):
+def encode_data(dataset, encoder, args, return_raw_encodings=False):
     assert args.imgSizeToEncoder > 0
     encode_batch_size = 512
     if args.dsName.startswith("celeba") or args.dsName=="animals":
@@ -106,6 +106,9 @@ def encode_data(dataset, encoder, args):
         encodings_origSpace_tmp.append(
             encoder.encode(data_transforms_for_encoder(data_batch).to(DEVICE)).cpu())
     encodings_origSpace_tmp = torch.concat(encodings_origSpace_tmp, dim=0)
+    
+    if return_raw_encodings:
+        return encodings_origSpace_tmp
     
     # post processing, such as PCA and kmeans
     encodings_origSpace = encoder.post_encode(encodings_origSpace_tmp)

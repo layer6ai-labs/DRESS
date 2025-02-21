@@ -25,7 +25,7 @@ def contrastive_pretrain(model, optimizer, train_set, valid_set, descriptor, arg
     for epoch in trange(PRETRAIN_EPOCHS):
         model.train()
         train_loss = []
-        for i, (images, _) in enumerate(train_loader): 
+        for i, (images, _) in enumerate(tqdm(train_loader)): 
             x1 = data_transforms_for_encoder(images[0]).to(DEVICE, non_blocking=True, dtype=torch.float)
             x2 = data_transforms_for_encoder(images[1]).to(DEVICE, non_blocking=True, dtype=torch.float)
             # compute output and loss

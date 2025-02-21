@@ -225,48 +225,48 @@ cd ~/DRESS
 ############ PreTrain and FineTune ############
 # python main.py --dsName shapes3d  \
 #                --encoder simclrpretrain  \
-#                --imgSizeToEncoder 64 --imgSizeToMetaModel 84  \
+#                --imgSizeToEncoder 64 --imgSizeToMetaModel 64  \
 #                --NWay 2 --KShot 5 --KQuery 5 \
 #                --seed $seedval
 
 # python main.py --dsName mpi3deasy  \
 #                --encoder simclrpretrain  \
-#                --imgSizeToEncoder 64 --imgSizeToMetaModel 84  \
+#                --imgSizeToEncoder 64 --imgSizeToMetaModel 64  \
 #                --NWay 2 --KShot 5 --KQuery 5 \
 #                --seed $seedval
 
 # python main.py --dsName mpi3dhard  \
 #                --encoder simclrpretrain  \
-#                --imgSizeToEncoder 64 --imgSizeToMetaModel 84  \
+#                --imgSizeToEncoder 64 --imgSizeToMetaModel 64  \
 #                --NWay 2 --KShot 5 --KQuery 5 \
 #                --seed $seedval
 
 # python main.py --dsName norb  \
 #                --encoder simclrpretrain  \
-#                --imgSizeToEncoder 64 --imgSizeToMetaModel 84  \
+#                --imgSizeToEncoder 64 --imgSizeToMetaModel 64  \
 #                --NWay 2 --KShot 5 --KQuery 5 \
 #                --seed $seedval
 
 # python main.py --dsName causal3d  \
 #                --encoder simclrpretrain  \
-#                --imgSizeToEncoder 64 --imgSizeToMetaModel 84  \
+#                --imgSizeToEncoder 64 --imgSizeToMetaModel 64  \
 #                --NWay 2 --KShot 5 --KQuery 5 \
 #                --seed $seedval
 
 python main.py --dsName celebahair \
                --encoder simclrpretrain  \
-               --imgSizeToEncoder 128 --imgSizeToMetaModel -1  \
+               --imgSizeToEncoder 128 --imgSizeToMetaModel 128  \
                --NWay 2 --KShot 5 --KQuery 5 \
                --seed $seedval
 
 python main.py --dsName celebaprimary  \
                --encoder simclrpretrain  \
-               --imgSizeToEncoder 128 --imgSizeToMetaModel -1  \
+               --imgSizeToEncoder 128 --imgSizeToMetaModel 128  \
                --NWay 2 --KShot 5 --KQuery 5 \
                --seed $seedval
 
 python main.py --dsName celebarand  \
                --encoder simclrpretrain  \
-               --imgSizeToEncoder 128 --imgSizeToMetaModel -1  \
+               --imgSizeToEncoder 128 --imgSizeToMetaModel 128  \
                --NWay 2 --KShot 5 --KQuery 5 \
                --seed $seedval

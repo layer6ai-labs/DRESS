@@ -27,9 +27,9 @@ results = {
         'celebarand': [57.82]
     },
     'Pre-Training and Fine-Tuning': {
-        'celebahair': [],
-        'celebaprimary': [],
-        'celebarand': []
+        'celebahair': [60.01],
+        'celebaprimary': [66.49],
+        'celebarand': [64.38]
     },
     'Meta-GMVAE': {
         'celebahair': [],
@@ -37,9 +37,9 @@ results = {
         'celebarand': []
     },
     'PsCo':{
-        'celebahair': [],
-        'celebaprimary': [],
-        'celebarand': []
+        'celebahair': [61.90],
+        'celebaprimary': [66.25],
+        'celebarand': [59.34]
     },
     'CACTUS-DeepCluster': {
         'celebahair': [70.57],
@@ -81,7 +81,8 @@ if __name__ == "__main__":
             else:
                 res_avg = np.mean(res_vals)
                 res_std = np.std(res_vals) / np.sqrt(len(res_vals))
-                if method == "DRESS" and ds in ['celebahair', 'celebaprimary']:
+                if (method == "DRESS" and ds in ['celebahair', 'celebaprimary']) or \
+                    (method == "CACTUS-DinoV2" and ds in ['celebarand']):
                     # bold font
                     latex_table += f"\\textbf{{{res_avg:.2f}}}\% $\pm$ \\textbf{{{res_std:.2f}}}\%"
                 else:

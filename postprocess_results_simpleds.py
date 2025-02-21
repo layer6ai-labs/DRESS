@@ -49,11 +49,11 @@ results = {
         'causal3d': []
     },
     'PsCo':{
-        'shapes3d': [],
+        'shapes3d': [98.57],
         'mpi3deasy': [81.85, 87.07],
-        'mpi3dhard': [],
-        'smallnorb': [],
-        'causal3d': []
+        'mpi3dhard': [66.76],
+        'smallnorb': [70.24],
+        'causal3d': [64.37]
     },
     'CACTUS-DeepCluster': {
         'shapes3d': [88.03, 86.73, 84.62, 87.86],
@@ -101,7 +101,7 @@ if __name__ == "__main__":
             else:
                 res_avg = np.mean(res_vals)
                 res_std = np.std(res_vals) / np.sqrt(len(res_vals))
-                if method == "DRESS":
+                if method == "DRESS" and ds in ['shapes3d', 'mpi3deasy', 'mpi3dhard', 'smallnorb', 'causal3d']:
                     # bold font
                     latex_table += f"\\textbf{{{res_avg:.2f}}}\% $\pm$ \\textbf{{{res_std:.2f}}}\%"
                 else:
