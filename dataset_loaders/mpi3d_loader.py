@@ -91,12 +91,12 @@ def _load_mpi3d(args, meta_split_type):
                 perm[:n_train_imgs], perm[n_train_imgs:n_train_imgs+n_val_imgs], perm[-n_test_imgs:]
     
     # meta training (or pre-training)
-    data_transforms = build_transforms(split="meta_train", args=args)
+    data_transforms = build_transforms(meta_split="meta_train", args=args)
     metatrain_dataset = MPI3D(mpi3d_imgs[metatrain_idxs], mpi3d_attrs[metatrain_idxs], data_transforms)
     # meta validation and meta testing
-    data_transforms = build_transforms(split="meta_valid", args=args)
+    data_transforms = build_transforms(meta_split="meta_valid", args=args)
     metavalid_dataset = MPI3D(mpi3d_imgs[metavalid_idxs], mpi3d_attrs[metavalid_idxs], data_transforms)
-    data_transforms = build_transforms(split="meta_test", args=args)
+    data_transforms = build_transforms(meta_split="meta_test", args=args)
     metatest_dataset = MPI3D(mpi3d_imgs[metatest_idxs], mpi3d_attrs[metatest_idxs], data_transforms)
     
     metatrain_attrs_all, metavalid_attrs, metatest_attrs = \

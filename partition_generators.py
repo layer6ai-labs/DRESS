@@ -33,12 +33,7 @@ def generate_attributes_based_partitions(attributes, code_sizes_per_attributes, 
 
     num_partitions = 0
     partitions = []
-    if meta_split == "meta_train":
-        n_samples_minimal = args.KShotMetaTr + args.KQuery 
-    elif meta_split == "meta_valid": 
-        n_samples_minimal = args.KShotMetaVa + args.KQuery
-    else:
-        n_samples_minimal = args.KShotMetaTe + args.KQuery
+    n_samples_minimal = args.KShot + args.KQuery 
  
     for attr_idxs in tqdm(combinations(range(attributes.shape[1]), order), 
                           desc=f'[{args.dsName}] get_task_from_attributes', 

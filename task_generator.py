@@ -28,15 +28,7 @@ class TaskGenerator():
         
 
     def _sample_task_idxs_labels(self, partition, meta_split, args):
-        if meta_split == "meta_train":
-            n_train_samples = args.KShotMetaTr  
-        elif meta_split == "meta_valid":
-            n_train_samples = args.KShotMetaVa
-        elif meta_split == "meta_test":
-            n_train_samples = args.KShotMetaTe
-        else:
-            print(f"Invalid split: {meta_split}!")
-            exit(1)    
+        n_train_samples = args.KShot
 
         (
             train_idxs, 

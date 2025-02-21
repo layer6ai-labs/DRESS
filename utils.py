@@ -148,7 +148,8 @@ def get_args_parser():
     parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument('--dsName', 
                         help='dataset for meta-learning', 
-                        choices=["mpi3deasy",
+                        choices=["omniglot",
+                                 "mpi3deasy",
                                  "mpi3dhard",
                                  "shapes3d"],
                         required=True)
@@ -162,7 +163,13 @@ def get_args_parser():
                                  "dino", 
                                  "deepcluster", 
                                  "fdae",
-                                 "soda"],
+                                 "soda",
+                                 "metagmvae",
+                                 ],
+                        required=True)
+    parser.add_argument('--channels',
+                        help='number of channels in the input image',
+                        type=int,
                         required=True)
     parser.add_argument('--imgSizeToEncoder',
                         help='image size to encoders',

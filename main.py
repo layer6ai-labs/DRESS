@@ -21,15 +21,7 @@ def accuracy_fn(preds, labels):
     return (preds==labels).sum().float() / labels.size(0)
 
 def fast_adapt(batch, inner_learner, loss_fn, num_adaptation_steps, meta_split, args):
-    if meta_split == "meta_train": 
-        K = args.KShotMetaTr 
-    elif meta_split == "meta_valid":
-        K = args.KShotMetaVa
-    elif meta_split == "meta_test":
-        K = args.KShotMetaTe
-    else:
-        print(f"Invalid split: {meta_split}!")
-        exit(1)
+    K = args.KShot
 
     K_te = args.KQuery
     train_data, train_labels, _, test_data, test_labels, _ = batch
