@@ -204,7 +204,13 @@ def get_args_parser():
                                  "fdae",
                                  "lsd",
                                  "diti",
-                                 "soda"],
+                                 "soda",
+                                 "metagmvae",
+                                 ],
+                        required=True)
+    parser.add_argument('--channels',
+                        help='number of channels in the input image',
+                        type=int,
                         required=True)
     parser.add_argument('--imgSizeToEncoder',
                         help='image size to encoders',
