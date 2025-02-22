@@ -69,7 +69,7 @@ def get_encoder(args, device):
         encoder = SimCLR(latent_dim=2048, args=args).to(DEVICE)
     elif args.encoder == "metagmvae":
         encoder = GMVAE(hidden_size=64,
-                        component_size=20,        
+                        component_size=2,        
                         latent_size=64, 
                         args=args).to(DEVICE)
     else:
