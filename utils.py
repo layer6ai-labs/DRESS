@@ -233,4 +233,7 @@ def get_args_parser():
     parser.add_argument('--visualizeTasks',
                         help='Visualize the constructed meta-learning tasks',
                         action='store_true')
+    parser.add_argument('--computeDCI',
+                        help='Whether computing DCI for a encoder on meta-test dataset',
+                        action='store_true')
     return parser

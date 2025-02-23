@@ -14,6 +14,7 @@ from partition_generators import generate_unsupervised_partitions
 from task_generator import TaskGenerator
 from baselines.pretraining_baseline import contrastive_pretrain, test_pretrain
 from baselines.metagmvae_baseline import metagmvae_train, metagmvae_test
+from compute_dci import compute_DCI
 
 
 def fast_adapt(batch, inner_learner, loss_fn, num_adaptation_steps, args):
@@ -166,6 +167,9 @@ if __name__ == "__main__":
     if args.visualizeTasks:
         assert args.encoder not in ["simclrpretrain", "metagmvae"]
         visualize_constructed_tasks(task_generator, descriptor, args, n_imgs=20)
+        exit(0)
+    elif args.computeDCI:
+        compute_DCI(meta_test_set, encoder, descriptor, args)
         exit(0)
 
     base_model = CNN4(output_size=args.NWay,

@@ -6,6 +6,7 @@ Following metrics are evaluated:
 """
 
 from itertools import islice
+from scipy.stats import entropy
 from torch.utils.data import Dataset, DataLoader
 from sklearn.linear_model import LogisticRegression
 from sklearn.preprocessing import StandardScaler
@@ -92,7 +93,7 @@ def learn_latent_to_attribute_mapping(metatest_ds, encoder, args):
 def collect_impt_weights(clf_models):
     clf_impt_weights = []
     for clf_model in clf_models:
-        clf_impt_weights.append(clf_model.coef_)
+        clf_impt_weights.append(np.abs(clf_model.coef_))
     return clf_impt_weights
 
 def aggregate_impt_weights(clf_impt_weights, latent_partition):
@@ -108,35 +109,57 @@ def aggregate_impt_weights(clf_impt_weights, latent_partition):
             clf_impt_weights_aggr.append(clf_impt_weights_aggr_to_one_attr)
     return np.array(clf_impt_weights_aggr)
 
-def compute_disentanglement_scores(clf_impt_weights, args):
+def compute_disentanglement_score(clf_impt_weights, args):
     print(f"Computing disentanglement score for {args.encoder}")
-    return
+    latent_dim, attr_dim = np.shape(clf_impt_weights)
+    # Entropy function takes care of normalizing across rows 
+    entropy_vals = entropy(clf_impt_weights, base=attr_dim, axis=1)
+    assert np.min(entropy_vals) >= 0 and np.max(entropy_vals) <= 1
+    # compute relative waiting (to address latent dimensions that might be useless)
+    relative_weights = np.sum(clf_impt_weights, axis=1) / np.sum(clf_impt_weights)
+    assert np.shape(entropy_vals) == np.shape(relative_weights) == (latent_dim,)
+    d_score = np.dot(1-entropy_vals, relative_weights)
+    return d_score
     
-
-def compute_completeness_scores(clf_impt_weights, args):
+def compute_completeness_score(clf_impt_weights, args):
     print(f"Computing completeness score for {args.encoder}")
-    return
+    latent_dim, attr_dim = np.shape(clf_impt_weights)
+    # Entropy function takes care of normalizing across columns 
+    entropy_vals = entropy(clf_impt_weights, base=latent_dim, axis=0)
+    assert np.min(entropy_vals) >= 0 and np.max(entropy_vals) <= 1
+    assert np.shape(entropy_vals) == (attr_dim, )
+    i_score = np.mean(1-entropy_vals)
+    return i_score
 
-
-def compute_informativeness_scores(ds_binded, clf_models, args):
+def compute_informativeness_score(ds_binded, clf_models, args):
     print(f"Computing informativeness score for {args.encoder}")
-    return
+    # take the next batch as testing points for informativeness score
+    n_samples = 5_000
+    data_loader = DataLoader(ds_binded,
+                             batch_size=n_samples,
+                             drop_last=False)
+    xs, ys = data_loader[1]
+    assert xs.shape[0] == ys.shape[0] == n_samples
+    raw_latent_dim, attr_dim = xs.shape[1], ys.shape[1]
+    attr_pred_accurs = []
+    for i in trange(attr_dim):
+        clf_model = clf_models[i]
+        attr_pred_accurs.append(clf_model.score(xs, ys))
+    return np.mean(attr_pred_accurs)
 
 
-def analyze_results(metatest_ds, encoder, descriptor, args):
+def compute_DCI(metatest_ds, encoder, descriptor, args):
     print(f"<<<<<<<<<<<<<<<Result Analysis for {descriptor}>>>>>>>>>>>>>>>>")
     metatest_ds_binded, clf_models, latent_partition = learn_latent_to_attribute_mapping(metatest_ds, encoder, args)
     clf_impt_weights = collect_impt_weights(clf_models)
     clf_impt_weights_aggr = aggregate_impt_weights(clf_impt_weights, latent_partition)
-    d_score = compute_disentanglement_scores(clf_impt_weights_aggr, latent_partition, args)
-    c_score = compute_completeness_scores(clf_impt_weights_aggr, latent_partition, args)
-    i_score = compute_informativeness_scores(metatest_ds_binded, clf_models, args)
+    d_score = compute_disentanglement_score(clf_impt_weights_aggr, latent_partition, args)
+    c_score = compute_completeness_score(clf_impt_weights_aggr, latent_partition, args)
+    i_score = compute_informativeness_score(metatest_ds_binded, clf_models, args)
 
-    with open("enc_eval.txt", "a") as f:
+    with open("dci_res.txt", "a") as f:
         f.write(str(datetime.datetime.now())+'\n')
         f.write(f"[{args.encoder} on {args.dsName}: \n")
-        for i, pred_accur in enumerate(pred_accurs):
-            f.write(f"on attr {i+1}: {np.mean(pred_accurs[i]):.2f}%;")
-            f.write(f"std {np.std(pred_accurs[i])/np.sqrt(len(pred_accurs[i]))*100:.2f}%\n")
+        f.write(f"D: {d_score:.2f}; C: {c_score:.2f}; I: {i_score:.2f} \n")
     print(f"[Compute_completeness_scores] finished for {descriptor}!")
     return
