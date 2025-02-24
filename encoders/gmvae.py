@@ -161,7 +161,7 @@ class GMVAE(nn.Module):
                 num_heads=4, 
                 ln=False
             ),          
-            nn.Linear(self.last_hidden_size, 2*self.hidden_size)
+            nn.Linear(self.last_hidden_size, 2*latent_size)
         )
 
         self.proj = nn.Sequential(
