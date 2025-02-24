@@ -14,7 +14,7 @@ from utils import *
 class Norb(Dataset):
     def __init__(self, ds_tf, img_transforms, instance_label_transform):
         self.images, self.attrs = [], []
-        self.img_transforms = img_transforms
+        self.transform = img_transforms
         # build the images and attributes into tensors
         for sample in tqdm(ds_tf):
             (
@@ -48,7 +48,7 @@ class Norb(Dataset):
 
     def __getitem__(self, index):
         img, attrs = self.images[index], self.attrs[index]
-        return (self.img_transforms(img), torch.tensor(attrs))
+        return (self.transform(img), torch.tensor(attrs))
     
 
 def load_norb(args):

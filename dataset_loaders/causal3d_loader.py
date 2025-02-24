@@ -30,13 +30,13 @@ class Causal3D(Dataset):
         self.imgs = imgs
         self.attrs = attrs
         assert np.shape(self.attrs) == (len(imgs), N_ATTRS)
-        self.transforms = transforms
+        self.transform = transforms
 
     def __len__(self):
         return len(self.imgs)
 
     def __getitem__(self, index):
-        img_tensor, attrs_tensor = self.transforms(self.imgs[index]), torch.tensor(self.attrs[index])
+        img_tensor, attrs_tensor = self.transform(self.imgs[index]), torch.tensor(self.attrs[index])
         return (img_tensor, attrs_tensor)
 
 def discretize_causal3d_attrs(attrs_raw):
