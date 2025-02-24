@@ -198,11 +198,11 @@ cd ~/DRESS
 #                --NWay 2 --KShot 5 --KQuery 5  \
 #                --seed $seedval
 
-# python main.py --dsName causal3d \
-#                --encoder deepcluster \
-#                --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
-#                --NWay 2 --KShot 5 --KQuery 5  \
-#                --seed $seedval
+python main.py --dsName causal3d \
+               --encoder deepcluster \
+               --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
+               --NWay 2 --KShot 5 --KQuery 5  \
+               --seed $seedval
 
 # python main.py --dsName celebahair  \
 #                --encoder deepcluster  \
@@ -253,20 +253,20 @@ cd ~/DRESS
 #                --NWay 2 --KShot 5 --KQuery 5 \
 #                --seed $seedval
 
-python main.py --dsName celebahair \
-               --encoder simclrpretrain  \
-               --imgSizeToEncoder 128 --imgSizeToMetaModel 128  \
-               --NWay 2 --KShot 5 --KQuery 5 \
-               --seed $seedval
+# python main.py --dsName celebahair \
+#                --encoder simclrpretrain  \
+#                --imgSizeToEncoder 128 --imgSizeToMetaModel 128  \
+#                --NWay 2 --KShot 5 --KQuery 5 \
+#                --seed $seedval
 
-python main.py --dsName celebaprimary  \
-               --encoder simclrpretrain  \
-               --imgSizeToEncoder 128 --imgSizeToMetaModel 128  \
-               --NWay 2 --KShot 5 --KQuery 5 \
-               --seed $seedval
+# python main.py --dsName celebaprimary  \
+#                --encoder simclrpretrain  \
+#                --imgSizeToEncoder 128 --imgSizeToMetaModel 128  \
+#                --NWay 2 --KShot 5 --KQuery 5 \
+#                --seed $seedval
 
-python main.py --dsName celebarand  \
-               --encoder simclrpretrain  \
-               --imgSizeToEncoder 128 --imgSizeToMetaModel 128  \
-               --NWay 2 --KShot 5 --KQuery 5 \
-               --seed $seedval
+# python main.py --dsName celebarand  \
+#                --encoder simclrpretrain  \
+#                --imgSizeToEncoder 128 --imgSizeToMetaModel 128  \
+#                --NWay 2 --KShot 5 --KQuery 5 \
+#                --seed $seedval

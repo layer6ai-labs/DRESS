@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 from PIL import ImageFilter
 import torch
 from torchvision import transforms as T
-import torchvision.transforms.functional as F
+import torchvision.transforms.functional as T_F
 import os
 
 # Hardware setup
@@ -37,12 +37,13 @@ NUM_ENCODING_CLUSTERS = 300 # originally 500 in cactus paper, taking way too lon
 # folders for saving results
 DATADIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data")
 MODELDIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "trained_models")
+CLFMODELDIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "trained_clf_models")
 ENCODERDIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "trained_encoders")
 CLUSTERDIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "cluster_identities")
 LEARNCURVEDIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "train_ps")
 SANITYCHECKDIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "visualization_checks")
 # The model dir should already be synched within the git repo
-for dirname in [DATADIR, MODELDIR, ENCODERDIR, CLUSTERDIR, LEARNCURVEDIR, SANITYCHECKDIR]:
+for dirname in [DATADIR, MODELDIR, CLFMODELDIR, ENCODERDIR, CLUSTERDIR, LEARNCURVEDIR, SANITYCHECKDIR]:
     os.makedirs(dirname, exist_ok=True)
 
 def fix_seed(seed):
@@ -142,7 +143,7 @@ class GaussianBlur(object):
 # Aggressive but focus on face and eliminates background noise
 class CropCelebA(object):
     def __call__(self, img):
-        new_img = F.crop(img, 57, 35, 128, 100)
+        new_img = T_F.crop(img, 57, 35, 128, 100)
         return new_img
 
 class TwoCropsTransform:
@@ -246,4 +247,7 @@ def get_args_parser():
                         help='beta parameter for GMVAE',
                         type=float,
                         default=1.0)
+    parser.add_argument('--computeDCI',
+                        help='Whether computing DCI for a encoder on meta-test dataset',
+                        action='store_true')
     return parser

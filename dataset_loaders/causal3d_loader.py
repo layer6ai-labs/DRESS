@@ -12,13 +12,13 @@ from partition_generators import generate_attributes_based_partitions
 from utils import *
 
 CAUSAL3D_DIR = {
-    "train": os.path.join(DATADIR, "causal3d", "train"),
-    "test": os.path.join(DATADIR, "causal3d", "test")
+    "meta_train": os.path.join(DATADIR, "causal3d", "train"),
+    "meta_test": os.path.join(DATADIR, "causal3d", "test")
 }
 N_OBJ_CLS = 7
 N_IMGS_PER_SUBDIR = {
-    "train": 36_000,
-    "test": 3_600
+    "meta_train": 36_000,
+    "meta_test": 3_600
 }
 N_ATTRS = 10
 N_LEVELS_PER_ATTR = 10
@@ -52,27 +52,36 @@ def discretize_causal3d_attrs(attrs_raw):
     assert np.shape(attrs_quantized) == np.shape(attrs_raw)
     return attrs_quantized
 
-def _load_causal3d(args):
+def load_causal3d(args):
     ds_train, ds_test = None, None
-    for split in ["train", "test"]:
-        print(f"[Causal3D] loading meta-{split} data and attributes...")
-        imgs_all, attrs_raw_all = [], []
-        for obj_cls in trange(N_OBJ_CLS):
-            img_dir = os.path.join(CAUSAL3D_DIR[split], f"images_{obj_cls}")
-            attrs_raw_onecls = np.load(os.path.join(CAUSAL3D_DIR[split], f"latents_{obj_cls}.npy"))
-            assert np.shape(attrs_raw_onecls) == (N_IMGS_PER_SUBDIR[split], N_ATTRS)
-            for i in range(N_IMGS_PER_SUBDIR[split]):
-                img_filename = f"{i:05d}.png" if split=="train" else f"{i:04d}.png"
-                imgs_all.append(Image.open(os.path.join(img_dir, img_filename)).convert('RGB'))
-                attrs_raw_all.append(attrs_raw_onecls[i])
-        attrs_raw_all = np.array(attrs_raw_all)
-        attrs_all = discretize_causal3d_attrs(attrs_raw_all)
-        if split=="train":
-            data_transforms = build_initial_img_transforms("meta_train", args)
-            ds_train = Causal3D(imgs_all, attrs_all, data_transforms)
+    for split in ["meta_train", "meta_test"]:
+        print(f"[Causal3D] loading {split} data and attributes...")
+        data_for_split_filename = os.path.join(DATADIR, "causal3d", f"causal3d_compressed_{split}.npz")
+        try:
+            data_for_split = np.load(data_for_split_filename)
+        except FileNotFoundError:
+            print("Compressed file not found. Extract from beginning...")
+            imgs_all, attrs_raw_all = [], []
+            for obj_cls in trange(N_OBJ_CLS):
+                img_dir = os.path.join(CAUSAL3D_DIR[split], f"images_{obj_cls}")
+                attrs_raw_onecls = np.load(os.path.join(CAUSAL3D_DIR[split], f"latents_{obj_cls}.npy"))
+                assert np.shape(attrs_raw_onecls) == (N_IMGS_PER_SUBDIR[split], N_ATTRS)
+                for i in range(N_IMGS_PER_SUBDIR[split]):
+                    img_filename = f"{i:05d}.png" if split=="meta_train" else f"{i:04d}.png"
+                    imgs_all.append(Image.open(os.path.join(img_dir, img_filename)).convert('RGB'))
+                    attrs_raw_all.append(attrs_raw_onecls[i])
+            attrs_raw_all = np.array(attrs_raw_all)
+            attrs_all = discretize_causal3d_attrs(attrs_raw_all)
+            data_for_split = {
+                'imgs': imgs_all,
+                'attrs': attrs_all
+            }
+            np.savez(data_for_split_filename, **data_for_split)
+        data_transforms = build_initial_img_transforms(split, args)
+        if split=="meta_train":
+            ds_train = Causal3D(data_for_split['imgs'], data_for_split['attrs'], data_transforms)
         else:
-            data_transforms = build_initial_img_transforms("meta_test", args)
-            ds_test = Causal3D(imgs_all, attrs_all, data_transforms)
+            ds_test = Causal3D(data_for_split['imgs'], data_for_split['attrs'], data_transforms)
 
     # just a placeholder
     ds_valid = ds_train
@@ -128,6 +137,3 @@ def _load_causal3d(args):
         metatest_partitions
     )
 
-
-def load_causal3d(args):
-    return _load_causal3d(args)

@@ -4,8 +4,6 @@ import math
 import torch
 import torch.nn as nn
 from torchvision import transforms
-import torchvision.transforms.functional as F
-from sklearn.decomposition import PCA
 from sklearn.cluster import KMeans
 from tqdm import trange
 
