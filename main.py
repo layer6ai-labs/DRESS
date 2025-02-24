@@ -3,7 +3,7 @@ from torch import nn, optim
 from torch.utils.tensorboard import SummaryWriter
 import learn2learn as l2l
 from learn2learn.algorithms import MAML
-from learn2learn.vision.models import OmniglotCNN, CNN4
+from learn2learn.vision.models import CNN4
 from tqdm import tqdm
 import datetime
 

@@ -11,11 +11,13 @@ from torch.utils.data import Dataset, DataLoader
 from sklearn.linear_model import LogisticRegression
 from sklearn.preprocessing import StandardScaler
 import datetime
+import joblib
 
 from utils import *
 from partition_generators import encode_data
 from dataset_loaders import *
 from encoders import *
+
 
 
 EVALUATE_COMPLETENESS = False
@@ -32,12 +34,12 @@ class BindedDataset(Dataset):
         assert np.shape(self.encodings) == (len(dataset), self.raw_latent_dim)
         assert np.shape(self.attributes) == (len(dataset), self.attr_dim)
 
-        # normalize both encodings and attributes
+        # normalize the encodings 
         # this is to ensure logistic regression weights are comparable in its absolute values
-        latent_normalizer, attr_normalizer = StandardScaler(), StandardScaler()
+        # no need to normalize attributes since they are multi-class labels
+        # also the logistic regression allows for bias
+        latent_normalizer = StandardScaler()
         self.encodings = latent_normalizer.fit_transform(self.encodings)
-        self.attributes = attr_normalizer.fit_transform(self.attributes)
-
 
     def __len__(self):
         return len(self.dataset)
@@ -59,6 +61,7 @@ def learn_latent_to_attribute_mapping(metatest_ds, encoder, args):
     n_samples = 5_000
     data_loader = DataLoader(metatest_ds_binded,
                              batch_size=n_samples, 
+                             shuffle=False,
                              drop_last=False)
     # get latent partitions based on encoder
     if args.encoder == "dino":
@@ -78,16 +81,23 @@ def learn_latent_to_attribute_mapping(metatest_ds, encoder, args):
         exit(1)
     assert sum(latent_partition) == raw_latent_dim
 
-    xs, ys = data_loader[0] 
-    assert xs.shape == (n_samples, raw_latent_dim) and \
-            ys.shape == (n_samples, attr_dim)
-    
-    print("Fitting logistic regression models...")
-    clf_models = []
-    for i in trange(attr_dim):
-        # use lasso to encourage sparce connections
-        clf = LogisticRegression(penalty='l1').fit(X=xs, y=ys[:,i])
-        clf_models.append(clf)
+    clf_models_path = os.path.join(CLFMODELDIR, f"clf_models_{args.encoder}_{args.dsName}.pkl")
+    try:
+        clf_models = joblib.load(clf_models_path)
+    except FileNotFoundError:
+        print(f"No trained clf model found at {clf_models_path}!")
+        xs, ys = next(iter(data_loader)) 
+        assert xs.shape == (n_samples, raw_latent_dim) and \
+                ys.shape == (n_samples, attr_dim)
+        
+        print("Fitting logistic regression models...")
+        clf_models = []
+        for i in trange(attr_dim):
+            # use lasso to encourage sparce connections
+            clf = LogisticRegression(solver='saga', penalty='l1').fit(X=xs, y=ys[:,i])
+            clf_models.append(clf)
+        joblib.dump(clf_models, clf_models_path)
+        print(f"Saved models into {clf_models_path}!")
     return metatest_ds_binded, clf_models, latent_partition
     
 def collect_impt_weights(clf_models):
@@ -105,7 +115,7 @@ def aggregate_impt_weights(clf_impt_weights, latent_partition):
             clf_impt_weights_aggr_to_one_attr = []
             impt_weights_iterator = iter(clf_impt_weights_to_one_attr)
             for length in latent_partition:
-                clf_impt_weights_aggr_to_one_attr.append(np.mean(islice(impt_weights_iterator, length)))
+                clf_impt_weights_aggr_to_one_attr.append(np.mean(list(islice(impt_weights_iterator, length))))
             clf_impt_weights_aggr.append(clf_impt_weights_aggr_to_one_attr)
     return np.array(clf_impt_weights_aggr)
 
@@ -137,8 +147,12 @@ def compute_informativeness_score(ds_binded, clf_models, args):
     n_samples = 5_000
     data_loader = DataLoader(ds_binded,
                              batch_size=n_samples,
+                             shuffle=False,
                              drop_last=False)
-    xs, ys = data_loader[1]
+    data_loader_iter = iter(data_loader)
+    # use the second batch to evaluate
+    next(data_loader_iter) 
+    xs, ys = next(data_loader_iter)
     assert xs.shape[0] == ys.shape[0] == n_samples
     raw_latent_dim, attr_dim = xs.shape[1], ys.shape[1]
     attr_pred_accurs = []
