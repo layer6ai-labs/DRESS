@@ -15,13 +15,13 @@ class Shapes3D(Dataset):
     def __init__(self, imgs, attrs, transforms):
         self.imgs = imgs
         self.attrs = attrs
-        self.transforms = transforms
+        self.transform = transforms
 
     def __len__(self):
         return np.shape(self.imgs)[0]
 
     def __getitem__(self, index):
-        return (self.transforms(self.imgs[index]), torch.tensor(self.attrs[index]))
+        return (self.transform(self.imgs[index]), torch.tensor(self.attrs[index]))
     
 
 def load_shapes3d(args):
