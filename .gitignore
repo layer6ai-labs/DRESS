@@ -7,6 +7,7 @@
 data/
 trained_encoders/
 trained_models/
+trained_clf_models/
 cluster_identities/
 learning_curves/
 train_ps/

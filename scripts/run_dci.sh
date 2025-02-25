@@ -5,8 +5,8 @@ seedval=2367
 cd ~/DRESS
 
 python main.py  --dsName celebaprimary  \
-                --encoder lsd  \
-                --imgSizeToEncoder 128 --imgSizeToMetaModel 84 \
+                --encoder dino  \
+                --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
                 --NWay 2 --KShot 5 --KQuery 5  \
                 --seed $seedval \
                 --computeDCI

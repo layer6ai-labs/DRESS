@@ -10,6 +10,7 @@ from scipy.stats import entropy
 from torch.utils.data import Dataset, DataLoader
 from sklearn.linear_model import LogisticRegression
 from sklearn.preprocessing import StandardScaler
+from sklearn.metrics import log_loss
 import datetime
 import joblib
 
@@ -103,7 +104,10 @@ def learn_latent_to_attribute_mapping(metatest_ds, encoder, args):
 def collect_impt_weights(clf_models):
     clf_impt_weights = []
     for clf_model in clf_models:
-        clf_impt_weights.append(np.abs(clf_model.coef_))
+        # for multi-class classification, pick the largest weight 
+        # as that class is affected the most by the encoding
+        clf_impt_weights_one_attr = np.max(np.abs(clf_model.coef_), axis=0)
+        clf_impt_weights.append(clf_impt_weights_one_attr)
     return clf_impt_weights
 
 def aggregate_impt_weights(clf_impt_weights, latent_partition):
@@ -138,8 +142,8 @@ def compute_completeness_score(clf_impt_weights, args):
     entropy_vals = entropy(clf_impt_weights, base=latent_dim, axis=0)
     assert np.min(entropy_vals) >= 0 and np.max(entropy_vals) <= 1
     assert np.shape(entropy_vals) == (attr_dim, )
-    i_score = np.mean(1-entropy_vals)
-    return i_score
+    c_score = np.mean(1-entropy_vals)
+    return c_score
 
 def compute_informativeness_score(ds_binded, clf_models, args):
     print(f"Computing informativeness score for {args.encoder}")
@@ -155,11 +159,12 @@ def compute_informativeness_score(ds_binded, clf_models, args):
     xs, ys = next(data_loader_iter)
     assert xs.shape[0] == ys.shape[0] == n_samples
     raw_latent_dim, attr_dim = xs.shape[1], ys.shape[1]
-    attr_pred_accurs = []
+    attr_pred_losses = []
     for i in trange(attr_dim):
         clf_model = clf_models[i]
-        attr_pred_accurs.append(clf_model.score(xs, ys))
-    return np.mean(attr_pred_accurs)
+        attr_pred_losses.append(log_loss(y_true=ys[:,i], y_pred=clf_model.predict(xs)))
+    i_score = 1-attr_pred_losses
+    return np.mean(i_score)
 
 
 def compute_DCI(metatest_ds, encoder, descriptor, args):
@@ -167,13 +172,13 @@ def compute_DCI(metatest_ds, encoder, descriptor, args):
     metatest_ds_binded, clf_models, latent_partition = learn_latent_to_attribute_mapping(metatest_ds, encoder, args)
     clf_impt_weights = collect_impt_weights(clf_models)
     clf_impt_weights_aggr = aggregate_impt_weights(clf_impt_weights, latent_partition)
-    d_score = compute_disentanglement_score(clf_impt_weights_aggr, latent_partition, args)
-    c_score = compute_completeness_score(clf_impt_weights_aggr, latent_partition, args)
+    d_score = compute_disentanglement_score(clf_impt_weights_aggr, args)
+    c_score = compute_completeness_score(clf_impt_weights_aggr, args)
     i_score = compute_informativeness_score(metatest_ds_binded, clf_models, args)
 
     with open("dci_res.txt", "a") as f:
         f.write(str(datetime.datetime.now())+'\n')
-        f.write(f"[{args.encoder} on {args.dsName}: \n")
+        f.write(f"{args.encoder} on {args.dsName}: \n")
         f.write(f"D: {d_score:.2f}; C: {c_score:.2f}; I: {i_score:.2f} \n")
     print(f"[Compute_completeness_scores] finished for {descriptor}!")
     return
