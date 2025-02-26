@@ -73,9 +73,9 @@ if __name__ == "__main__":
                 if (method == "DRESS" and ds in ['shapes3d', 'mpi3dhard', 'smallnorb', 'celebahair']) or \
                     (method == "CACTUS-DeepCluster" and ds == 'causal3d'):
                     # bold font
-                    latex_table += f"\\textbf{{{1-res_avg:.2f}}}\% $\pm$ \\textbf{{{res_std:.2f}}}\%"
+                    latex_table += f"\\textbf{{{1-res_avg:.2f}}} $\pm$ \\textbf{{{res_std:.2f}}}"
                 else:
-                    latex_table += f"${1-res_avg:.2f}\% \pm {res_std:.2f}\%$"
+                    latex_table += f"${1-res_avg:.2f} \pm {res_std:.2f}$"
             if ds != "celebahair":
                 latex_table += " & "
             else:

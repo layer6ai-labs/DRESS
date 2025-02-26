@@ -1,4 +1,0 @@
-
-2025-02-25 21:52:05.322156
-mpi3d_fdae_14D_latent: 
-Joint over union: avg: 0.08; std: 0.10 

@@ -48,14 +48,14 @@ results = {
         'celebarand': [65.87]
     },
     'CACTUS-DinoV2': {
-        'celebahair': [69.85],
-        'celebaprimary': [77.04],
-        'celebarand': [74.59]
+        'celebahair': [69.85, 69.11],
+        'celebaprimary': [77.04, 77.48],
+        'celebarand': [74.59, 74.42]
     },
     'DRESS': {
-        'celebahair': [73.86],
-        'celebaprimary': [77.12],
-        'celebarand': [70.01]
+        'celebahair': [73.86, 74.18],
+        'celebaprimary': [77.12, 77.40],
+        'celebarand': [70.01, 67.49]
     }
 }
 
@@ -82,7 +82,7 @@ if __name__ == "__main__":
             else:
                 res_avg = np.mean(res_vals)
                 res_std = np.std(res_vals) / np.sqrt(len(res_vals))
-                if (method == "DRESS" and ds in ['celebahair', 'celebaprimary']) or \
+                if (method == "DRESS" and ds in ['celebahair']) or \
                     (method == "CACTUS-DinoV2" and ds in ['celebarand']):
                     # bold font
                     latex_table += f"\\textbf{{{res_avg:.2f}}}\% $\pm$ \\textbf{{{res_std:.2f}}}\%"

@@ -179,7 +179,7 @@ def compute_DCI(metatest_ds, encoder, descriptor, args):
     i_score = compute_informativeness_score(metatest_ds_binded, clf_models, args)
 
     res_filename = os.path.join(os.path.dirname(os.path.abspath(__file__)), 
-                                        "dci_res.tex")
+                                        "dci_res.txt")
     with open(res_filename, "a") as f:
         f.write(str(datetime.datetime.now())+'\n')
         f.write(f"{args.encoder} on {args.dsName}: \n")

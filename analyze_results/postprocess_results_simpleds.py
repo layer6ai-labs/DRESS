@@ -43,10 +43,10 @@ results = {
         'causal3d': [56.03]
     },
     'Meta-GMVAE': {
-        'shapes3d': [],
+        'shapes3d': [57.04, 56.23, 58.14, 64.98],
         'mpi3deasy': [99.62, 99.64, 99.03, 99.27],
         'mpi3dhard': [],
-        'smallnorb': [],
+        'smallnorb': [66.29, 68.86, 70.36, 68.89],
         'causal3d': []
     },
     'PsCo':{
@@ -102,7 +102,8 @@ if __name__ == "__main__":
             else:
                 res_avg = np.mean(res_vals)
                 res_std = np.std(res_vals) / np.sqrt(len(res_vals))
-                if method == "DRESS" and ds in ['shapes3d', 'mpi3deasy', 'mpi3dhard', 'smallnorb', 'causal3d']:
+                if (method == "DRESS" and ds in ['mpi3deasy', 'mpi3dhard', 'smallnorb', 'causal3d']) or \
+                    (method == "PsCo" and ds == 'shapes3d'):
                     # bold font
                     latex_table += f"\\textbf{{{res_avg:.2f}}}\% $\pm$ \\textbf{{{res_std:.2f}}}\%"
                 else:
