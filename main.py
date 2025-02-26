@@ -14,7 +14,8 @@ from partition_generators import generate_unsupervised_partitions
 from task_generator import TaskGenerator
 from baselines.pretraining_baseline import contrastive_pretrain, test_pretrain
 from baselines.metagmvae_baseline import metagmvae_train, metagmvae_test
-from compute_dci import compute_DCI
+from analyze_results.compute_dci import compute_DCI
+from analyze_results.compute_partition_overlap import compute_partition_overlap
 
 
 def fast_adapt(batch, inner_learner, loss_fn, num_adaptation_steps, args):
@@ -171,6 +172,11 @@ if __name__ == "__main__":
     elif args.computeDCI:
         compute_DCI(meta_test_set, encoder, descriptor, args)
         exit(0)
+    elif args.computePartitionOverlap:
+        compute_partition_overlap(meta_train_partitions, descriptor)
+        exit(0)
+    else:
+        pass
 
     base_model = CNN4(output_size=args.NWay,
                       hidden_size=32,

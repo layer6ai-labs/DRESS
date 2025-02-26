@@ -250,4 +250,7 @@ def get_args_parser():
     parser.add_argument('--computeDCI',
                         help='Whether computing DCI for a encoder on meta-test dataset',
                         action='store_true')
+    parser.add_argument('--computePartitionOverlap',
+                        help='Whether computing the partition overlap metric',
+                        action='store_true')
     return parser

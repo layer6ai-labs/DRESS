@@ -13,6 +13,8 @@ from sklearn.preprocessing import StandardScaler
 import datetime
 import joblib
 
+import sys
+sys.path.append("../")
 from utils import *
 from partition_generators import encode_data
 from dataset_loaders import *
@@ -171,7 +173,9 @@ def compute_DCI(metatest_ds, encoder, descriptor, args):
     c_score = compute_completeness_score(clf_impt_weights_aggr, latent_partition, args)
     i_score = compute_informativeness_score(metatest_ds_binded, clf_models, args)
 
-    with open("dci_res.txt", "a") as f:
+    res_filename = os.path.join(os.path.dirname(os.path.abspath(__file__)), 
+                                        "dci_res.tex")
+    with open(res_filename, "a") as f:
         f.write(str(datetime.datetime.now())+'\n')
         f.write(f"[{args.encoder} on {args.dsName}: \n")
         f.write(f"D: {d_score:.2f}; C: {c_score:.2f}; I: {i_score:.2f} \n")
