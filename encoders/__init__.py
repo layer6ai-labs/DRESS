@@ -70,8 +70,8 @@ def get_encoder(args, device):
     elif args.encoder == "metagmvae":
         encoder = GMVAE(input_size=[args.channels, args.imgSizeToEncoder, args.imgSizeToEncoder],
                         hidden_size=64,
-                        component_size=20,        
-                        latent_size=64, 
+                        component_size=args.NWay,        
+                        latent_size=args.latent_dim, 
                         args=args).to(DEVICE)
     else:
         print(f"Encoder model {args.encoder} hasn't been implemented yet!")

@@ -30,7 +30,7 @@ PRETRAIN_LR = 0.05
 FINETUNE_STEPS = 5
 FINETUNE_LR = 0.05
 # Meta-GMVAE setup
-GMVAE_METATRAIN_LR = 1e-3
+GMVAE_METATRAIN_LR = 1e-4
 # Dino & deepcluster setup
 NUM_ENCODING_PARTITIONS = 50
 NUM_ENCODING_CLUSTERS = 300 # originally 500 in cactus paper, taking way too long
@@ -205,8 +205,17 @@ def get_args_parser():
                                  "fdae",
                                  "lsd",
                                  "diti",
-                                 "soda"],
+                                 "soda",
+                                 "metagmvae",
+                                 ],
                         required=True)
+    parser.add_argument('--channels',
+                        help='number of channels in the input image',
+                        type=int)
+    parser.add_argument('--latent_dim',
+                        help='model latent dimension',
+                        type=int,
+                        default=64)
     parser.add_argument('--imgSizeToEncoder',
                         help='image size to encoders',
                         type=int,
@@ -234,7 +243,14 @@ def get_args_parser():
     parser.add_argument('--visualizeTasks',
                         help='Visualize the constructed meta-learning tasks',
                         action='store_true')
+    parser.add_argument('--gmvae_beta',
+                        help='beta parameter for GMVAE',
+                        type=float,
+                        default=1.0)
     parser.add_argument('--computeDCI',
                         help='Whether computing DCI for a encoder on meta-test dataset',
+                        action='store_true')
+    parser.add_argument('--computePartitionOverlap',
+                        help='Whether computing the partition overlap metric',
                         action='store_true')
     return parser
