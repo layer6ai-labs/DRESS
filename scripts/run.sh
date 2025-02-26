@@ -198,11 +198,11 @@ cd ~/DRESS
 #                --NWay 2 --KShot 5 --KQuery 5  \
 #                --seed $seedval
 
-python main.py --dsName causal3d \
-               --encoder deepcluster \
-               --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
-               --NWay 2 --KShot 5 --KQuery 5  \
-               --seed $seedval
+# python main.py --dsName causal3d \
+#                --encoder deepcluster \
+#                --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
+#                --NWay 2 --KShot 5 --KQuery 5  \
+#                --seed $seedval
 
 # python main.py --dsName celebahair  \
 #                --encoder deepcluster  \
@@ -270,3 +270,9 @@ python main.py --dsName causal3d \
 #                --imgSizeToEncoder 128 --imgSizeToMetaModel 128  \
 #                --NWay 2 --KShot 5 --KQuery 5 \
 #                --seed $seedval
+
+python main.py --dsName causal3d  \
+               --encoder metagmvae  \
+               --channels 3 --imgSizeToEncoder 64 --imgSizeToMetaModel 64 \
+               --NWay 2 --KQuery 5 --KShot 5 \
+               --seed $seedval

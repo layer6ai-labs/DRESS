@@ -1,8 +1,9 @@
 # Script to organize few-shot learning results of all the methods
 # to a latex table file
 
-import matplotlib.pyplot as plt
 import os
+import sys
+sys.path.append("../")
 from utils import *
 
 results = {
@@ -43,7 +44,7 @@ results = {
     },
     'Meta-GMVAE': {
         'shapes3d': [],
-        'mpi3deasy': [],
+        'mpi3deasy': [99.62, 99.64, 99.03, 99.27],
         'mpi3dhard': [],
         'smallnorb': [],
         'causal3d': []
@@ -118,7 +119,8 @@ if __name__ == "__main__":
     latex_table += "\\bottomrule \n" 
     
     # write the results to a file 
-    latex_table_filename = "res_table_simpleds.tex"
+    latex_table_filename = os.path.join(os.path.dirname(os.path.abspath(__file__)), 
+                                        "res_table_simpleds.tex")
     with open(latex_table_filename, "w") as f:
         f.write(latex_table)
     

@@ -13,6 +13,7 @@ import torch.nn.functional as F
 from torch.utils.tensorboard import SummaryWriter
 import torchvision
 from torch.utils.data import TensorDataset, DataLoader, RandomSampler
+import torchvision.transforms as transforms
 
 import sys
 sys.path.append("../")
@@ -21,13 +22,18 @@ from utils import *
 
 def metagmvae_train(gmvae_model, opt, meta_train_set, meta_valid_set, descriptor, args):        
     print(f"[{descriptor}] Pre-Training Meta-GMVAE...")
+    tb_writer = SummaryWriter(log_dir=os.path.join(LEARNCURVEDIR, descriptor, str(datetime.datetime.now())))
 
     global_epoch = 0
+    global_step = 0
     freq_iters = 1000
     sample_size = 200
     batch_size = 4
-
-    train_loader =  DataLoader(meta_train_set, batch_size=batch_size*sample_size, shuffle=True, drop_last=False)
+    beta = args.gmvae_beta
+    data_transforms = transforms.Resize((
+                                    args.imgSizeToEncoder, 
+                                    args.imgSizeToEncoder))
+    train_loader = DataLoader(meta_train_set, batch_size=batch_size*sample_size, shuffle=True, drop_last=True)
 
     train_iterator = iter(train_loader)
 
@@ -44,10 +50,11 @@ def metagmvae_train(gmvae_model, opt, meta_train_set, meta_valid_set, descriptor
                     X = next(iterator)[0]
                                     
                 X = X.to(DEVICE).float()
-                X = X.view(batch_size, sample_size, args.imgSizeToEncoder, args.imgSizeToEncoder)
+                X = data_transforms(X)
+                X = X.view(batch_size, sample_size, -1, args.imgSizeToEncoder, args.imgSizeToEncoder)
 
                 rec_loss, kl_loss = gmvae_model(X)
-                loss = rec_loss + kl_loss
+                loss = rec_loss + beta * kl_loss
                 
                 loss.backward()          
                 opt.step()
@@ -59,6 +66,11 @@ def metagmvae_train(gmvae_model, opt, meta_train_set, meta_valid_set, descriptor
                 )
                 pbar.set_postfix(**postfix)                    
                 pbar.update(1)
+                tb_writer.add_scalar("Loss/rec_loss", rec_loss, global_step)
+                tb_writer.add_scalar("Loss/kl_loss", kl_loss, global_step)
+                tb_writer.add_scalar("Loss/total_loss", loss, global_step)
+
+                global_step += 1
 
         global_epoch += 1
 
@@ -69,6 +81,11 @@ def metagmvae_train(gmvae_model, opt, meta_train_set, meta_valid_set, descriptor
 def metagmvae_test(gmvae_model, task_generator, loss_fn, descriptor, args):
     meta_test_losses, meta_test_accurs = [], []
     gmvae_model.eval()
+    all_task_batch = []
+    all_predictions = []
+    data_transforms = transforms.Resize((
+                                    args.imgSizeToEncoder, 
+                                    args.imgSizeToEncoder))
 
     for _ in tqdm(range(NUM_TASKS_METATEST), desc='Testing tasks'):
         task_batch = task_generator.sample_task("meta_test", args)
@@ -76,21 +93,16 @@ def metagmvae_test(gmvae_model, task_generator, loss_fn, descriptor, args):
         train_data, train_labels, test_data, test_labels =  \
             train_data.to(DEVICE), train_labels.to(DEVICE), test_data.to(DEVICE), test_labels.to(DEVICE)
 
+        train_data = data_transforms(train_data.unsqueeze(0))
+        train_labels = train_labels.unsqueeze(0)
+        test_data = data_transforms(test_data.unsqueeze(0))
+        test_labels = test_labels.unsqueeze(0)
         test_predictions = gmvae_model.prediction(train_data, train_labels, test_data)
-        loss = loss_fn(test_predictions, test_labels).item()
+        loss = loss_fn(test_predictions.float(), test_labels.float()).item()
         accuracy = torch.mean(torch.eq(test_predictions, test_labels).float()).item()
         meta_test_losses.append(loss)
         meta_test_accurs.append(accuracy)
-    
-    with open("res.txt", "a") as f:
-        f.write(str(datetime.datetime.now())+f' under seed {args.seed}'+'\n')
-        f.write(f"[{descriptor} {args.NWay}-way {args.KShot}-shot meteTrain {args.KShot}-shot metaTest]: " + \
-                f"Meta test loss: Mean: {np.mean(meta_test_losses):.2f}; Std: {np.std(meta_test_losses):.2f}\n" + \
-                f"Meta test accuracy: Mean: {np.mean(meta_test_accurs)*100:.2f}%; Std: {np.std(meta_test_accurs)*100:.2f}%\n")
-    print(f"[{descriptor}] testing completed!")
-    return
 
-
-
-
-
+        all_task_batch.append(task_batch)
+        all_predictions.append(test_predictions)
+    return meta_test_accurs

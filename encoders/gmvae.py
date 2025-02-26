@@ -9,12 +9,12 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 class GMVAE_Encoder(nn.Module):
-    def __init__(self, hidden_size):
+    def __init__(self, in_channels, hidden_size):
         super(GMVAE_Encoder, self).__init__()
         self.last_hidden_size = 2*2*hidden_size
         self.encoder = nn.Sequential(
             # -1, hidden_size, 14, 14
-            nn.Conv2d(1, hidden_size, 3, 1, 1),
+            nn.Conv2d(in_channels, hidden_size, 3, 1, 1),
             nn.BatchNorm2d(hidden_size),
             nn.ReLU(inplace=True),
             nn.MaxPool2d(2, ceil_mode=True),
@@ -24,6 +24,11 @@ class GMVAE_Encoder(nn.Module):
             nn.ReLU(inplace=True),
             nn.MaxPool2d(2, ceil_mode=True),
             # -1, 2*hidden_size, 4, 4
+            nn.Conv2d(hidden_size, hidden_size, 3, 1, 1),
+            nn.BatchNorm2d(hidden_size),
+            nn.ReLU(inplace=True),
+            nn.MaxPool2d(2, ceil_mode=True),
+            # -1, 2*hidden_size, 2, 2
             nn.Conv2d(hidden_size, hidden_size, 3, 1, 1),
             nn.BatchNorm2d(hidden_size),
             nn.ReLU(inplace=True),
@@ -43,7 +48,7 @@ class GMVAE_Encoder(nn.Module):
         return h
 
 class GMVAE_Decoder(nn.Module):
-    def __init__(self, hidden_size):
+    def __init__(self, out_channels, hidden_size):
         super(GMVAE_Decoder, self).__init__()
         self.hidden_size = hidden_size
         self.decoder = nn.Sequential(
@@ -51,8 +56,12 @@ class GMVAE_Decoder(nn.Module):
             nn.ConvTranspose2d(hidden_size, hidden_size, 4, 2, 1),
             nn.BatchNorm2d(hidden_size),
             nn.ReLU(inplace=True),
+            # -1, hidden_size, 4, 4
+            nn.ConvTranspose2d(hidden_size, hidden_size, 4, 2, 1),
+            nn.BatchNorm2d(hidden_size),
+            nn.ReLU(inplace=True),
             # -1, hidden_size, 7, 7
-            nn.ConvTranspose2d(hidden_size, hidden_size, 3, 2, 1),
+            nn.ConvTranspose2d(hidden_size, hidden_size, 4, 2, 1),
             nn.BatchNorm2d(hidden_size),
             nn.ReLU(inplace=True),
             # -1, hidden_size, 14, 14
@@ -60,8 +69,8 @@ class GMVAE_Decoder(nn.Module):
             nn.BatchNorm2d(hidden_size),
             nn.ReLU(inplace=True),
             # -1, 1, 28, 28
-            nn.ConvTranspose2d(hidden_size, 1, 4, 2, 1),
-            nn.Sigmoid()
+            nn.ConvTranspose2d(hidden_size, out_channels, 4, 2, 1),
+            nn.Sigmoid(),
         )        
 
     def forward(self, h):
@@ -114,6 +123,7 @@ class GMVAE_SAB(nn.Module):
 class GMVAE(nn.Module):
     def __init__(
         self,
+        input_size,
         hidden_size,
         component_size,   
         latent_size, 
@@ -121,18 +131,20 @@ class GMVAE(nn.Module):
     ):
         super(GMVAE, self).__init__()
         
-        self.input_size = args.imgSizeToEncoder
-        self.unsupervised_em_iters = 5
-        self.semisupervised_em_iters = 5
+        self.input_size = input_size
+        self.unsupervised_em_iters = 10
+        self.semisupervised_em_iters = 10
         self.fix_pi = False
         self.hidden_size = hidden_size
         self.last_hidden_size = 2*2*hidden_size
         self.component_size = component_size
+        self.latent_dim = latent_size  # alias
         self.latent_size = latent_size
-        self.train_mc_sample_size = 32
-        self.test_mc_sample_size = 32
+        self.train_mc_sample_size = 10
+        self.test_mc_sample_size = 10
 
         self.encoder = GMVAE_Encoder(
+            in_channels=input_size[0],
             hidden_size=hidden_size             
         )
 
@@ -149,7 +161,7 @@ class GMVAE(nn.Module):
                 num_heads=4, 
                 ln=False
             ),          
-            nn.Linear(self.last_hidden_size, 2*self.hidden_size)
+            nn.Linear(self.last_hidden_size, 2*latent_size)
         )
 
         self.proj = nn.Sequential(
@@ -162,7 +174,8 @@ class GMVAE(nn.Module):
         )
 
         self.decoder = GMVAE_Decoder(
-            hidden_size=hidden_size          
+            hidden_size=hidden_size,
+            out_channels=input_size[0]
         )
 
         self.rec_criterion = nn.BCELoss(reduction='sum')
@@ -371,8 +384,9 @@ class GMVAE(nn.Module):
 
         # encode
         H = self.encoder(
-            X.view(-1, self.input_size, self.input_size)
-        ).view(batch_size, sample_size, self.last_hidden_size)
+            X.view(-1, *self.input_size)
+        )
+        H = H.view(batch_size, sample_size, self.last_hidden_size)
 
         # q_z
         # batch_size, sample_size, latent_size
@@ -391,9 +405,8 @@ class GMVAE(nn.Module):
         # batch_size*sample_size*mc_sample_size, latent_size
         H_rec = self.proj(q_z_given_x.view(-1, self.latent_size))
         # batch_size*sample_size*mc_sample_size, 1, 28, 28
-        X_rec = self.decoder(
-            H_rec
-        ).view(batch_size, sample_size, self.train_mc_sample_size, self.input_size, self.input_size)
+        X_rec = self.decoder(H_rec)
+        X_rec = X_rec.view(batch_size, sample_size, self.train_mc_sample_size, *self.input_size)
 
         ## rec loss ##
         rec_loss = self.rec_criterion(
@@ -421,6 +434,7 @@ class GMVAE(nn.Module):
 
         #kl_loss = torch.mean(log_qz.mean(dim=-1) - log_pz.mean(dim=-1))
         kl_loss = torch.mean(log_qz - log_pz)
+        breakpoint()
 
         return rec_loss, kl_loss
 
@@ -430,11 +444,9 @@ class GMVAE(nn.Module):
 
         # batch_size, tr_sample_size+te_sample_size, 1, 28, 28
         X = torch.cat([X_tr, X_te], dim=1)
-
         # encode
-        H = self.encoder(
-            X.view(-1, self.input_size, self.input_size)
-        ).view(batch_size, tr_sample_size+te_sample_size, self.last_hidden_size)
+        H = self.encoder(X.view(-1, *self.input_size))
+        H = H.view(batch_size, tr_sample_size+te_sample_size, self.last_hidden_size)
 
         # q_z
         # batch_size, tr_sample_size+te_sample_size, mc_sample_size, latent_size
@@ -476,5 +488,6 @@ class GMVAE(nn.Module):
         )
         # batch_size, sample_size
         y_te_pred = posteriors.mean(dim=-2).argmax(dim=-1)
+        breakpoint()
 
         return y_te_pred

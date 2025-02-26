@@ -68,9 +68,10 @@ def get_encoder(args, device):
     elif args.encoder == "simclrpretrain":
         encoder = SimCLR(latent_dim=2048, args=args).to(DEVICE)
     elif args.encoder == "metagmvae":
-        encoder = GMVAE(hidden_size=64,
-                        component_size=2,        
-                        latent_size=64, 
+        encoder = GMVAE(input_size=[args.channels, args.imgSizeToEncoder, args.imgSizeToEncoder],
+                        hidden_size=64,
+                        component_size=args.NWay,        
+                        latent_size=args.latent_dim, 
                         args=args).to(DEVICE)
     else:
         print(f"Encoder model {args.encoder} hasn't been implemented yet!")

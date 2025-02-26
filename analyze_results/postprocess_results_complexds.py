@@ -1,8 +1,9 @@
 # Script to organize few-shot learning results of all the methods
 # to a latex table file
 
-import matplotlib.pyplot as plt
 import os
+import sys
+sys.path.append("../")
 from utils import *
 
 results = {
@@ -99,7 +100,8 @@ if __name__ == "__main__":
     latex_table += "\\bottomrule \n" 
     
     # write the results to a file 
-    latex_table_filename = "res_table_complexds.tex"
+    latex_table_filename = os.path.join(os.path.dirname(os.path.abspath(__file__)), 
+                                        "res_table_complexds.tex")
     with open(latex_table_filename, "w") as f:
         f.write(latex_table)
     
