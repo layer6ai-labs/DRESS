@@ -2,9 +2,11 @@ from .dino import DinoV2
 from .deep_cluster import DeepCluster
 from .vae import *
 from .fdae import *
+from .diti import *
 from .simclr_pretrain import SimCLR
 from .gmvae import GMVAE
 from .soda import *
+from .lsd import LSD
 
 def get_encoder(args, device):
     if args.encoder in ['sup', 'supall', 'supora', 'scratch']:
@@ -31,20 +33,20 @@ def get_encoder(args, device):
             code_length = 80
             code_length_reduced = 40
             levels_per_dim = 200
-        elif args.dsName.startswith("celeba"):
-            n_semantic_groups = 15
-            code_length = 100
-            code_length_reduced = 30
-            levels_per_dim = 500
         elif args.dsName.startswith("mpi3d"):
             # probably would need to increase for mpi3d
             n_semantic_groups = 7
             code_length = 100
             code_length_reduced = 40
             levels_per_dim = 200
-        elif args.dsName == "animals":
+        elif args.dsName == "norb":
             n_semantic_groups = 8
-            code_length = 100
+            code_length = 80
+            code_length_reduced = 40
+            levels_per_dim = 200
+        elif args.dsName == "causal3d":
+            n_semantic_groups = 8
+            code_length = 80
             code_length_reduced = 40
             levels_per_dim = 200
         else:
@@ -55,6 +57,10 @@ def get_encoder(args, device):
                        code_length_reduced=code_length_reduced,
                        levels_per_dim=levels_per_dim,
                        args=args).to(device)
+    elif args.encoder == "lsd":
+        encoder = LSD(levels_per_dim=200, args=args).to(DEVICE)
+    elif args.encoder == "diti":
+        encoder = DiTi(levels_per_dim=200, args=args).to(DEVICE)
     elif args.encoder == "soda":
         encoder = SODA(latent_dim=32, 
                        levels_per_dim=100,

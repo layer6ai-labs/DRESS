@@ -45,12 +45,10 @@ def load_celeba_attrs():
     return attrs_meta_train, attrs_meta_valid, attrs_meta_test
 
 
+
 def _load_celeba(args, meta_split_type):
-    # Resize happens later in the pipeline
-    data_transforms = transforms.Compose([
-        transforms.ToTensor()
-    ])
-   # Set up both the background and eval dataset
+    data_transforms = build_initial_img_transforms("meta_train", args)
+    # Set up both the background and eval dataset
     celeba_meta_train = CelebA(DATADIR, 
                           split='train', 
                           target_type='attr',
@@ -62,33 +60,31 @@ def _load_celeba(args, meta_split_type):
                           target_type='attr',
                           transform=data_transforms,
                           download=True)
-    
+
+    data_transforms = build_initial_img_transforms("meta_test", args)    
     celeba_meta_test = CelebA(DATADIR, 
                          split='test', 
                          target_type='attr',
                          transform=data_transforms,
                          download=True)
 
-    #TODO: validate that the attributes loaded automatically match the attributes loaded by load_celeba_attrs()
-
     # collect attributes for creating supervised partitions
     celeba_meta_train_attrs_all, celeba_meta_valid_attrs, celeba_meta_test_attrs = load_celeba_attrs()
 
-    if meta_split_type == "rand":
-        CELEBA_ATTRIBUTES_IDX_META_TRAIN = np.arange(25)
-        CELEBA_ATTRIBUTES_IDX_META_VALID = np.arange(21,25) # without early stopping, meta validation doesn't matter
-        CELEBA_ATTRIBUTES_IDX_META_TEST = np.arange(25, 40)
-    elif meta_split_type == "hair":
-        CELEBA_ATTRIBUTES_IDX_META_TRAIN = [15, 16, 20, 21, 22, 24, 31, 35, 38, 39]
-        CELEBA_ATTRIBUTES_IDX_META_VALID = [21, 22, 24, 31] # without early stopping, meta validation doesn't matter
-        CELEBA_ATTRIBUTES_IDX_META_TEST = [8, 9, 11, 17, 28, 32, 33]
-    elif meta_split_type == "eyes":
-        CELEBA_ATTRIBUTES_IDX_META_TRAIN = [4,6,7,8,9,11,14,16,17,19,20,21,22,24,26,27,32]
-        CELEBA_ATTRIBUTES_IDX_META_VALID = [4,6,7,8] # without early stopping, meta validation doesn't matter
-        CELEBA_ATTRIBUTES_IDX_META_TEST = [1, 3, 12, 15, 23]
+    if meta_split_type == "hair": 
+        CELEBA_ATTRIBUTES_IDX_META_TEST = [5, 8, 9, 11, 17, 28, 32, 33]
+    elif meta_split_type == "primary":
+        CELEBA_ATTRIBUTES_IDX_META_TEST = [4, 6, 7, 9, 15, 26, 32, 35]
+    elif meta_split_type == "rand":
+        CELEBA_ATTRIBUTES_IDX_META_TEST = [0, 3, 4, 10, 12, 14, 16, 21]
     else:
         print(f"Invalid meta_split_type for celeba: {meta_split_type}!")
         exit(1)
+
+    # for supervised benchmark, the labels are for attributes different from that for meta-test tasks
+    CELEBA_ATTRIBUTES_IDX_META_TRAIN = [i for i in range(40) if i not in CELEBA_ATTRIBUTES_IDX_META_TEST]    
+    # without early stopping, meta validation doesn't matter
+    CELEBA_ATTRIBUTES_IDX_META_VALID = CELEBA_ATTRIBUTES_IDX_META_TRAIN[:10]
 
     # Use disjoint subset of attrs for meta splits
     celeba_meta_train_attrs = celeba_meta_train_attrs_all[:,CELEBA_ATTRIBUTES_IDX_META_TRAIN]
@@ -143,12 +139,16 @@ def load_celeba_rand(args):
 def load_celeba_hair(args):
     return _load_celeba(args, meta_split_type='hair')
 
-def load_celeba_eyes(args):
-    return _load_celeba(args, meta_split_type='eyes')
+def load_celeba_primary(args):
+    return _load_celeba(args, meta_split_type='primary')
+
 
 if __name__ == "__main__":
     data_transforms = transforms.Compose([
-        transforms.ToTensor()
+        transforms.ToTensor(),
+        # remove margins
+        transforms.Resize(256),
+        transforms.CenterCrop(224)
     ])
     celeba_set = CelebA(DATADIR, 
                         split='valid', 

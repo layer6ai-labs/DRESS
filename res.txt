@@ -1,1 +1,20 @@
 =============Under seed 1234============
+
+2025-02-20 11:23:52.423956 under seed 1234
+[norb_simclrpretrain_2048D_latent on norb 2-way 5-shot meteTrain 5-shot metaTest]: 
+Mean meta test accuracy: 53.84%
+2025-02-20 13:21:58.474233 under seed 1234
+[causal3d_simclrpretrain_2048D_latent on causal3d 2-way 5-shot meteTrain 5-shot metaTest]: 
+Mean meta test accuracy: 56.03%
+2025-02-20 14:51:16.666267 under seed 1234
+[celeba_simclrpretrain_2048D_latent on celebahair 2-way 5-shot meteTrain 5-shot metaTest]: 
+Mean meta test accuracy: 60.01%
+2025-02-20 14:52:24.374578 under seed 1234
+[celeba_simclrpretrain_2048D_latent on celebaprimary 2-way 5-shot meteTrain 5-shot metaTest]: 
+Mean meta test accuracy: 66.49%
+2025-02-20 14:53:32.213775 under seed 1234
+[celeba_simclrpretrain_2048D_latent on celebarand 2-way 5-shot meteTrain 5-shot metaTest]: 
+Mean meta test accuracy: 64.38%
+2025-02-24 14:32:00.170085 under seed 1234
+[celeba_simclrpretrain_2048D_latent on celebahair 2-way 5-shot meteTrain 5-shot metaTest]: 
+Mean meta test accuracy: 60.01%

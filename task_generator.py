@@ -28,7 +28,7 @@ class TaskGenerator():
         
 
     def _sample_task_idxs_labels(self, partition, meta_split, args):
-        n_train_samples = args.KShot
+        n_train_samples = args.KShot      
 
         (
             train_idxs, 

@@ -4,6 +4,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 from PIL import ImageFilter
 import torch
+from torchvision import transforms as T
+import torchvision.transforms.functional as T_F
 import os
 
 # Hardware setup
@@ -13,7 +15,7 @@ if torch.cuda.device_count() > 1:
     print("Let's use", torch.cuda.device_count(), "GPUs!!!")
 # meta-training setup
 METATRAIN_OUTER_EPISODES = 30000 # originally 60000 episodes in cactus paper
-METAVALID_OUTER_INTERVAL = 3000 # runs very rarely. currently not using early stopping. just for code integrity.
+METAVALID_OUTER_INTERVAL = 5000 # runs very rarely. currently not using early stopping. just for code integrity.
 METATRAIN_INNER_UPDATES = 5
 METAVALID_INNER_UPDATES = METATEST_INNER_UPDATES = 5 # reduced from original 50 updates in CACTUS paper
 NUM_TASKS_METATRAIN = 8
@@ -23,7 +25,7 @@ METATRAIN_OUTER_LR = 0.001
 METATRAIN_INNER_LR = 0.05
 # pre-training & fine-tuning setup
 PRETRAIN_EPOCHS = 10
-PRETRAIN_BATCH_SIZE = 4096
+PRETRAIN_BATCH_SIZE = 1024
 PRETRAIN_LR = 0.05
 FINETUNE_STEPS = 5
 FINETUNE_LR = 0.05
@@ -35,12 +37,13 @@ NUM_ENCODING_CLUSTERS = 300 # originally 500 in cactus paper, taking way too lon
 # folders for saving results
 DATADIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data")
 MODELDIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "trained_models")
+CLFMODELDIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "trained_clf_models")
 ENCODERDIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "trained_encoders")
 CLUSTERDIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "cluster_identities")
 LEARNCURVEDIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "train_ps")
-RESULTSDIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "results")
+SANITYCHECKDIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "visualization_checks")
 # The model dir should already be synched within the git repo
-for dirname in [DATADIR, MODELDIR, ENCODERDIR, CLUSTERDIR, LEARNCURVEDIR]:
+for dirname in [DATADIR, MODELDIR, CLFMODELDIR, ENCODERDIR, CLUSTERDIR, LEARNCURVEDIR, SANITYCHECKDIR]:
     os.makedirs(dirname, exist_ok=True)
 
 def fix_seed(seed):
@@ -66,6 +69,9 @@ def get_descriptor(encoder, args):
         descriptor = f'{dsName_base}_{args.encoder}_{encoder.latent_dim}D_latent'
     return descriptor
 
+def accuracy_fn(preds, labels):
+    preds = preds.argmax(dim=1).view(labels.shape)
+    return (preds==labels).sum().float() / labels.size(0)
 
 def visualize_constructed_tasks(task_generator, descriptor, args, n_imgs):    
     for visual_id in range(n_imgs):
@@ -82,8 +88,8 @@ def visualize_constructed_tasks(task_generator, descriptor, args, n_imgs):
             support_samples = [img for (img, lbl) 
                                       in zip(train_data, train_labels)
                                         if lbl==cls]
-            assert len(support_samples) == args.KShotMetaTr
-            inner_grid = outer_grid[cls*2].subgridspec(1, args.KShotMetaTr, wspace=0.0, hspace=0.0)
+            assert len(support_samples) == args.KShot
+            inner_grid = outer_grid[cls*2].subgridspec(1, args.KShot, wspace=0.0, hspace=0.0)
             for i, img in enumerate(support_samples):
                 ax = fig.add_subplot(inner_grid[i])
                 ax.imshow(torch.permute(img, (1,2,0)))
@@ -106,16 +112,16 @@ def visualize_constructed_tasks(task_generator, descriptor, args, n_imgs):
         all_axes = fig.get_axes()
         # label rows
         for i in range(args.NWay):
-            all_axes[i*(args.KShotMetaTr+args.KQuery)].set_ylabel(f"Class {i}", fontsize=34)
+            all_axes[i*(args.KShot+args.KQuery)].set_ylabel(f"Class {i}", fontsize=34)
         # annotate columns (at bottom of figures)
-        support_col_idx = np.floor(args.KShotMetaTr / 2).astype(int)
-        support_ax_idx = (args.NWay-1)*(args.KShotMetaTr+args.KQuery) + support_col_idx
+        support_col_idx = np.floor(args.KShot / 2).astype(int)
+        support_ax_idx = (args.NWay-1)*(args.KShot+args.KQuery) + support_col_idx
         all_axes[support_ax_idx].set_xlabel("Support Samples", fontsize=36)
-        query_col_idx = args.KShotMetaTr + np.floor(args.KQuery / 2).astype(int)  
-        query_ax_idx = (args.NWay-1)*(args.KShotMetaTr+args.KQuery) + query_col_idx      
+        query_col_idx = args.KShot + np.floor(args.KQuery / 2).astype(int)  
+        query_ax_idx = (args.NWay-1)*(args.KShot+args.KQuery) + query_col_idx      
         all_axes[query_ax_idx].set_xlabel("Query Samples", fontsize=36)
                 
-        plt.savefig(os.path.join(ENCODERDIR, 
+        plt.savefig(os.path.join(SANITYCHECKDIR, 
                                  f"{descriptor}_constructed_tasks_eg{visual_id+1}.pdf"), 
                     format="pdf",
                     bbox_inches='tight')
@@ -133,6 +139,13 @@ class GaussianBlur(object):
         x = x.filter(ImageFilter.GaussianBlur(radius=sigma))
         return x
 
+# Croping CelebA: more strict than the cropping did in original DiTi paper. 
+# Aggressive but focus on face and eliminates background noise
+class CropCelebA(object):
+    def __call__(self, img):
+        new_img = T_F.crop(img, 57, 35, 128, 100)
+        return new_img
+
 class TwoCropsTransform:
     """Take two random crops of one image as the query and key."""
     def __init__(self, base_transform):
@@ -142,16 +155,43 @@ class TwoCropsTransform:
         q = self.base_transform(x)
         k = self.base_transform(x)
         return [q, k]
+    
+def build_initial_img_transforms(meta_split, args):
+    # Resize happens later in the pipeline
+    img_transforms = []
+    if args.dsName == "causal3d" or args.dsName.startswith("celeba"):
+        # for these datasets, images loaded are already in PIL format
+        pass
+    else:
+        img_transforms.append(T.ToPILImage())
+    if args.dsName.startswith("celeba"):
+        img_transforms.append(CropCelebA())
+        img_transforms.append(T.Resize(size=(128,128)))
+    if args.encoder == "simclrpretrain" and meta_split == "meta_train":
+        # MoCo v2's aug: similar to SimCLR https://arxiv.org/abs/2002.05709
+        img_transforms.extend([
+            T.RandomResizedCrop(64, scale=(0.2, 1.0)),
+            T.RandomApply(
+                [T.ColorJitter(0.4, 0.4, 0.4, 0.1)], p=0.8  # not strengthened
+            ),
+            T.RandomGrayscale(p=0.2),
+            T.RandomApply([GaussianBlur([0.1, 2.0])], p=0.5),
+            T.RandomHorizontalFlip(),
+        ])
+    img_transforms.append(T.ToTensor())
+    if args.dsName == "norb":
+        # turn gray-scale single channel into 3 channels
+        img_transforms.append(T.Lambda(lambda x: x.repeat(3,1,1)))
+    img_transforms = T.Compose(img_transforms)
+    if args.encoder == "simclrpretrain" and meta_split == "meta_train":
+        img_transforms=TwoCropsTransform(img_transforms)
+    return img_transforms
 
 
 def get_args_parser():
     parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument('--dsName', 
-                        help='dataset for meta-learning', 
-                        choices=["omniglot",
-                                 "mpi3deasy",
-                                 "mpi3dhard",
-                                 "shapes3d"],
+                        help='dataset for meta-learning',
                         required=True)
     parser.add_argument('--encoder',
                         help='encoder for encodings to be clustered',
@@ -163,13 +203,9 @@ def get_args_parser():
                                  "dino", 
                                  "deepcluster", 
                                  "fdae",
-                                 "soda",
-                                 "metagmvae",
-                                 ],
-                        required=True)
-    parser.add_argument('--channels',
-                        help='number of channels in the input image',
-                        type=int,
+                                 "lsd",
+                                 "diti",
+                                 "soda"],
                         required=True)
     parser.add_argument('--imgSizeToEncoder',
                         help='image size to encoders',
@@ -197,5 +233,8 @@ def get_args_parser():
                         required=True)
     parser.add_argument('--visualizeTasks',
                         help='Visualize the constructed meta-learning tasks',
+                        action='store_true')
+    parser.add_argument('--computeDCI',
+                        help='Whether computing DCI for a encoder on meta-test dataset',
                         action='store_true')
     return parser

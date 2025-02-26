@@ -32,8 +32,8 @@ def generate_attributes_based_partitions(attributes, code_sizes_per_attributes, 
     assert order <= attributes.shape[1]
 
     num_partitions = 0
-    partitions = []
-    n_samples_minimal = args.KShot + args.KQuery 
+    partitions = []   
+    n_samples_minimal = args.KShot + args.KQuery    
  
     for attr_idxs in tqdm(combinations(range(attributes.shape[1]), order), 
                           desc=f'[{args.dsName}] get_task_from_attributes', 
@@ -84,52 +84,17 @@ def generate_label_based_partition(dataset):
 Unsupervised partition generator methods
 '''
 
-def encode_data(dataset, encoder, args):
+def encode_data(dataset, encoder, args, return_raw_encodings=False):
     assert args.imgSizeToEncoder > 0
-    if args.dsName.startswith("celeba"):
-        if args.imgSizeToEncoder == 224:
-            # take the center portion of the image (where the face is)
-            data_transforms_for_encoder = transforms.Compose([
-                transforms.Resize(276),
-                transforms.CenterCrop(224)
-                ])
-        elif args.imgSizeToEncoder == 128:
-            data_transforms_for_encoder = transforms.Compose([
-                transforms.Resize(140),
-                transforms.CenterCrop(128)
-                ])
-        elif args.imgSizeToEncoder == 64:
-            data_transforms_for_encoder = transforms.Compose([
-                transforms.Resize(75),
-                transforms.CenterCrop(64)
-            ])
-        else:
-            print(f"Unsupported image size {args.imgSizeToEncoder} for {args.dsName}")
-            exit(1)
-
+    encode_batch_size = 512
+    if args.dsName.startswith("celeba") or args.dsName=="animals":
         if args.encoder == "FDAE":
             encode_batch_size = 32 # due to memory requirement from FDAE
-        else:
-            encode_batch_size = 512
-    elif args.dsName == "animals":
-        if args.imgSizeToEncoder == 224:
-            data_transforms_for_encoder = transforms.Compose([
-                transforms.Resize(236),
-                transforms.CenterCrop(224)
-                ])
-        else:
-            print(f"Unsupported image size {args.imgSizeToEncoder} for {args.dsName}")
-            exit(1)
-        if args.encoder == "FDAE":
-            encode_batch_size = 32 # due to memory requirement from FDAE
-        else:
-            encode_batch_size = 512
-    else:
-        # simply reduce the size for the images
-        data_transforms_for_encoder = transforms.Resize((
-                                        args.imgSizeToEncoder, 
-                                        args.imgSizeToEncoder))
-        encode_batch_size = 512
+        
+    # simply reduce the size for the images
+    data_transforms_for_encoder = transforms.Resize((
+                                    args.imgSizeToEncoder, 
+                                    args.imgSizeToEncoder))
         
     dl = DataLoader(dataset, 
                     batch_size=encode_batch_size,
@@ -137,9 +102,13 @@ def encode_data(dataset, encoder, args):
                     drop_last=False)
     encodings_origSpace_tmp = []
     for data_batch, _ in tqdm(dl, desc="encoding batches"):
+        # resize transform actually can be applied to batches of images
         encodings_origSpace_tmp.append(
             encoder.encode(data_transforms_for_encoder(data_batch).to(DEVICE)).cpu())
     encodings_origSpace_tmp = torch.concat(encodings_origSpace_tmp, dim=0)
+    
+    if return_raw_encodings:
+        return encodings_origSpace_tmp
     
     # post processing, such as PCA and kmeans
     encodings_origSpace = encoder.post_encode(encodings_origSpace_tmp)
@@ -164,7 +133,7 @@ def _format_partition(list_of_labels, args):
     # trim clusters with insufficient number of samples 
     # this part should only be invoked for meta-training
     labels_to_prune = [label for label, idxs in partition.items() 
-                       if len(idxs) < args.KShotMetaTr+args.KQuery]
+                       if len(idxs) < args.KShot+args.KQuery]
     for label in labels_to_prune:
         del partition[label]
     # ensure there is enough classes with sufficient samples
@@ -191,7 +160,7 @@ def generate_unsupervised_partitions(
         print(f"[{descriptor}] No pre-computed clusters exist. Compute from beginning...")
         encodings_origSpace = encode_data(dataset, encoder, args)
 
-        if args.encoder in ["factorvae", "fdae", "dlqvae", "soda"]:
+        if args.encoder in ["factorvae", "fdae", "dlqvae", "diti", "lsd"]:
             n_partitions = encoder.latent_dim
             # simply use the index of the quantized latent code as the cluster identity
             # and use different latent dimension as different partitions
@@ -211,12 +180,12 @@ def generate_unsupervised_partitions(
                                     n_init=1, 
                                     max_iter=100).fit(encoding)
                     uniques, counts = np.unique(kmeans.labels_, return_counts=True)
-                    num_big_enough_clusters = np.sum(counts > (args.KShotMetaTr+args.KQuery))
+                    num_big_enough_clusters = np.sum(counts > (args.KShot+args.KQuery))
                     if num_big_enough_clusters > args.NWay * 3:
                         break
                     else:
                         tqdm.write("Too few classes ({}) with greater than {} examples.".format(
-                                    num_big_enough_clusters, args.KShotMetaTr+args.KQuery))
+                                    num_big_enough_clusters, args.KShot+args.KQuery))
                         tqdm.write('Frequency: {}'.format(counts))
                 assert max(kmeans.labels_)+1 == NUM_ENCODING_CLUSTERS
                 cluster_idxs.append(np.array(kmeans.labels_))
