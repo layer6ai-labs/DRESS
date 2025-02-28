@@ -1,1 +1,10 @@
 
+2025-02-28 15:21:34.881331 under seed 2367
+[celeba_dino_384D_latent on celebahair 2-way 5-shot meteTrain 5-shot metaTest]: 
+Mean meta test accuracy: 68.88%
+2025-02-28 15:22:47.847475 under seed 2367
+[celeba_dino_384D_latent on celebaprimary 2-way 5-shot meteTrain 5-shot metaTest]: 
+Mean meta test accuracy: 76.00%
+2025-02-28 15:24:01.255030 under seed 2367
+[celeba_dino_384D_latent on celebarand 2-way 5-shot meteTrain 5-shot metaTest]: 
+Mean meta test accuracy: 73.54%
