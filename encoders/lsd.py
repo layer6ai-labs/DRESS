@@ -276,7 +276,7 @@ class LSD(nn.Module):
         
         print(f"Created LSD model with {self.latent_dim} latent dimensions!")
 
-    def encode(self, input_data: torch.Tensor) -> torch.Tensor:
+    def encode(self, input_data: torch.Tensor, align_latents=True) -> torch.Tensor:
         batch_size = input_data.shape[0]
         assert input_data.shape == (batch_size, 3, self.img_size, self.img_size), \
                     f"Incorrect input image shape for LSD: {input_data.shape}"
@@ -288,18 +288,19 @@ class LSD(nn.Module):
         slots = slots[:, 0]
         attn = attn[:, 0, 0]
         attn = rearrange(attn, 'b l s -> b s l')
-        # normalize attn so the 4096-dim map lives in a simplex
-        attn = attn / attn.sum(dim=2, keepdim=True)
-        if not self.attn_kmeans_fitted:
-            self.attn_kmeans_model = self.attn_kmeans_model.fit(attn.reshape(-1, 4096).cpu())
-            self.attn_kmeans_fitted = True
-        slots_cluster_ids = np.reshape(self.attn_kmeans_model.predict(attn.reshape(-1, 4096).cpu()), 
-                                 [batch_size, self.latent_dim]) 
-        slots_order = torch.tensor(np.argsort(slots_cluster_ids, axis=1))
-        if WHETHER_VISUALIZE_ATTN_MAP_CLUSTERS:
-            self._visualize_attn_map_alignments(attn, slots_cluster_ids, slots_order)
-        slots_order = slots_order.unsqueeze(2).repeat(1,1,self.dim_per_slot).to(DEVICE)
-        slots = torch.gather(slots, dim=1, index=slots_order)
+        if align_latents:
+            # normalize attn so the 4096-dim map lives in a simplex
+            attn = attn / attn.sum(dim=2, keepdim=True)
+            if not self.attn_kmeans_fitted:
+                self.attn_kmeans_model = self.attn_kmeans_model.fit(attn.reshape(-1, 4096).cpu())
+                self.attn_kmeans_fitted = True
+            slots_cluster_ids = np.reshape(self.attn_kmeans_model.predict(attn.reshape(-1, 4096).cpu()), 
+                                    [batch_size, self.latent_dim]) 
+            slots_order = torch.tensor(np.argsort(slots_cluster_ids, axis=1))
+            if WHETHER_VISUALIZE_ATTN_MAP_CLUSTERS:
+                self._visualize_attn_map_alignments(attn, slots_cluster_ids, slots_order)
+            slots_order = slots_order.unsqueeze(2).repeat(1,1,self.dim_per_slot).to(DEVICE)
+            slots = torch.gather(slots, dim=1, index=slots_order)
         return slots
 
     def post_encode(self, encodings_raw):
@@ -336,5 +337,40 @@ class LSD(nn.Module):
         return
     
 
+class Ablate_Align(LSD):
+    def __init__(self, 
+                 levels_per_dim,
+                 args):
+        super().__init__(levels_per_dim, args)
+        print("Ablate_Align encoder initialized successfully!")
 
+    # invoke the original LSD encode function without the alignment stage
+    def encode(self, input_data):
+        slots = super().encode(input_data, align_latents=False)
+        print("Ablate_Align finished encoding!")
+        return slots
 
+class Ablate_Indiviual_Cluster(LSD):
+    def __init__(self, 
+                 levels_per_dim,
+                 dim_per_slot_reduced,
+                 args):
+        super().__init__(levels_per_dim, args)
+        # have additional PCAs to reduce the dimension on each slot
+        self.dim_per_slot_reduced = dim_per_slot_reduced
+        self.pca_model = PCA(self.dim_per_slot_reduced)
+        print("Ablate_Individual_Cluster encoder initialized successfully!")
+
+    # Aggregate the latent instead of doing individual disentangled dimension clustering
+    def post_encode(self, encodings_raw):
+        print("Ablate_Individual_Cluster start post_encode...")
+        dataset_size = encodings_raw.shape[0]
+        assert encodings_raw.shape == (dataset_size, self.latent_dim, self.dim_per_slot)
+        encodings_aggregated = [
+            self.pca_model.fit_transform(encodings_raw[:, i, :]) for i in range(LATENT_DIM)
+        ]
+        encodings_aggregated = np.stack(encodings_aggregated, axis=1)
+        assert np.shape(encodings_aggregated) == (dataset_size, self.latent_dim, self.dim_per_slot_reduced)
+        encodings_aggregated = torch.from_numpy(encodings_aggregated).reshape(dataset_size, -1)
+        print("Ablate_Individual_Cluster post_encode computed successfully!")
+        return encodings_aggregated

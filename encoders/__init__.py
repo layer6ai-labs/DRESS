@@ -1,4 +1,4 @@
-from .dino import DinoV2
+from .dino import DinoV2, Ablate_Disentangle
 from .deep_cluster import DeepCluster
 from .vae import *
 from .fdae import *
@@ -6,7 +6,8 @@ from .diti import *
 from .simclr_pretrain import SimCLR
 from .gmvae import GMVAE
 from .soda import *
-from .lsd import LSD
+from .lsd import LSD, Ablate_Align, Ablate_Indiviual_Cluster
+
 
 def get_encoder(args, device):
     if args.encoder in ['sup', 'supall', 'supora', 'scratch']:
@@ -59,6 +60,15 @@ def get_encoder(args, device):
                        args=args).to(device)
     elif args.encoder == "lsd":
         encoder = LSD(levels_per_dim=200, args=args).to(DEVICE)
+    elif args.encoder == "ablate_disentangle":
+        encoder = Ablate_Disentangle(latent_dim=384,
+                                     levels_per_dim=200).to(DEVICE)
+    elif args.encoder == "ablate_align":
+        encoder = Ablate_Align(levels_per_dim=200, args=args).to(DEVICE)
+    elif args.encoder == "ablate_individual_cluster":
+        encoder = Ablate_Indiviual_Cluster(levels_per_dim=200, 
+                                           dim_per_slot_reduced=20,
+                                           args=args).to(DEVICE)
     elif args.encoder == "diti":
         encoder = DiTi(levels_per_dim=200, args=args).to(DEVICE)
     elif args.encoder == "soda":

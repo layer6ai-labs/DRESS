@@ -160,7 +160,10 @@ def generate_unsupervised_partitions(
         print(f"[{descriptor}] No pre-computed clusters exist. Compute from beginning...")
         encodings_origSpace = encode_data(dataset, encoder, args)
 
-        if args.encoder in ["factorvae", "fdae", "dlqvae", "diti", "lsd"]:
+        if args.encoder in ["fdae", 
+                            "lsd", 
+                            "ablate_disentangle", 
+                            "ablate_align"]:
             n_partitions = encoder.latent_dim
             # simply use the index of the quantized latent code as the cluster identity
             # and use different latent dimension as different partitions

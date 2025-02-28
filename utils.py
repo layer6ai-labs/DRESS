@@ -206,7 +206,10 @@ def get_args_parser():
                                  "lsd",
                                  "diti",
                                  "soda",
-                                 "metagmvae"],
+                                 "metagmvae",
+                                 "ablate_disentangle",
+                                 "ablate_align",
+                                 "ablate_individual_cluster"],
                         required=True)
     parser.add_argument('--imgSizeToEncoder',
                         help='image size to encoders',
