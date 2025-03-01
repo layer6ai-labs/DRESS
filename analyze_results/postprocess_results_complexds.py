@@ -5,60 +5,7 @@ import os
 import sys
 sys.path.append("../")
 from utils import *
-
-results = {
-    'Supervised-Original': {
-        'celebahair': [67.95],
-        'celebaprimary': [73.26],
-        'celebarand': [81.28]
-    },
-    'Supervised-All': {
-        'celebahair': [79.74],
-        'celebaprimary': [87.62],
-        'celebarand': [85.33]
-    },
-    'Supervised-Oracle': {
-        'celebahair': [87.07],
-        'celebaprimary': [91.08],
-        'celebarand': [90.57]
-    },
-    'Few-Shot Direct Adaptation': {
-        'celebahair': [64.00],
-        'celebaprimary': [69.12],
-        'celebarand': [57.82]
-    },
-    'Pre-Training and Fine-Tuning': {
-        'celebahair': [60.01],
-        'celebaprimary': [66.49],
-        'celebarand': [64.38]
-    },
-    'Meta-GMVAE': {
-        'celebahair': [],
-        'celebaprimary': [],
-        'celebarand': []
-    },
-    'PsCo':{
-        'celebahair': [61.90],
-        'celebaprimary': [66.25],
-        'celebarand': [59.34]
-    },
-    'CACTUS-DeepCluster': {
-        'celebahair': [70.57],
-        'celebaprimary': [71.59],
-        'celebarand': [65.87]
-    },
-    'CACTUS-DinoV2': {
-        'celebahair': [69.85, 69.11, 69.63, 68.88],
-        'celebaprimary': [77.04, 77.48, 77.50, 76.00],
-        'celebarand': [74.59, 74.42, 75.00, 73.54]
-    },
-    'DRESS': {
-        'celebahair': [73.86, 74.18, 73.87],
-        'celebaprimary': [77.12, 77.40, 77.77],
-        'celebarand': [70.01, 67.49, 67.97]
-    }
-}
-
+from res_all import ACCURACIES_ALL
 
 if __name__ == "__main__":
     print(f"Processing results...")
@@ -66,7 +13,7 @@ if __name__ == "__main__":
     latex_table = "\\toprule \n"
     latex_table += "Method & CelebA-Hair & CelebA-Primary & CelebA-Random \\\\ \n\midrule \n"
 
-    for method, res_dict in results.items():
+    for method, res_dict in ACCURACIES_ALL.items():
         if method == 'Few-Shot Direct Adaptation':
             latex_table += "\\makecell[l]{Few-Shot Direct \\\\ Adaptation} & "
         elif method == 'Pre-Training and Fine-Tuning':

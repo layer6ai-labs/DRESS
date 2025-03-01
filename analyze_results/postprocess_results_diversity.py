@@ -5,51 +5,7 @@ import os
 import sys
 sys.path.append("../")
 from utils import *
-
-results = {
-    'Supervised-Original': {
-        'shapes3d': [0.05],
-        'mpi3dhard': [0.07],
-        'smallnorb': [0.00],
-        'causal3d': [0.02],
-        'celebahair': [0.12]
-    },
-    'Supervised-All': {
-        'shapes3d': [0.01],
-        'mpi3dhard': [0.01],
-        'smallnorb': [0.02],
-        'causal3d': [0.01],
-        'celebahair': [0.16]
-    },
-    'Supervised-Oracle': {
-        'shapes3d': [0.01],
-        'mpi3dhard': [0.03],
-        'smallnorb': [0.00],
-        'causal3d': [0.02],
-        'celebahair': [0.17]
-    },
-    'CACTUS-DeepCluster': {
-        'shapes3d': [0.20],
-        'mpi3dhard': [0.21],
-        'smallnorb': [0.32],
-        'causal3d': [0.12],
-        'celebahair': [0.08]
-    },
-    'CACTUS-DinoV2': {
-        'shapes3d': [0.39],
-        'mpi3dhard': [0.42],
-        'smallnorb': [0.42],
-        'causal3d': [0.37],
-        'celebahair': [0.26]
-    },
-    'DRESS': {
-        'shapes3d': [0.10],
-        'mpi3dhard': [0.08],
-        'smallnorb': [0.30],
-        'causal3d': [0.27],
-        'celebahair': [0.02]
-    }
-}
+from res_all import DIVERSITIES_ALL
 
 
 if __name__ == "__main__":
@@ -58,7 +14,7 @@ if __name__ == "__main__":
     latex_table = "\\toprule \n"
     latex_table += "Method & Shapes3D & MPI3D-Hard & SmallNORB & Causal3D & CelebA-Hair \\\\ \n\midrule \n"
 
-    for method, res_dict in results.items():
+    for method, res_dict in DIVERSITIES_ALL.items():
         if method == 'DRESS':
             latex_table += "\\textbf{DRESS} & "
         else:
