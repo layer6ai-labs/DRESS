@@ -53,6 +53,7 @@ def fix_seed(seed):
     torch.cuda.manual_seed(seed)
 
 def get_descriptor(encoder, args):
+    # mpi3d / celeba model series are with the same pretrained data, so use only one is good enough
     if args.dsName.startswith("mpi3d"):
         dsName_base = "mpi3d"
     elif args.dsName.startswith("celeba"):
@@ -64,6 +65,10 @@ def get_descriptor(encoder, args):
     elif args.encoder in ["supall", "scratch"]:
         # doesn't matter what attribute splits are
         descriptor = f'{dsName_base}_{args.encoder}'
+    elif args.encoder == "metagmvae":
+        # make it two lines for readability for descriptor
+        descriptor = (f'{dsName_base}/{args.encoder}_latent_{encoder.latent_dim}/'
+                      f'epochs_{args.epochs}_lr_{GMVAE_METATRAIN_LR}_beta_{args.gmvae_beta}_seed_{args.seed}')
     else:
         # using self-supervised/unsupervised encoder, doesn't matter what attribute splits are
         descriptor = f'{dsName_base}_{args.encoder}_{encoder.latent_dim}D_latent'
@@ -159,7 +164,7 @@ class TwoCropsTransform:
 def build_initial_img_transforms(meta_split, args):
     # Resize happens later in the pipeline
     img_transforms = []
-    if args.dsName == "causal3d" or args.dsName.startswith("celeba"):
+    if args.dsName.startswith("celeba"):
         # for these datasets, images loaded are already in PIL format
         pass
     else:
@@ -178,6 +183,9 @@ def build_initial_img_transforms(meta_split, args):
             T.RandomApply([GaussianBlur([0.1, 2.0])], p=0.5),
             T.RandomHorizontalFlip(),
         ])
+    
+    if args.encoder == "metagmvae":
+        img_transforms.append(T.Resize((args.imgSizeToEncoder, args.imgSizeToEncoder)))
     img_transforms.append(T.ToTensor())
     if args.dsName == "norb":
         # turn gray-scale single channel into 3 channels
@@ -243,6 +251,10 @@ def get_args_parser():
     parser.add_argument('--visualizeTasks',
                         help='Visualize the constructed meta-learning tasks',
                         action='store_true')
+    parser.add_argument('--epochs',
+                        help='training epochs',
+                        type=int,
+                        default=30000)
     parser.add_argument('--gmvae_beta',
                         help='beta parameter for GMVAE',
                         type=float,

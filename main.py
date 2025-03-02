@@ -181,6 +181,8 @@ if __name__ == "__main__":
 
     if args.encoder != "scratch":
         model_path = os.path.join(MODELDIR, f"{descriptor}.ckpt")
+        # create model_path directory if it doesn't exist
+        os.makedirs(os.path.dirname(model_path), exist_ok=True)
         try:
             if args.encoder in ["simclrpretrain", "metagmvae"]:
                 encoder.load_state_dict(torch.load(model_path))

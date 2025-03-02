@@ -30,14 +30,11 @@ def metagmvae_train(gmvae_model, opt, meta_train_set, meta_valid_set, descriptor
     sample_size = 200
     batch_size = 4
     beta = args.gmvae_beta
-    data_transforms = transforms.Resize((
-                                    args.imgSizeToEncoder, 
-                                    args.imgSizeToEncoder))
     train_loader = DataLoader(meta_train_set, batch_size=batch_size*sample_size, shuffle=True, drop_last=True)
 
     train_iterator = iter(train_loader)
 
-    while (global_epoch * freq_iters < METATRAIN_OUTER_EPISODES):
+    while (global_epoch * freq_iters < args.epochs):
         with tqdm(total=freq_iters) as pbar:
             for _ in range(freq_iters):
                 gmvae_model.train()
@@ -50,7 +47,6 @@ def metagmvae_train(gmvae_model, opt, meta_train_set, meta_valid_set, descriptor
                     X = next(iterator)[0]
                                     
                 X = X.to(DEVICE).float()
-                X = data_transforms(X)
                 X = X.view(batch_size, sample_size, -1, args.imgSizeToEncoder, args.imgSizeToEncoder)
 
                 rec_loss, kl_loss = gmvae_model(X)
