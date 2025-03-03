@@ -240,23 +240,23 @@ cd ~/DRESS
 #                --NWay 2 --KShot 5 --KQuery 5 \
 #                --seed $seedval
 
-python main.py --dsName norb  \
-               --encoder simclrpretrain  \
-               --imgSizeToEncoder 64 --imgSizeToMetaModel 64  \
-               --NWay 2 --KShot 5 --KQuery 5 \
-               --seed $seedval
+# python main.py --dsName norb  \
+#                --encoder simclrpretrain  \
+#                --imgSizeToEncoder 64 --imgSizeToMetaModel 64  \
+#                --NWay 2 --KShot 5 --KQuery 5 \
+#                --seed $seedval
 
-python main.py --dsName causal3d  \
-               --encoder simclrpretrain  \
-               --imgSizeToEncoder 64 --imgSizeToMetaModel 64  \
-               --NWay 2 --KShot 5 --KQuery 5 \
-               --seed $seedval
+# python main.py --dsName causal3d  \
+#                --encoder simclrpretrain  \
+#                --imgSizeToEncoder 64 --imgSizeToMetaModel 64  \
+#                --NWay 2 --KShot 5 --KQuery 5 \
+#                --seed $seedval
 
-python main.py --dsName celebahair \
-               --encoder simclrpretrain  \
-               --imgSizeToEncoder 128 --imgSizeToMetaModel 128  \
-               --NWay 2 --KShot 5 --KQuery 5 \
-               --seed $seedval
+# python main.py --dsName celebahair \
+#                --encoder simclrpretrain  \
+#                --imgSizeToEncoder 128 --imgSizeToMetaModel 128  \
+#                --NWay 2 --KShot 5 --KQuery 5 \
+#                --seed $seedval
 
 python main.py --dsName celebaprimary  \
                --encoder simclrpretrain  \

@@ -46,8 +46,8 @@ ACCURACIES_ALL = {
         'smallnorb': [53.84, 58.36],
         'causal3d': [56.03],
         'celebahair': [60.01, 60.03],
-        'celebaprimary': [66.49],
-        'celebarand': [64.38]
+        'celebaprimary': [66.49, 67.38],
+        'celebarand': [64.38, 66.15]
     },
     'Meta-GMVAE': {
         'shapes3d': [57.04, 56.23, 58.14, 64.98],

@@ -1,7 +1,1 @@
 
-2025-03-03 11:12:28.737755 under seed 1276
-[norb_simclrpretrain_2048D_latent on norb 2-way 5-shot meteTrain 5-shot metaTest]: 
-Mean meta test accuracy: 58.36%
-2025-03-03 12:10:30.528621 under seed 1276
-[celeba_simclrpretrain_2048D_latent on celebahair 2-way 5-shot meteTrain 5-shot metaTest]: 
-Mean meta test accuracy: 60.03%
