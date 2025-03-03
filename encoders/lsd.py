@@ -372,5 +372,5 @@ class Ablate_Indiviual_Cluster(LSD):
         encodings_aggregated = np.stack(encodings_aggregated, axis=1)
         assert np.shape(encodings_aggregated) == (dataset_size, self.latent_dim, self.dim_per_slot_reduced)
         encodings_aggregated = torch.from_numpy(encodings_aggregated).reshape(dataset_size, -1)
-        print("Ablate_Individual_Cluster post_encode computed successfully!")
+        print(f"Ablate_Individual_Cluster post_encode computed successfully, with the new latent dim: {encodings_aggregated.shape[1]}!")
         return encodings_aggregated

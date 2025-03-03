@@ -113,7 +113,6 @@ def encode_data(dataset, encoder, args, return_raw_encodings=False):
     # post processing, such as PCA and kmeans
     encodings_origSpace = encoder.post_encode(encodings_origSpace_tmp)
     
-    assert encodings_origSpace.shape == (len(dataset), encoder.latent_dim)
     return encodings_origSpace
  
 

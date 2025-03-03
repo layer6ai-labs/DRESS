@@ -3,8 +3,8 @@ ACCURACIES_ALL = {
         'shapes3d': [66.39, 62.60, 57.70, 61.44],
         'mpi3deasy': [56.78, 57.22, 57.79, 59.23],
         'mpi3dhard': [62.11, 66.96, 63.85, 60.15],
-        'smallnorb': [63.38],
-        'causal3d': [52.26],
+        'smallnorb': [63.38, 60.49],
+        'causal3d': [52.26, 51.68],
         'celebahair': [67.95],
         'celebaprimary': [73.26],
         'celebarand': [81.28]
@@ -13,8 +13,8 @@ ACCURACIES_ALL = {
         'shapes3d': [99.91, 99.86, 99.96, 99.98],
         'mpi3deasy': [99.86, 99.61, 99.35, 98.34],
         'mpi3dhard': [88.37, 87.38, 95.94, 92.41],
-        'smallnorb': [79.16],
-        'causal3d': [86.97],
+        'smallnorb': [79.16, 79.51],
+        'causal3d': [86.97, 90.62],
         'celebahair': [79.74],
         'celebaprimary': [87.62],
         'celebarand': [85.33]
@@ -23,8 +23,8 @@ ACCURACIES_ALL = {
         'shapes3d': [99.99, 99.96, 100.00, 99.92],
         'mpi3deasy': [100.00, 100.00, 100.00, 100.00],
         'mpi3dhard': [99.32, 99.13, 99.72, 99.50],
-        'smallnorb': [81.60],
-        'causal3d': [93.37],
+        'smallnorb': [81.60, 79.93],
+        'causal3d': [93.37, 93.07],
         'celebahair': [87.07],
         'celebaprimary': [91.08],
         'celebarand': [90.57]
@@ -33,8 +33,8 @@ ACCURACIES_ALL = {
         'shapes3d': [63.43, 63.30, 72.79, 63.28],
         'mpi3deasy': [61.19, 60.63, 59.63, 60.90],
         'mpi3dhard': [62.57, 62.45, 61.30, 62.74],
-        'smallnorb': [74.17],
-        'causal3d': [66.38],
+        'smallnorb': [74.17, 75.06],
+        'causal3d': [66.38, 69.80],
         'celebahair': [64.00],
         'celebaprimary': [69.12],
         'celebarand': [57.82]
@@ -52,12 +52,12 @@ ACCURACIES_ALL = {
     'Meta-GMVAE': {
         'shapes3d': [57.04, 56.23, 58.14, 64.98],
         'mpi3deasy': [99.62, 99.64, 99.03, 99.27],
-        'mpi3dhard': [],
+        'mpi3dhard': [49.63, 50.72, 50.31, 49.44],
         'smallnorb': [66.29, 68.86, 70.36, 68.89],
         'causal3d': [],
-        'celebahair': [],
-        'celebaprimary': [],
-        'celebarand': []
+        'celebahair': [64.60, 63.54, 64.21, 64.36],
+        'celebaprimary': [68.73, 67.47, 67.21, 68.07],
+        'celebarand': [65.34, 65.09, 64.38, 64.95]
     },
     'PsCo':{
         'shapes3d': [98.64, 98.75, 95.93, 97.17],
@@ -73,8 +73,8 @@ ACCURACIES_ALL = {
         'shapes3d': [88.03, 86.73, 84.62, 87.86],
         'mpi3deasy': [84.18, 86.27, 85.80, 83.57],
         'mpi3dhard': [71.09, 73.47, 70.88, 75.64],
-        'smallnorb': [76.77],
-        'causal3d': [65.64],
+        'smallnorb': [76.77, 75.18],
+        'causal3d': [65.64, 65.03],
         'celebahair': [70.57],
         'celebaprimary': [71.59],
         'celebarand': [65.87]
@@ -93,20 +93,20 @@ ACCURACIES_ALL = {
         'shapes3d': [92.54, 93.15, 93.55, 92.97],
         'mpi3deasy': [99.89, 100.00, 99.89, 100.00],
         'mpi3dhard': [83.63, 84.38, 85.58, 86.22],
-        'smallnorb': [78.70],
-        'causal3d': [77.49],
+        'smallnorb': [78.70, 76.96],
+        'causal3d': [77.49, 75.35],
         'celebahair': [73.86, 74.18, 73.87, 73.41],
         'celebaprimary': [77.12, 77.40, 77.77, 77.33],
         'celebarand': [70.01, 67.49, 67.97, 67.63]
     },
     'Ablate-Disentangle':{
-        'causal3d': [53.41]
+        'causal3d': [53.41, 55.24, 53.98]
     },
     'Ablate-Align': {
-        'celebahair': []
+        'celebahair': [72.55, 73.02]
     },
     'Ablate-Individual-Cluster':{
-        'celebaprimary': []
+        'celebaprimary': [73.91, 74.35]
     }
 }
 

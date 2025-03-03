@@ -14,6 +14,8 @@ if __name__ == "__main__":
     latex_table += "Method & CelebA-Hair & CelebA-Primary & CelebA-Random \\\\ \n\midrule \n"
 
     for method, res_dict in ACCURACIES_ALL.items():
+        if method.startswith("Ablate"):
+            continue
         if method == 'Few-Shot Direct Adaptation':
             latex_table += "\\makecell[l]{Few-Shot Direct \\\\ Adaptation} & "
         elif method == 'Pre-Training and Fine-Tuning':

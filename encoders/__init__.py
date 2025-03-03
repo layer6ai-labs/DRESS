@@ -66,8 +66,8 @@ def get_encoder(args, device):
     elif args.encoder == "ablate_align":
         encoder = Ablate_Align(levels_per_dim=200, args=args).to(DEVICE)
     elif args.encoder == "ablate_individual_cluster":
-        encoder = Ablate_Indiviual_Cluster(levels_per_dim=200, 
-                                           dim_per_slot_reduced=20,
+        encoder = Ablate_Indiviual_Cluster(levels_per_dim=200, # here levels_per_dim isn't used
+                                           dim_per_slot_reduced=15,
                                            args=args).to(DEVICE)
     elif args.encoder == "diti":
         encoder = DiTi(levels_per_dim=200, args=args).to(DEVICE)

@@ -16,6 +16,8 @@ if __name__ == "__main__":
     latex_table += "Method & SmallNORB & Shapes3D & Causal3D & MPI3D-Easy & MPI3D-Hard \\\\ \n\midrule \n"
 
     for method, res_dict in ACCURACIES_ALL.items():
+        if method.startswith("Ablate"):
+            continue
         if method == 'Few-Shot Direct Adaptation':
             latex_table += "\\makecell[l]{Few-Shot Direct \\\\ Adaptation} & "
         elif method == 'Pre-Training and Fine-Tuning':
