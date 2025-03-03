@@ -31,6 +31,7 @@ FINETUNE_STEPS = 5
 FINETUNE_LR = 0.05
 # Meta-GMVAE setup
 GMVAE_METATRAIN_LR = 1e-4
+GMVAE_BETA = 1
 # Dino & deepcluster setup
 NUM_ENCODING_PARTITIONS = 50
 NUM_ENCODING_CLUSTERS = 300 # originally 500 in cactus paper, taking way too long
@@ -159,7 +160,7 @@ class TwoCropsTransform:
 def build_initial_img_transforms(meta_split, args):
     # Resize happens later in the pipeline
     img_transforms = []
-    if args.dsName == "causal3d" or args.dsName.startswith("celeba"):
+    if args.dsName.startswith("celeba"):
         # for these datasets, images loaded are already in PIL format
         pass
     else:
@@ -178,6 +179,8 @@ def build_initial_img_transforms(meta_split, args):
             T.RandomApply([GaussianBlur([0.1, 2.0])], p=0.5),
             T.RandomHorizontalFlip(),
         ])
+    if args.encoder == "metagmvae":
+        img_transforms.append(T.Resize((args.imgSizeToEncoder, args.imgSizeToEncoder)))
     img_transforms.append(T.ToTensor())
     if args.dsName == "norb":
         # turn gray-scale single channel into 3 channels
