@@ -1,6 +1,6 @@
 # change here for different experimental trials
 # seedval=1234
-seedval=1276
+seedval=3278
 
 # Assume the project repo is cloned directly under the user home directory
 cd ~/DRESS
@@ -140,17 +140,17 @@ cd ~/DRESS
 #                --NWay 2 --KShot 5 --KQuery 5   \
 #                --seed $seedval
 
-# python main.py --dsName norb  \
-#                --encoder fdae  \
-#                --imgSizeToEncoder 96 --imgSizeToMetaModel 84 \
-#                --NWay 2 --KShot 5 --KQuery 5   \
-#                --seed $seedval
+python main.py --dsName norb  \
+               --encoder fdae  \
+               --imgSizeToEncoder 96 --imgSizeToMetaModel 84 \
+               --NWay 2 --KShot 5 --KQuery 5   \
+               --seed $seedval
 
-# python main.py --dsName causal3d  \
-#                --encoder fdae  \
-#                --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
-#                --NWay 2 --KShot 5 --KQuery 5   \
-#                --seed $seedval
+python main.py --dsName causal3d  \
+               --encoder fdae  \
+               --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
+               --NWay 2 --KShot 5 --KQuery 5   \
+               --seed $seedval
 
 ########### DRESS with LSD ############
 # python main.py --dsName celebahair  \
@@ -258,17 +258,17 @@ cd ~/DRESS
 #                --NWay 2 --KShot 5 --KQuery 5 \
 #                --seed $seedval
 
-python main.py --dsName celebaprimary  \
-               --encoder simclrpretrain  \
-               --imgSizeToEncoder 128 --imgSizeToMetaModel 128  \
-               --NWay 2 --KShot 5 --KQuery 5 \
-               --seed $seedval
+# python main.py --dsName celebaprimary  \
+#                --encoder simclrpretrain  \
+#                --imgSizeToEncoder 128 --imgSizeToMetaModel 128  \
+#                --NWay 2 --KShot 5 --KQuery 5 \
+#                --seed $seedval
 
-python main.py --dsName celebarand  \
-               --encoder simclrpretrain  \
-               --imgSizeToEncoder 128 --imgSizeToMetaModel 128  \
-               --NWay 2 --KShot 5 --KQuery 5 \
-               --seed $seedval
+# python main.py --dsName celebarand  \
+#                --encoder simclrpretrain  \
+#                --imgSizeToEncoder 128 --imgSizeToMetaModel 128  \
+#                --NWay 2 --KShot 5 --KQuery 5 \
+#                --seed $seedval
 
 ############## Meta-GMVAE #############
 # python main.py --dsName causal3d  \

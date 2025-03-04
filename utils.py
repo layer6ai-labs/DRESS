@@ -68,7 +68,7 @@ def get_descriptor(encoder, args):
     else:
         # using self-supervised/unsupervised encoder, doesn't matter what attribute splits are
         descriptor = f'{dsName_base}_{args.encoder}_{encoder.latent_dim}D_latent'
-    descriptor += f'seed_{args.seed}'
+    descriptor += f'_seed_{args.seed}'
     return descriptor
 
 def accuracy_fn(preds, labels):

@@ -166,7 +166,7 @@ if __name__ == "__main__":
     
     if args.visualizeTasks:
         assert args.encoder not in ["simclrpretrain", "metagmvae"]
-        visualize_constructed_tasks(task_generator, descriptor, args, n_imgs=20)
+        visualize_constructed_tasks(task_generator, descriptor, args, n_imgs=30)
         exit(0)
     elif args.computeDCI:
         compute_DCI(meta_test_set, encoder, descriptor, args)

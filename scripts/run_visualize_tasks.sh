@@ -1,5 +1,5 @@
 # change here for different experimental trials
-seedval=2367
+seedval=1234
 
 # Assume the project repo is cloned directly under the user home directory
 cd ~/DRESS
