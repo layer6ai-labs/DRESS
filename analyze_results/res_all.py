@@ -112,25 +112,25 @@ ACCURACIES_ALL = {
 
 DIVERSITIES_ALL = {
     'Supervised-Original': {
-        'shapes3d': [0.05],
-        'mpi3dhard': [0.07],
-        'smallnorb': [0.00],
-        'causal3d': [0.02],
-        'celebahair': [0.12]
+        'shapes3d': [0.05, 0.03, 0.02, 0.02],
+        'mpi3dhard': [0.07, 0.03, 0.05, 0.05],
+        'smallnorb': [0.00, 0.10, 0.05, 0.03],
+        'causal3d': [0.02, 0.01, 0.01, 0.01],
+        'celebahair': [0.12, 0.12, 0.11, 0.10]
     },
     'Supervised-All': {
-        'shapes3d': [0.01],
-        'mpi3dhard': [0.01],
-        'smallnorb': [0.02],
-        'causal3d': [0.01],
-        'celebahair': [0.16]
+        'shapes3d': [0.01, 0.01, 0.01, 0.01],
+        'mpi3dhard': [0.01, 0.01, 0.01, 0.01],
+        'smallnorb': [0.02, 0.02, 0.01, 0.01],
+        'causal3d': [0.01, 0.01, 0.00, 0.01],
+        'celebahair': [0.16, 0.09, 0.11, 0.09]
     },
     'Supervised-Oracle': {
-        'shapes3d': [0.01],
-        'mpi3dhard': [0.03],
-        'smallnorb': [0.00],
-        'causal3d': [0.02],
-        'celebahair': [0.17]
+        'shapes3d': [0.01, 0.01, 0.01, 0.01],
+        'mpi3dhard': [0.03, 0.03, 0.00, 0.00],
+        'smallnorb': [0.00, 0.00, 0.01, 0.01],
+        'causal3d': [0.02, 0.01, 0.00, 0.03],
+        'celebahair': [0.17, 0.11, 0.16, 0.14]
     },
     'CACTUS-DeepCluster': {
         'shapes3d': [0.20],

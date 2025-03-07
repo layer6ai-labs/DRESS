@@ -19,9 +19,9 @@ if __name__ == "__main__":
         if method.startswith("Ablate"):
             continue
         if method == 'Few-Shot Direct Adaptation':
-            latex_table += "\\makecell[l]{Few-Shot Direct \\\\ Adaptation} & "
+            latex_table += "FSDA & "
         elif method == 'Pre-Training and Fine-Tuning':
-            latex_table += "\\makecell[l]{Pre-Training \\\\ and Fine-Tuning} & "
+            latex_table += "PTFT & "
         elif method == 'DRESS':
             latex_table += "\\textbf{DRESS} & "
         else:

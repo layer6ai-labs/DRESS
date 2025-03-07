@@ -22,7 +22,7 @@ if __name__ == "__main__":
         if method == 'DRESS':
             latex_table += "DRESS & "
         elif method == 'Ablate-Disentangle':
-            latex_table += "\\makecell[l]{DRESS without \\\\ Disentangled Representations} & "
+            latex_table += "DRESS w/o Dis. Rep. & "
         else:
             continue
         res_vals = res_dict['causal3d']
@@ -49,7 +49,7 @@ if __name__ == "__main__":
         if method == 'DRESS':
             latex_table += "DRESS & "
         elif method == 'Ablate-Align':
-            latex_table += "\\makecell[l]{DRESS without \\\\ Latent Dimension Alignment} & "
+            latex_table += "DRESS w/o LDA & "
         else:
             continue
         res_vals = res_dict['celebahair']
@@ -76,7 +76,7 @@ if __name__ == "__main__":
         if method == 'DRESS':
             latex_table += "DRESS & "
         elif method == 'Ablate-Individual-Cluster':
-            latex_table += "\\makecell[l]{DRESS without \\\\ Individual Dimension Clustering} & "
+            latex_table += "DRESS w/o Ind. Dim. Cluster. & "
         else:
             continue
         res_vals = res_dict['celebaprimary']

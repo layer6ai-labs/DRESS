@@ -54,7 +54,6 @@ def compute_partition_overlap(partitions, descriptor_for_partitions):
     with open(res_filename, "a") as f:
         f.write(str(datetime.datetime.now())+'\n')
         f.write(f"{descriptor_for_partitions}: \n")
-        f.write(f"Joint over union: avg: {np.mean(joint_over_union_all_pairs):.2f}; ")
-        f.write(f"std: {np.std(joint_over_union_all_pairs):.2f} \n")
+        f.write(f"Joint over union: avg: {np.mean(joint_over_union_all_pairs):.2f} \n")
     print(f"[Compute_completeness_scores] finished for {descriptor_for_partitions}!")
     return

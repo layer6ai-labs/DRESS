@@ -1,4 +1,4 @@
-seedval=1234
+seedval=82937
 
 
 # Assume the project repo is cloned directly under the user home directory
@@ -98,12 +98,12 @@ done
 #                --seed $seedval  \
 #                --computePartitionOverlap
 
-python main.py --dsName mpi3dhard  \
-               --encoder fdae  \
-               --imgSizeToEncoder 64 --imgSizeToMetaModel 84 \
-               --NWay 2 --KShot 5 --KQuery 5  \
-               --seed $seedval  \
-               --computePartitionOverlap
+# python main.py --dsName mpi3dhard  \
+#                --encoder fdae  \
+#                --imgSizeToEncoder 64 --imgSizeToMetaModel 84 \
+#                --NWay 2 --KShot 5 --KQuery 5  \
+#                --seed $seedval  \
+#                --computePartitionOverlap
 
 # python main.py --dsName norb  \
 #                --encoder fdae  \
