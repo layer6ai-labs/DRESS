@@ -36,9 +36,9 @@ if __name__ == "__main__":
                 if (method == "DRESS" and ds in ['mpi3deasy', 'mpi3dhard', 'smallnorb', 'causal3d']) or \
                     (method == "PsCo" and ds == 'shapes3d'):
                     # bold font
-                    latex_table += f"\\textbf{{{res_avg:.2f}}}\% $\pm$ \\textbf{{{res_std:.2f}}}\%"
+                    latex_table += f"\\textbf{{{res_avg:.2f}}}\% {{\scriptsize $\pm$ \\textbf{{{res_std:.2f}}}}}\%"
                 else:
-                    latex_table += f"${res_avg:.2f}\% \pm {res_std:.2f}\%$"
+                    latex_table += f"${res_avg:.2f}\%$ {{\scriptsize $\pm {res_std:.2f}\%$}}"
             if ds != "mpi3dhard":
                 latex_table += " & "
             else:

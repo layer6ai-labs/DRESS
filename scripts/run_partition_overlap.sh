@@ -1,4 +1,4 @@
-seedval=82937
+seedval=9283
 
 
 # Assume the project repo is cloned directly under the user home directory
@@ -6,51 +6,51 @@ cd ~/DRESS
 
 
 ####### Supervised meta-learning (and scratch) baselines #####
-for supmethod in "sup" "supall" "supora"; do
-    python main.py --dsName shapes3d  \
-                --encoder $supmethod \
-                --imgSizeToEncoder -1 --imgSizeToMetaModel 84 \
-                --NWay 2 --KShot 5 --KQuery 5 \
-                --seed $seedval \
-                --computePartitionOverlap
-done
+# for supmethod in "sup" "supall" "supora"; do
+#     python main.py --dsName shapes3d  \
+#                 --encoder $supmethod \
+#                 --imgSizeToEncoder -1 --imgSizeToMetaModel 84 \
+#                 --NWay 2 --KShot 5 --KQuery 5 \
+#                 --seed $seedval \
+#                 --computePartitionOverlap
+# done
 
 
-for supmethod in "sup" "supall" "supora"; do
-    python main.py --dsName mpi3dhard  \
-                --encoder $supmethod \
-                --imgSizeToEncoder -1 --imgSizeToMetaModel 84 \
-                --NWay 2 --KShot 5 --KQuery 5 \
-                --seed $seedval  \
-                --computePartitionOverlap
-done
+# for supmethod in "sup" "supall" "supora"; do
+#     python main.py --dsName mpi3dhard  \
+#                 --encoder $supmethod \
+#                 --imgSizeToEncoder -1 --imgSizeToMetaModel 84 \
+#                 --NWay 2 --KShot 5 --KQuery 5 \
+#                 --seed $seedval  \
+#                 --computePartitionOverlap
+# done
 
-for supmethod in "sup" "supall" "supora"; do
-    python main.py --dsName norb  \
-                --encoder $supmethod \
-                --imgSizeToEncoder -1 --imgSizeToMetaModel 84 \
-                --NWay 2 --KShot 5 --KQuery 5 \
-                --seed $seedval  \
-                --computePartitionOverlap
-done
+# for supmethod in "sup" "supall" "supora"; do
+#     python main.py --dsName norb  \
+#                 --encoder $supmethod \
+#                 --imgSizeToEncoder -1 --imgSizeToMetaModel 84 \
+#                 --NWay 2 --KShot 5 --KQuery 5 \
+#                 --seed $seedval  \
+#                 --computePartitionOverlap
+# done
 
-for supmethod in "sup" "supall" "supora"; do
-    python main.py --dsName causal3d  \
-                --encoder $supmethod \
-                --imgSizeToEncoder -1 --imgSizeToMetaModel 84 \
-                --NWay 2 --KShot 5 --KQuery 5 \
-                --seed $seedval  \
-                --computePartitionOverlap
-done
+# for supmethod in "sup" "supall" "supora"; do
+#     python main.py --dsName causal3d  \
+#                 --encoder $supmethod \
+#                 --imgSizeToEncoder -1 --imgSizeToMetaModel 84 \
+#                 --NWay 2 --KShot 5 --KQuery 5 \
+#                 --seed $seedval  \
+#                 --computePartitionOverlap
+# done
 
-for supmethod in "sup" "supall" "supora"; do
-    python main.py --dsName celebahair  \
-                --encoder $supmethod \
-                --imgSizeToEncoder -1 --imgSizeToMetaModel 84 \
-                --NWay 2 --KShot 5 --KQuery 5 \
-                --seed $seedval  \
-                --computePartitionOverlap
-done
+# for supmethod in "sup" "supall" "supora"; do
+#     python main.py --dsName celebahair  \
+#                 --encoder $supmethod \
+#                 --imgSizeToEncoder -1 --imgSizeToMetaModel 84 \
+#                 --NWay 2 --KShot 5 --KQuery 5 \
+#                 --seed $seedval  \
+#                 --computePartitionOverlap
+# done
 
  
 ############# Dino #############
@@ -129,37 +129,37 @@ done
 
 
 ########### DeepCluster ###########
-# python main.py --dsName shapes3d  \
-#                --encoder deepcluster \
-#                --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
-#                --NWay 2 --KShot 5 --KQuery 5  \
-#                --seed $seedval  \
-#                --computePartitionOverlap
+python main.py --dsName shapes3d  \
+               --encoder deepcluster \
+               --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
+               --NWay 2 --KShot 5 --KQuery 5  \
+               --seed $seedval  \
+               --computePartitionOverlap
 
-# python main.py --dsName mpi3dhard  \
-#                --encoder deepcluster \
-#                --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
-#                --NWay 2 --KShot 5 --KQuery 5  \
-#                --seed $seedval  \
-#                --computePartitionOverlap
+python main.py --dsName mpi3dhard  \
+               --encoder deepcluster \
+               --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
+               --NWay 2 --KShot 5 --KQuery 5  \
+               --seed $seedval  \
+               --computePartitionOverlap
 
-# python main.py --dsName norb  \
-#                --encoder deepcluster \
-#                --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
-#                --NWay 2 --KShot 5 --KQuery 5  \
-#                --seed $seedval  \
-#                --computePartitionOverlap
+python main.py --dsName norb  \
+               --encoder deepcluster \
+               --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
+               --NWay 2 --KShot 5 --KQuery 5  \
+               --seed $seedval  \
+               --computePartitionOverlap
 
-# python main.py --dsName causal3d \
-#                --encoder deepcluster \
-#                --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
-#                --NWay 2 --KShot 5 --KQuery 5  \
-#                --seed $seedval  \
-#                --computePartitionOverlap
+python main.py --dsName causal3d \
+               --encoder deepcluster \
+               --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
+               --NWay 2 --KShot 5 --KQuery 5  \
+               --seed $seedval  \
+               --computePartitionOverlap
 
-# python main.py --dsName celebahair  \
-#                --encoder deepcluster  \
-#                --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
-#                --NWay 2 --KShot 5 --KQuery 5  \
-#                --seed $seedval  \
-#                --computePartitionOverlap
+python main.py --dsName celebahair  \
+               --encoder deepcluster  \
+               --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
+               --NWay 2 --KShot 5 --KQuery 5  \
+               --seed $seedval  \
+               --computePartitionOverlap

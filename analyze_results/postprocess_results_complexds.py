@@ -34,9 +34,9 @@ if __name__ == "__main__":
                 if (method == "DRESS" and ds in ['celebahair', 'celebaprimary']) or \
                     (method == "CACTUS-DinoV2" and ds in ['celebarand']):
                     # bold font
-                    latex_table += f"\\textbf{{{res_avg:.2f}}}\% $\pm$ \\textbf{{{res_std:.2f}}}\%"
+                    latex_table += f"\\textbf{{{res_avg:.2f}}}\% {{\scriptsize $\pm$ \\textbf{{{res_std:.2f}}}}}\%"
                 else:
-                    latex_table += f"${res_avg:.2f}\% \pm {res_std:.2f}\%$"
+                    latex_table += f"${res_avg:.2f}\%$ {{\scriptsize $\pm {res_std:.2f}\%$}}"
             if ds != "celebarand":
                 latex_table += " & "
             else:

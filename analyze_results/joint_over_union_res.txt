@@ -1,0 +1,16 @@
+
+2025-03-07 20:23:09.235123
+shapes3d_deepcluster_256D_latent_seed_9283: 
+Joint over union: avg: 0.17 
+2025-03-07 20:59:03.351487
+mpi3d_deepcluster_256D_latent_seed_9283: 
+Joint over union: avg: 0.21 
+2025-03-07 21:00:42.730505
+norb_deepcluster_256D_latent_seed_9283: 
+Joint over union: avg: 0.29 
+2025-03-07 21:11:25.394831
+causal3d_deepcluster_256D_latent_seed_9283: 
+Joint over union: avg: 0.12 
+2025-03-07 21:12:53.956414
+celeba_deepcluster_256D_latent_seed_9283: 
+Joint over union: avg: 0.06 

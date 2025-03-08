@@ -128,23 +128,23 @@ DIVERSITIES_ALL = {
     'Supervised-Oracle': {
         'shapes3d': [0.01, 0.01, 0.01, 0.01],
         'mpi3dhard': [0.03, 0.03, 0.00, 0.00],
-        'smallnorb': [0.00, 0.00, 0.01, 0.01],
+        'smallnorb': [0.01, 0.00, 0.00, 0.01],
         'causal3d': [0.02, 0.01, 0.00, 0.03],
         'celebahair': [0.17, 0.11, 0.16, 0.14]
     },
     'CACTUS-DeepCluster': {
-        'shapes3d': [0.20],
-        'mpi3dhard': [0.21],
-        'smallnorb': [0.32],
-        'causal3d': [0.12],
-        'celebahair': [0.08]
+        'shapes3d': [0.20, 0.17, 0.17],
+        'mpi3dhard': [0.21, 0.22, 0.21],
+        'smallnorb': [0.32, 0.28, 0.29],
+        'causal3d': [0.12, 0.12],
+        'celebahair': [0.08, 0.07]
     },
     'CACTUS-DinoV2': {
-        'shapes3d': [0.39],
-        'mpi3dhard': [0.42],
-        'smallnorb': [0.42],
-        'causal3d': [0.37],
-        'celebahair': [0.26]
+        'shapes3d': [0.39, 0.39],
+        'mpi3dhard': [0.42, 0.44],
+        'smallnorb': [0.42, 0.43],
+        'causal3d': [0.37, 0.35],
+        'celebahair': [0.26, 0.27]
     },
     'DRESS': {
         'shapes3d': [0.10],
