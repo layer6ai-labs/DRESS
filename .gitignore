@@ -18,4 +18,5 @@ visualization_checks/
 analyze_results/*.tex
 analyze_results/*.txt
 analyze_results/res_all.py
+analyze_results/compute_dci.py
 res.txt
