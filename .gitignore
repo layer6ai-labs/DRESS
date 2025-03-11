@@ -15,3 +15,7 @@ dataset_loaders/misc/
 .vscode/
 results/
 visualization_checks/
+analyze_results/*.tex
+analyze_results/*.txt
+analyze_results/res_all.py
+res.txt
