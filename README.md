@@ -2,7 +2,7 @@
 <a href="https://layer6.ai/"><img src="https://github.com/layer6ai-labs/DropoutNet/blob/master/logs/logobox.jpg" width="180"></a>
 </p> 
 
-### DRESS: Disentangled Representation-based Self-Supervised Meta-Learning for Diverse Tasks
+### DRESS: Disentangled Representation-based Self-Supervised Meta-Learning for Diverse Tasks [[arXiv]](https://arxiv.org/abs/2503.09679)
 Authors: Wei Cui, Tongzi Wu, Jesse C. Cresswell, Yi Sui, Keyvan Golestan
 
 
