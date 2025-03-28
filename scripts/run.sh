@@ -1,6 +1,6 @@
 # change here for different experimental trials
-# seedval=1234
-seedval=5432
+seedval=1234
+
 
 # Assume the project repo is cloned directly under the user home directory
 cd ~/DRESS
@@ -62,13 +62,13 @@ cd ~/DRESS
 #                 --seed $seedval
 # done
 
-for supmethod in "sup" "supall" "supora" "scratch"; do
-    python main.py --dsName celebarand  \
-                --encoder $supmethod \
-                --imgSizeToEncoder -1 --imgSizeToMetaModel 84 \
-                --NWay 2 --KShot 5 --KQuery 5 \
-                --seed $seedval
-done
+# for supmethod in "sup" "supall" "supora" "scratch"; do
+#     python main.py --dsName celebarand  \
+#                 --encoder $supmethod \
+#                 --imgSizeToEncoder -1 --imgSizeToMetaModel 84 \
+#                 --NWay 2 --KShot 5 --KQuery 5 \
+#                 --seed $seedval
+# done
 
  
 ############# Dino #############
@@ -277,7 +277,7 @@ done
 #                --NWay 2 --KQuery 5 --KShot 5 \
 #                --seed $seedval
 
-############### Ablation ##############
+############### Ablation I ##############
 # python main.py --dsName causal3d \
 #                --encoder ablate_disentangle \
 #                --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
@@ -285,7 +285,39 @@ done
 #                --seed $seedval
 
 # python main.py --dsName celebahair \
+#                --encoder ablate_disentangle \
+#                --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
+#                --NWay 2 --KShot 5 --KQuery 5 \
+#                --seed $seedval
+
+python main.py --dsName celebaprimary \
+               --encoder ablate_disentangle \
+               --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
+               --NWay 2 --KShot 5 --KQuery 5 \
+               --seed $seedval
+
+############### Ablation II ##############
+# python main.py --dsName celebahair \
 #                --encoder ablate_align \
+#                --imgSizeToEncoder 128 --imgSizeToMetaModel 84 \
+#                --NWay 2 --KShot 5 --KQuery 5 \
+#                --seed $seedval
+
+# python main.py --dsName celebaprimary \
+#                --encoder ablate_align \
+#                --imgSizeToEncoder 128 --imgSizeToMetaModel 84 \
+#                --NWay 2 --KShot 5 --KQuery 5 \
+#                --seed $seedval
+
+############### Ablation III ##############
+# python main.py --dsName causal3d \
+#                --encoder ablate_individual_cluster \
+#                --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
+#                --NWay 2 --KShot 5 --KQuery 5 \
+#                --seed $seedval
+
+# python main.py --dsName celebahair \
+#                --encoder ablate_individual_cluster \
 #                --imgSizeToEncoder 128 --imgSizeToMetaModel 84 \
 #                --NWay 2 --KShot 5 --KQuery 5 \
 #                --seed $seedval

@@ -220,3 +220,43 @@ class FDAE(nn.Module):
         encodings_quantized = torch.from_numpy(encodings_quantized) 
         print("FDAE post_encode computed successfully!")
         return encodings_quantized
+
+class Ablate_Individual_Cluster_FDAE(FDAE):
+    def __init__(self, 
+                 n_semantic_groups,
+                 code_length,
+                 code_length_reduced,
+                 levels_per_dim,
+                 args):
+        super().__init__(n_semantic_groups,
+                         code_length,
+                         code_length_reduced,
+                         levels_per_dim,
+                         args)
+        # use the original FDAE PCA model to reduce dimension
+        # the KMeans model in FDAE will not be used
+        print("Ablate_Individual_Cluster_FDAE encoder initialized successfully!")
+
+    # Aggregate the latent instead of doing individual disentangled dimension clustering
+    def post_encode(self, encodings):
+        print("Ablate_Individual_Cluster_FDAE start post_encode...")
+        dataset_size = encodings.shape[0]
+        assert encodings.shape == (dataset_size, self.n_semantic_groups, 2, self._code_length)
+        # first, use PCA to reduce the dimension of each code 
+        # do PCA separately in the semantic code and mask code space
+        semantic_codes, mask_codes = encodings.split(1, dim=2)
+        semantic_codes = semantic_codes.view(-1, self._code_length)
+        mask_codes = mask_codes.view(-1, self._code_length)
+        if self._code_length_reduced < self._code_length:
+            semantic_codes = self.pca.fit_transform(semantic_codes)
+            mask_codes = self.pca.fit_transform(mask_codes)            
+        semantic_codes = np.reshape(semantic_codes, 
+                                    [dataset_size, self.n_semantic_groups, self._code_length_reduced])
+        mask_codes = np.reshape(mask_codes, 
+                                [dataset_size, self.n_semantic_groups, self._code_length_reduced])
+        encodings_aggregated = np.concatenate([semantic_codes, mask_codes], axis=2)
+        encodings_aggregated = np.reshape(encodings_aggregated, [dataset_size, -1])
+        assert np.shape(encodings_aggregated) == (dataset_size, 2*self.n_semantic_groups*self._code_length_reduced)
+        encodings_aggregated = torch.from_numpy(encodings_aggregated) 
+        print(f"Ablate_Individual_Cluster_FDAE post_encode computed successfully, with the new latent dim: {encodings_aggregated.shape[1]}!")
+        return encodings_aggregated

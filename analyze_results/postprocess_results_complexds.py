@@ -32,7 +32,7 @@ if __name__ == "__main__":
                 res_avg = np.mean(res_vals)
                 res_std = np.std(res_vals) / np.sqrt(len(res_vals))
                 if (method == "DRESS" and ds in ['celebahair', 'celebaprimary']) or \
-                    (method == "CACTUS-DinoV2" and ds in ['celebarand']):
+                    (method == "CACTUS-DINOv2" and ds in ['celebarand']):
                     # bold font
                     latex_table += f"\\textbf{{{res_avg:.2f}}}\% {{\scriptsize $\pm$ \\textbf{{{res_std:.2f}}}}}\%"
                 else:

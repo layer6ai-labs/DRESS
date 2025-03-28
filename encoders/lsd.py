@@ -315,25 +315,53 @@ class LSD(nn.Module):
         print("LSD post_encode computed successfully!")
         return encodings_quantized
     
+    # Before saving to images, resize them to BXCXHXW, where C=1 so they are gray-scale images
     def _visualize_attn_map_alignments(self, attn, attn_cluster_ids, attn_order):
         batch_size = attn.shape[0]
         assert attn.shape == (batch_size, self.latent_dim, 4096)
         assert attn_cluster_ids.shape == (batch_size, self.latent_dim)
         assert attn_order.shape == (batch_size, self.latent_dim) 
-        # flatten them and inspect all attention masks across all images within a batch
-        attn_all_batch = attn.reshape(-1, 1, 64, 64)
+        n_imgs_to_inspect = 16
+        attn, attn_cluster_ids, attn_order = attn[:n_imgs_to_inspect],  \
+                                                attn_cluster_ids[:n_imgs_to_inspect],  \
+                                                    attn_order[:n_imgs_to_inspect]
+        # flatten them and inspect all attention masks across a number of images within a batch
+        attn_collected = attn.reshape(-1, 1, 64, 64)
         attn_cluster_ids_all_batch = attn_cluster_ids.flatten()
         for i in range(ATTN_MAP_CLUSTERS):
-            img_filename = os.path.join(SANITYCHECKDIR, f"cluster_{i+1}.jpg")
-            attn_per_cluster = attn_all_batch[attn_cluster_ids_all_batch == i]
-            torchvision.utils.save_image(attn_per_cluster, fp=img_filename, nrow=10, normalize=True, scale_each=True)
-        # check attention mask and slots alignment within each batch
+            if (attn_cluster_ids_all_batch==i).sum().item() == 0:
+                print(f"Attention Cluster {i} has zero attention mask from the images selected")
+                break
+            img_filename = os.path.join(SANITYCHECKDIR, f"cluster_{i+1}.png")
+            attn_per_cluster = attn_collected[attn_cluster_ids_all_batch == i]
+            torchvision.utils.save_image(attn_per_cluster, 
+                                         fp=img_filename, 
+                                         nrow=10, 
+                                         normalize=True, 
+                                         scale_each=True,
+                                         padding=2,
+                                         pad_value=1.0)
+        # check attention mask and slots before and after alignment 
+        # among a number of images within each batch
+        # before alignment
+        torchvision.utils.save_image(attn_collected, 
+                                     fp=os.path.join(SANITYCHECKDIR, "attn_maps_before_align.png"), 
+                                     nrow=self.latent_dim, 
+                                     normalize=True, 
+                                     scale_each=True,
+                                     padding=2,
+                                     pad_value=1.0)
+        # after alignment
         attn_order = attn_order.unsqueeze(2).repeat(1,1,4096).to(DEVICE)
         attn_aligned = torch.gather(attn, dim=1, index=attn_order)
         attn_aligned = attn_aligned.reshape(-1, 1, 64, 64)
         torchvision.utils.save_image(attn_aligned, 
-                                     fp=os.path.join(SANITYCHECKDIR, "attn_alignment.jpg"), 
-                                     nrow=self.latent_dim, normalize=True, scale_each=True)
+                                     fp=os.path.join(SANITYCHECKDIR, "attn_maps_after_align.png"), 
+                                     nrow=self.latent_dim, 
+                                     normalize=True, 
+                                     scale_each=True,
+                                     padding=2,
+                                     pad_value=1.0)
         return
     
 
@@ -350,7 +378,7 @@ class Ablate_Align(LSD):
         print("Ablate_Align finished encoding!")
         return slots
 
-class Ablate_Indiviual_Cluster(LSD):
+class Ablate_Individual_Cluster_LSD(LSD):
     def __init__(self, 
                  levels_per_dim,
                  dim_per_slot_reduced,
@@ -359,11 +387,11 @@ class Ablate_Indiviual_Cluster(LSD):
         # have additional PCAs to reduce the dimension on each slot
         self.dim_per_slot_reduced = dim_per_slot_reduced
         self.pca_model = PCA(self.dim_per_slot_reduced)
-        print("Ablate_Individual_Cluster encoder initialized successfully!")
+        print("Ablate_Individual_Cluster_LSD encoder initialized successfully!")
 
     # Aggregate the latent instead of doing individual disentangled dimension clustering
     def post_encode(self, encodings_raw):
-        print("Ablate_Individual_Cluster start post_encode...")
+        print("Ablate_Individual_Cluster_LSD start post_encode...")
         dataset_size = encodings_raw.shape[0]
         assert encodings_raw.shape == (dataset_size, self.latent_dim, self.dim_per_slot)
         encodings_aggregated = [
