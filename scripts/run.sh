@@ -278,11 +278,35 @@ cd ~/DRESS
 #                --seed $seedval
 
 ############### Ablation I ##############
+python main.py --dsName norb \
+               --encoder ablate_disentangle \
+               --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
+               --NWay 2 --KShot 5 --KQuery 5 \
+               --seed $seedval
+
+python main.py --dsName shapes3d \
+               --encoder ablate_disentangle \
+               --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
+               --NWay 2 --KShot 5 --KQuery 5 \
+               --seed $seedval
+
 # python main.py --dsName causal3d \
 #                --encoder ablate_disentangle \
 #                --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
 #                --NWay 2 --KShot 5 --KQuery 5 \
 #                --seed $seedval
+
+python main.py --dsName mpi3deasy \
+               --encoder ablate_disentangle \
+               --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
+               --NWay 2 --KShot 5 --KQuery 5 \
+               --seed $seedval
+
+python main.py --dsName mpi3dhard \
+               --encoder ablate_disentangle \
+               --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
+               --NWay 2 --KShot 5 --KQuery 5 \
+               --seed $seedval
 
 # python main.py --dsName celebahair \
 #                --encoder ablate_disentangle \
@@ -290,11 +314,11 @@ cd ~/DRESS
 #                --NWay 2 --KShot 5 --KQuery 5 \
 #                --seed $seedval
 
-python main.py --dsName celebaprimary \
-               --encoder ablate_disentangle \
-               --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
-               --NWay 2 --KShot 5 --KQuery 5 \
-               --seed $seedval
+# python main.py --dsName celebaprimary \
+#                --encoder ablate_disentangle \
+#                --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
+#                --NWay 2 --KShot 5 --KQuery 5 \
+#                --seed $seedval
 
 ############### Ablation II ##############
 # python main.py --dsName celebahair \
@@ -310,9 +334,33 @@ python main.py --dsName celebaprimary \
 #                --seed $seedval
 
 ############### Ablation III ##############
+# python main.py --dsName norb \
+#                --encoder ablate_individual_cluster \
+#                --imgSizeToEncoder 96 --imgSizeToMetaModel 84 \
+#                --NWay 2 --KShot 5 --KQuery 5 \
+#                --seed $seedval
+
+# python main.py --dsName shapes3d \
+#                --encoder ablate_individual_cluster \
+#                --imgSizeToEncoder 64 --imgSizeToMetaModel 84 \
+#                --NWay 2 --KShot 5 --KQuery 5 \
+#                --seed $seedval
+
 # python main.py --dsName causal3d \
 #                --encoder ablate_individual_cluster \
 #                --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
+#                --NWay 2 --KShot 5 --KQuery 5 \
+#                --seed $seedval
+
+# python main.py --dsName mpi3deasy \
+#                --encoder ablate_individual_cluster \
+#                --imgSizeToEncoder 64 --imgSizeToMetaModel 84 \
+#                --NWay 2 --KShot 5 --KQuery 5 \
+#                --seed $seedval
+
+# python main.py --dsName mpi3dhard \
+#                --encoder ablate_individual_cluster \
+#                --imgSizeToEncoder 64 --imgSizeToMetaModel 84 \
 #                --NWay 2 --KShot 5 --KQuery 5 \
 #                --seed $seedval
 

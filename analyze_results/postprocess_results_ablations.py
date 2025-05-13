@@ -28,8 +28,8 @@ if __name__ == "__main__":
             latex_table += "DRESS w/o Ind. Dim. Cluster. & "
         else:
             continue
-        for ds in ['causal3d', 'celebahair', 'celebaprimary']:
-            if method == "Ablate-Align" and ds == 'causal3d':
+        for ds in ['smallnorb', 'shapes3d', 'causal3d', 'mpi3deasy', 'mpi3dhard', 'celebahair', 'celebaprimary']:
+            if method == "Ablate-Align" and ds in ['smallnorb', 'shapes3d', 'causal3d', 'mpi3deasy', 'mpi3dhard']:
                 # this ablation study doesn't apply
                 latex_table += "-"
             else:
