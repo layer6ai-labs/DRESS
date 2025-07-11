@@ -321,7 +321,10 @@ class LSD(nn.Module):
         assert attn.shape == (batch_size, self.latent_dim, 4096)
         assert attn_cluster_ids.shape == (batch_size, self.latent_dim)
         assert attn_order.shape == (batch_size, self.latent_dim) 
-        n_imgs_to_inspect = 16
+        # for full paper presentation
+        # n_imgs_to_inspect = 16
+        # for rebuttal image
+        n_imgs_to_inspect = 6
         attn, attn_cluster_ids, attn_order = attn[:n_imgs_to_inspect],  \
                                                 attn_cluster_ids[:n_imgs_to_inspect],  \
                                                     attn_order[:n_imgs_to_inspect]

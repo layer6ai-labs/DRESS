@@ -1,5 +1,5 @@
 # change here for different experimental trials
-seedval=1234
+seedval=673547
 
 
 # Assume the project repo is cloned directly under the user home directory
@@ -278,12 +278,6 @@ cd ~/DRESS
 #                --seed $seedval
 
 ############### Ablation I ##############
-python main.py --dsName norb \
-               --encoder ablate_disentangle \
-               --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
-               --NWay 2 --KShot 5 --KQuery 5 \
-               --seed $seedval
-
 python main.py --dsName shapes3d \
                --encoder ablate_disentangle \
                --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
@@ -295,12 +289,6 @@ python main.py --dsName shapes3d \
 #                --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
 #                --NWay 2 --KShot 5 --KQuery 5 \
 #                --seed $seedval
-
-python main.py --dsName mpi3deasy \
-               --encoder ablate_disentangle \
-               --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
-               --NWay 2 --KShot 5 --KQuery 5 \
-               --seed $seedval
 
 python main.py --dsName mpi3dhard \
                --encoder ablate_disentangle \
@@ -334,12 +322,6 @@ python main.py --dsName mpi3dhard \
 #                --seed $seedval
 
 ############### Ablation III ##############
-# python main.py --dsName norb \
-#                --encoder ablate_individual_cluster \
-#                --imgSizeToEncoder 96 --imgSizeToMetaModel 84 \
-#                --NWay 2 --KShot 5 --KQuery 5 \
-#                --seed $seedval
-
 # python main.py --dsName shapes3d \
 #                --encoder ablate_individual_cluster \
 #                --imgSizeToEncoder 64 --imgSizeToMetaModel 84 \
@@ -349,12 +331,6 @@ python main.py --dsName mpi3dhard \
 # python main.py --dsName causal3d \
 #                --encoder ablate_individual_cluster \
 #                --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
-#                --NWay 2 --KShot 5 --KQuery 5 \
-#                --seed $seedval
-
-# python main.py --dsName mpi3deasy \
-#                --encoder ablate_individual_cluster \
-#                --imgSizeToEncoder 64 --imgSizeToMetaModel 84 \
 #                --NWay 2 --KShot 5 --KQuery 5 \
 #                --seed $seedval
 

@@ -1,4 +1,4 @@
-seedval=2000
+seedval=3000
 
 
 # Assume the project repo is cloned directly under the user home directory
@@ -120,12 +120,12 @@ python main.py --dsName causal3d  \
                --computePartitionOverlap
 
 ########### DRESS with LSD ############
-python main.py --dsName celebahair  \
-               --encoder lsd  \
-               --imgSizeToEncoder 128 --imgSizeToMetaModel 84 \
-               --NWay 2 --KShot 5 --KQuery 5  \
-               --seed $seedval  \
-               --computePartitionOverlap
+# python main.py --dsName celebahair  \
+#                --encoder lsd  \
+#                --imgSizeToEncoder 128 --imgSizeToMetaModel 84 \
+#                --NWay 2 --KShot 5 --KQuery 5  \
+#                --seed $seedval  \
+#                --computePartitionOverlap
 
 
 ########### DeepCluster ###########

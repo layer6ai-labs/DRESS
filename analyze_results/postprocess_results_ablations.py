@@ -15,7 +15,8 @@ if __name__ == "__main__":
                                         "res_table_ablations.tex")
 
     latex_table = "\\toprule \n"
-    latex_table += "Method & Causal3D & CelebA-Hair & CelebA-Primary \\\\ \n\midrule \n"
+    # full ablation table
+    latex_table += "Method & Shapes3D & Causal3D & MPI3D-Hard & CelebA-Hair & CelebA-Primary \\\\ \n\midrule \n"
 
     for method, res_dict in ACCURACIES_ALL.items():
         if method == 'DRESS':
@@ -28,8 +29,9 @@ if __name__ == "__main__":
             latex_table += "DRESS w/o Ind. Dim. Cluster. & "
         else:
             continue
-        for ds in ['smallnorb', 'shapes3d', 'causal3d', 'mpi3deasy', 'mpi3dhard', 'celebahair', 'celebaprimary']:
-            if method == "Ablate-Align" and ds in ['smallnorb', 'shapes3d', 'causal3d', 'mpi3deasy', 'mpi3dhard']:
+        # full ablation table
+        for ds in ['shapes3d', 'causal3d', 'mpi3dhard', 'celebahair', 'celebaprimary']:
+            if method == "Ablate-Align" and ds in ['shapes3d', 'causal3d', 'mpi3dhard']:
                 # this ablation study doesn't apply
                 latex_table += "-"
             else:
@@ -41,9 +43,10 @@ if __name__ == "__main__":
                     res_std = np.std(res_vals) / np.sqrt(len(res_vals))
                     if method == "DRESS":
                         # bold font
-                        latex_table += f"\\textbf{{{res_avg:.2f}}}\% $\pm$ \\textbf{{{res_std:.2f}}}\%"
+                        latex_table += f"\\textbf{{{res_avg:.2f}}}\% {{\scriptsize $\pm$ \\textbf{{{res_std:.2f}}}}}\%"
                     else:
-                        latex_table += f"${res_avg:.2f}\% \pm {res_std:.2f}\%$"
+                        latex_table += f"${res_avg:.2f}\%$ {{\scriptsize $\pm {res_std:.2f}\%$}}"
+            # full ablation table
             if ds != "celebaprimary":
                 latex_table += " & "
             else:

@@ -66,14 +66,36 @@ def get_encoder(args, device):
     elif args.encoder == "ablate_align":
         encoder = Ablate_Align(levels_per_dim=200, args=args).to(DEVICE)
     elif args.encoder == "ablate_individual_cluster":
-        if not args.dsName.startswith('celeba'):
-            # FDAE with causal3D config
+        # FDAE config
+        if args.dsName == "shapes3d":
+            encoder = Ablate_Individual_Cluster_FDAE(
+                        n_semantic_groups=6, 
+                        code_length=80, 
+                        code_length_reduced=15, # here reduced and then aggregated before clustering
+                        levels_per_dim=200, # here levels_per_dim isn't used
+                        args=args).to(DEVICE)
+        elif args.dsName == "causal3d":
             encoder = Ablate_Individual_Cluster_FDAE(
                         n_semantic_groups=8, 
                         code_length=80, 
                         code_length_reduced=15, # here reduced and then aggregated before clustering
                         levels_per_dim=200, # here levels_per_dim isn't used
                         args=args).to(DEVICE)
+        elif args.dsName == "norb":
+            encoder = Ablate_Individual_Cluster_FDAE(
+                        n_semantic_groups=8, 
+                        code_length=80, 
+                        code_length_reduced=15, # here reduced and then aggregated before clustering
+                        levels_per_dim=200, # here levels_per_dim isn't used
+                        args=args).to(DEVICE)
+        elif args.dsName.startswith("mpi3d"):
+            encoder = Ablate_Individual_Cluster_FDAE(
+                        n_semantic_groups=7, 
+                        code_length=100, 
+                        code_length_reduced=15, # here reduced and then aggregated before clustering
+                        levels_per_dim=200, # here levels_per_dim isn't used
+                        args=args).to(DEVICE)
+        # LSD config
         else:
             encoder = Ablate_Individual_Cluster_LSD(levels_per_dim=200, # here levels_per_dim isn't used
                                                dim_per_slot_reduced=15,
