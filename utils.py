@@ -80,7 +80,7 @@ def visualize_constructed_tasks(task_generator, descriptor, args, n_imgs):
         # sample meta-training task and meta-testing task
         meta_train_task = task_generator.sample_task("meta_train", args)
         train_data, train_labels, _, test_data, test_labels, _ = meta_train_task
-        grid_spacing = 0.03
+        grid_spacing = 0.02
         fig = plt.figure(figsize=(33+(args.NWay-1)*grid_spacing, 7.5+grid_spacing), 
                          constrained_layout=False)
         outer_grid = fig.add_gridspec(args.NWay, 2, wspace=grid_spacing, hspace=grid_spacing)
@@ -114,14 +114,14 @@ def visualize_constructed_tasks(task_generator, descriptor, args, n_imgs):
         all_axes = fig.get_axes()
         # label rows
         for i in range(args.NWay):
-            all_axes[i*(args.KShot+args.KQuery)].set_ylabel(f"Class {i}", fontsize=34)
+            all_axes[i*(args.KShot+args.KQuery)].set_ylabel(f"Class {i}", fontsize=40)
         # annotate columns (at bottom of figures)
         support_col_idx = np.floor(args.KShot / 2).astype(int)
         support_ax_idx = (args.NWay-1)*(args.KShot+args.KQuery) + support_col_idx
-        all_axes[support_ax_idx].set_xlabel("Support Samples", fontsize=36)
+        all_axes[support_ax_idx].set_xlabel("Support Samples", fontsize=43)
         query_col_idx = args.KShot + np.floor(args.KQuery / 2).astype(int)  
         query_ax_idx = (args.NWay-1)*(args.KShot+args.KQuery) + query_col_idx      
-        all_axes[query_ax_idx].set_xlabel("Query Samples", fontsize=36)
+        all_axes[query_ax_idx].set_xlabel("Query Samples", fontsize=43)
                 
         plt.savefig(os.path.join(SANITYCHECKDIR, 
                                  f"{descriptor}_constructed_tasks_eg{visual_id+1}.pdf"), 

@@ -166,7 +166,7 @@ if __name__ == "__main__":
     
     if args.visualizeTasks:
         assert args.encoder not in ["simclrpretrain", "metagmvae"]
-        visualize_constructed_tasks(task_generator, descriptor, args, n_imgs=30)
+        visualize_constructed_tasks(task_generator, descriptor, args, n_imgs=50)
         exit(0)
     elif args.computePartitionOverlap:
         compute_partition_overlap(meta_train_partitions, descriptor)
