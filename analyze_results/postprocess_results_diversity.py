@@ -27,9 +27,9 @@ if __name__ == "__main__":
                 res_avg = np.mean(res_vals)
                 res_std = np.std(res_vals) / np.sqrt(len(res_vals))
                 if (method == "DRESS" and ds in ['shapes3d', 'mpi3dhard', 'smallnorb', 'celebahair']) or \
-                    (method == "CACTUS-DeepCluster" and ds == 'causal3d'):
+                    (method == "CACTUS-DC" and ds == 'causal3d'):
                     # bold font
-                    latex_table += f"\\textbf{{{1-res_avg:.2f}}} {{\scriptsize $\pm$  \\textbf{{{res_std:.2f}}}}}"
+                    latex_table += f"\\textbf{{{1-res_avg:.2f}}} {{\scriptsize $\kern0.13em\pm$  \\textbf{{{res_std:.2f}}}}}"
                 else:
                     latex_table += f"${1-res_avg:.2f}$ {{\scriptsize $\pm {res_std:.2f}$}}"
             if ds != "celebahair":

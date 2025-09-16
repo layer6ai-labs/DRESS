@@ -43,9 +43,9 @@ if __name__ == "__main__":
                     res_std = np.std(res_vals) / np.sqrt(len(res_vals))
                     if method == "DRESS":
                         # bold font
-                        latex_table += f"\\textbf{{{res_avg:.2f}}}\% {{\scriptsize $\pm$ \\textbf{{{res_std:.2f}}}}}\%"
+                        latex_table += f"\\textbf{{{res_avg:.1f}}}\% {{\scriptsize $\pm$ \\textbf{{{res_std:.1f}}}}}\%"
                     else:
-                        latex_table += f"${res_avg:.2f}\%$ {{\scriptsize $\pm {res_std:.2f}\%$}}"
+                        latex_table += f"${res_avg:.1f}\%$ {{\scriptsize $\pm {res_std:.1f}\%$}}"
             # full ablation table
             if ds != "celebaprimary":
                 latex_table += " & "
