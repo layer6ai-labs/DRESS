@@ -15,9 +15,7 @@ if torch.cuda.device_count() > 1:
     print("Let's use", torch.cuda.device_count(), "GPUs!!!")
 # meta-training setup
 METATRAIN_OUTER_EPISODES = 30000 # originally 60000 episodes in cactus paper
-METAVALID_OUTER_INTERVAL = 5000 # runs very rarely. currently not using early stopping. just for code integrity.
 METATRAIN_INNER_UPDATES = 5
-METAVALID_INNER_UPDATES = METATEST_INNER_UPDATES = 5 # reduced from original 50 updates in CACTUS paper
 NUM_TASKS_METATRAIN = 8
 NUM_TASKS_METAVALID = 16
 NUM_TASKS_METATEST = 1000
@@ -208,8 +206,6 @@ def get_args_parser():
                                  "deepcluster", 
                                  "fdae",
                                  "lsd",
-                                 "diti",
-                                 "soda",
                                  "metagmvae",
                                  "ablate_disentangle",
                                  "ablate_align",
@@ -228,11 +224,19 @@ def get_args_parser():
                         type=int,
                         required=True)
     parser.add_argument('--KShot',
-                        help='Shots for each few-shot task (same across all tasks in meta splits)',
+                        help='Shots for each few-shot task for meta-training',
                         type=int,
                         required=True)
     parser.add_argument('--KQuery',
-                        help='number of testing samples in each task',
+                        help='number of testing samples in each task for meta-training',
+                        type=int,
+                        required=True)
+    parser.add_argument('--KShotTest',
+                        help='Shots for each few-shot task for meta-testing',
+                        type=int,
+                        required=True)
+    parser.add_argument('--KQueryTest',
+                        help='number of testing samples in each task for meta-testing',
                         type=int,
                         required=True)
     parser.add_argument('--seed',

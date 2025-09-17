@@ -70,26 +70,6 @@ def train(meta_model, task_generator, optimizer, loss_fn, descriptor, args):
         # log meta-training metrics
         tb_writer.add_scalar("Loss/meta_train", meta_train_loss, i)
         tb_writer.add_scalar("Accuracy/meta_train", meta_train_accur, i)
-
-        # meta validation
-        if (i+1) % METAVALID_OUTER_INTERVAL == 0:
-            meta_valid_loss, meta_valid_accur = 0.0, 0.0
-            for _ in range(NUM_TASKS_METAVALID):
-                inner_learner = meta_model.clone()
-                task_batch = task_generator.sample_task('meta_valid', args)
-                inner_test_loss, inner_test_accur = fast_adapt(task_batch, 
-                                                                inner_learner,
-                                                                loss_fn,
-                                                                METAVALID_INNER_UPDATES,
-                                                                args)
-                meta_valid_loss += inner_test_loss.item()
-                meta_valid_accur += inner_test_accur.item()
-            meta_valid_loss /= NUM_TASKS_METAVALID
-            meta_valid_accur /= NUM_TASKS_METAVALID
-        
-            # log meta-validation metrics
-            tb_writer.add_scalar("Loss/meta_valid", meta_valid_loss, i)
-            tb_writer.add_scalar("Accuracy/meta_valid", meta_valid_accur, i)
     
     # within the call of close(), flush() should also be called upon the tensorboard writer
     tb_writer.close()
@@ -97,7 +77,7 @@ def train(meta_model, task_generator, optimizer, loss_fn, descriptor, args):
     
     return meta_model 
 
-def test(meta_model, task_generator, loss_fn, descriptor, args):
+def test(meta_model, task_generator, loss_fn, args):
     meta_test_losses, meta_test_accurs = [], []
     for _ in tqdm(range(NUM_TASKS_METATEST), desc='Testing tasks'):
         inner_learner = meta_model.clone()
@@ -118,15 +98,13 @@ if __name__ == "__main__":
     args = parser.parse_args()
     fix_seed(args.seed)
 
-    # Load train/validation/test datasets
+    # Load meta-train/meta-test datasets
     (
         meta_train_set, 
-        meta_valid_set, 
         meta_test_set, 
         meta_train_partitions_supervised, 
         meta_train_partitions_supervised_all,
-        meta_train_partitions_supervised_oracle,
-        meta_valid_partitions, 
+        meta_train_partitions_supervised_oracle, 
         meta_test_partitions
     ) = LOAD_DATASET[args.dsName](args)
     
@@ -157,12 +135,10 @@ if __name__ == "__main__":
     assert meta_train_partitions
 
     task_generator = TaskGenerator(meta_train_set, 
-                                    meta_valid_set, 
-                                    meta_test_set,
-                                    meta_train_partitions,
-                                    meta_valid_partitions,
-                                    meta_test_partitions,
-                                    args)
+                                   meta_test_set,
+                                   meta_train_partitions,
+                                   meta_test_partitions,
+                                   args)
     
     if args.visualizeTasks:
         assert args.encoder not in ["simclrpretrain", "metagmvae"]
@@ -193,19 +169,19 @@ if __name__ == "__main__":
             print(f"[{descriptor}]: No model at {model_path}. Training from scratch...")
             if args.encoder == "simclrpretrain":
                 opt = optim.Adam(encoder.parameters(), lr=PRETRAIN_LR)
-                encoder = contrastive_pretrain(encoder, opt, meta_train_set, meta_valid_set, descriptor, args)
+                encoder = contrastive_pretrain(encoder, opt, meta_train_set, descriptor, args)
                 torch.save(encoder.state_dict(), model_path)
             elif args.encoder == "metagmvae":
                 opt = optim.Adam(encoder.parameters(), lr=GMVAE_METATRAIN_LR)
-                encoder = metagmvae_train(encoder, opt, meta_train_set, meta_valid_set, descriptor, args)
+                encoder = metagmvae_train(encoder, opt, meta_train_set, descriptor, args)
                 torch.save(encoder.state_dict(), model_path)
             else:
                 meta_model = train(meta_model, 
-                                    task_generator, 
-                                    opt, 
-                                    loss_fn, 
-                                    descriptor, 
-                                    args)
+                                   task_generator, 
+                                   opt, 
+                                   loss_fn, 
+                                   descriptor, 
+                                   args)
                 torch.save(meta_model.state_dict(), model_path)
             print(f"Model saved at {model_path}!")
 
@@ -214,11 +190,12 @@ if __name__ == "__main__":
     elif args.encoder == "metagmvae":
         meta_test_accurs = metagmvae_test(encoder, task_generator, loss_fn, descriptor, args)
     else:
-        meta_test_accurs = test(meta_model, task_generator, loss_fn, descriptor, args)
+        meta_test_accurs = test(meta_model, task_generator, loss_fn, args)
 
     with open("res.txt", "a") as f:
         f.write(str(datetime.datetime.now())+f' under seed {args.seed}'+'\n')
-        f.write(f"[{descriptor} on {args.dsName} {args.NWay}-way {args.KShot}-shot meteTrain {args.KShot}-shot metaTest]: \n" + \
+        f.write(f"[{descriptor} on {args.dsName} {args.NWay}-way {args.KShot}-shot {args.KQuery}-query meteTrain " + \
+                f"{args.NWay}-way {args.KShotTest}-shot {args.KQueryTest}-query metaTest]: \n" + \
                 f"Mean meta test accuracy: {np.mean(meta_test_accurs)*100:.2f}%\n")
     print(f"[{descriptor} on {args.dsName}] testing completed!")
     

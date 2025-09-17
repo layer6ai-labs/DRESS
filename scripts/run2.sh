@@ -1,5 +1,5 @@
 # change here for different experimental trials
-seedval=6273
+seedval=3278
 kShotTest=1
 kQueryTest=5
 

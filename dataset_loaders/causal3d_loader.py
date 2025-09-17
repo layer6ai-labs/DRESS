@@ -84,17 +84,13 @@ def load_causal3d(args):
         else:
             ds_test = Causal3D(data_for_split['imgs'], data_for_split['attrs'], data_transforms)
 
-    # just a placeholder
-    ds_valid = ds_train
 
     CAUSAL3D_ATTRIBUTES_IDX_META_TRAIN = [0,1,2,6] # object location and color
-    CAUSAL3D_ATTRIBUTES_IDX_META_VALID = [0,1] # without early stopping, meta validation doesn't matter
     CAUSAL3D_ATTRIBUTES_IDX_META_TEST = [7,8,9] # ground color and spotlight color and position
 
     # Use disjoint subset of attrs for meta splits
     metatrain_attrs_all = ds_train.attrs
     metatrain_attrs = ds_train.attrs[:,CAUSAL3D_ATTRIBUTES_IDX_META_TRAIN]
-    metavalid_attrs = ds_valid.attrs[:,CAUSAL3D_ATTRIBUTES_IDX_META_VALID]
     metatest_attrs = ds_test.attrs[:,CAUSAL3D_ATTRIBUTES_IDX_META_TEST]
     metatrain_attrs_oracle = ds_train.attrs[:,CAUSAL3D_ATTRIBUTES_IDX_META_TEST]
 
@@ -104,11 +100,7 @@ def load_causal3d(args):
                                             N_LEVELS_PER_ATTR,
                                             'meta_train', 
                                             args)
-    metavalid_partitions = generate_attributes_based_partitions(
-                                            metavalid_attrs, 
-                                            N_LEVELS_PER_ATTR,
-                                            'meta_valid', 
-                                            args)
+
     metatest_partitions = generate_attributes_based_partitions(
                                             metatest_attrs, 
                                             N_LEVELS_PER_ATTR,
@@ -128,13 +120,11 @@ def load_causal3d(args):
                                                 args)
 
     return (
-        ds_train,  
-        ds_valid,  
+        ds_train,    
         ds_test,   
         metatrain_partitions_supervised, 
         metatrain_partitions_supervised_all,
-        metatrain_partitions_supervised_oracle, 
-        metavalid_partitions,  
+        metatrain_partitions_supervised_oracle,   
         metatest_partitions
     )
 

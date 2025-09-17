@@ -58,13 +58,6 @@ def load_norb(args):
                               split='train', 
                               shuffle_files=False))
     instance_label_transform_train = {4:0, 6:1, 7:2, 8:3, 9:4}
-    # for now, validation is just a place holder
-    ds_tf_valid = tfds.as_numpy(
-                    tfds.load('smallnorb', 
-                              data_dir=DATADIR,
-                              split='train', 
-                              shuffle_files=False))
-    instance_label_transform_valid = instance_label_transform_train
     ds_tf_test = tfds.as_numpy(
                     tfds.load('smallnorb',
                               data_dir=DATADIR,
@@ -72,20 +65,17 @@ def load_norb(args):
                               shuffle_files=False))
     instance_label_transform_test = {0:0, 1:1, 2:2, 3:3, 5:4}
     data_transforms = build_initial_img_transforms(meta_split="meta_train", args=args)
-    ds_train, ds_valid = (Norb(ds_tf_train, data_transforms, instance_label_transform_train),
-                          Norb(ds_tf_valid, data_transforms, instance_label_transform_valid))
+    ds_train = Norb(ds_tf_train, data_transforms, instance_label_transform_train)
     data_transforms = build_initial_img_transforms(meta_split="meta_test", args=args)
     ds_test = Norb(ds_tf_test, data_transforms, instance_label_transform_test)
 
     NORB_ATTRIBUTES_COUNTS = [5,5,18,9,6]
     NORB_ATTRIBUTES_IDX_META_TRAIN = [0,1] # about object identity
-    NORB_ATTRIBUTES_IDX_META_VALID = [0,1] # without early stopping, meta validation doesn't matter
     NORB_ATTRIBUTES_IDX_META_TEST = [2,3,4] # pose and lighting condition
 
     # Use disjoint subset of attrs for meta splits
     norb_meta_train_attrs_all = ds_train.attrs
     norb_meta_train_attrs = ds_train.attrs[:,NORB_ATTRIBUTES_IDX_META_TRAIN]
-    norb_meta_valid_attrs = ds_valid.attrs[:,NORB_ATTRIBUTES_IDX_META_VALID]
     norb_meta_test_attrs = ds_test.attrs[:,NORB_ATTRIBUTES_IDX_META_TEST]
 
     norb_meta_train_attrs_oracle = ds_train.attrs[:,NORB_ATTRIBUTES_IDX_META_TEST]
@@ -96,11 +86,7 @@ def load_norb(args):
                                             np.array(NORB_ATTRIBUTES_COUNTS)[NORB_ATTRIBUTES_IDX_META_TRAIN],
                                             'meta_train', 
                                             args)
-    meta_valid_partitions = generate_attributes_based_partitions(
-                                            norb_meta_valid_attrs, 
-                                            np.array(NORB_ATTRIBUTES_COUNTS)[NORB_ATTRIBUTES_IDX_META_VALID],
-                                            'meta_valid', 
-                                            args)
+
     meta_test_partitions = generate_attributes_based_partitions(
                                             norb_meta_test_attrs, 
                                             np.array(NORB_ATTRIBUTES_COUNTS)[NORB_ATTRIBUTES_IDX_META_TEST],
@@ -121,12 +107,10 @@ def load_norb(args):
 
     return (
         ds_train,  
-        ds_valid,  
         ds_test,   
         meta_train_partitions_supervised, 
         meta_train_partitions_supervised_all,
         meta_train_partitions_supervised_oracle, 
-        meta_valid_partitions,  
         meta_test_partitions
     )
 

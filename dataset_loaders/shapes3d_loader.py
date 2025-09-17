@@ -39,14 +39,12 @@ def load_shapes3d(args):
     
     assert n_imgs == 480_000
     n_train_imgs = 400_000
-    n_val_imgs = 30_000
     n_test_imgs = 50_000
-    assert n_imgs == n_train_imgs + n_val_imgs + n_test_imgs
 
     # convert attributes to integers (starting from 0) for generating partitions
     attrs_counts = [10, 10, 10, 8, 4, 15]
-    attrs_offsets =   [0,   0,  0, -0.75, None, 30]
-    attrs_stepsizes = [10, 10, 10,    14, None, 14/60]
+    attrs_offsets = [0,  0,  0, -0.75, None, 30]
+    attrs_stepsizes = [10, 10, 10, 14, None, 14/60]
     for i, (offset, stepsize) in enumerate(zip(attrs_offsets, attrs_stepsizes)):
         if offset is None:
             # this attribute already in the nature number format
@@ -57,27 +55,24 @@ def load_shapes3d(args):
     # get meta split indices
     perm = np.arange(n_imgs)
     np.random.shuffle(perm)
-    metatrain_idxs, metavalid_idxs, metatest_idxs = \
-                perm[:n_train_imgs], perm[n_train_imgs:n_train_imgs+n_val_imgs], perm[-n_test_imgs:]
+    metatrain_idxs, metatest_idxs = \
+                perm[:n_train_imgs], perm[-n_test_imgs:]
     
     data_transforms = build_initial_img_transforms(meta_split="meta_train", args=args)
     metatrain_dataset = Shapes3D(shapes3d_imgs[metatrain_idxs], shapes3d_attrs[metatrain_idxs], data_transforms)
-    metavalid_dataset = Shapes3D(shapes3d_imgs[metavalid_idxs], shapes3d_attrs[metavalid_idxs], data_transforms)
     data_transforms = build_initial_img_transforms(meta_split="meta_test", args=args)
     metatest_dataset = Shapes3D(shapes3d_imgs[metatest_idxs], shapes3d_attrs[metatest_idxs], data_transforms)
     
-    metatrain_attrs_all, metavalid_attrs, metatest_attrs = \
-                shapes3d_attrs[metatrain_idxs], shapes3d_attrs[metavalid_idxs], shapes3d_attrs[metatest_idxs]
+    metatrain_attrs_all, metatest_attrs = \
+                shapes3d_attrs[metatrain_idxs], shapes3d_attrs[metatest_idxs]
     
     """
     The attributes with order: floor color, wall color, object color, scale, shape, orientation
     """
     SHAPES3D_ATTRIBUTES_IDX_META_TRAIN = [2,3,4]
-    SHAPES3D_ATTRIBUTES_IDX_META_VALID = [3,4] # don't matter without early stopping
     SHAPES3D_ATTRIBUTES_IDX_META_TEST = [0,1,5]
 
     metatrain_attrs = metatrain_attrs_all[:, SHAPES3D_ATTRIBUTES_IDX_META_TRAIN]
-    metavalid_attrs = metavalid_attrs[:, SHAPES3D_ATTRIBUTES_IDX_META_VALID]
     metatest_attrs = metatest_attrs[:, SHAPES3D_ATTRIBUTES_IDX_META_TEST]
 
     metatrain_attrs_oracle = metatrain_attrs_all[:, SHAPES3D_ATTRIBUTES_IDX_META_TEST]
@@ -88,11 +83,7 @@ def load_shapes3d(args):
                                         np.array(attrs_counts)[SHAPES3D_ATTRIBUTES_IDX_META_TRAIN], 
                                         'meta_train', 
                                         args)
-    metavalid_partitions = generate_attributes_based_partitions(
-                                        metavalid_attrs, 
-                                        np.array(attrs_counts)[SHAPES3D_ATTRIBUTES_IDX_META_VALID], 
-                                        'meta_valid', 
-                                        args)
+
     metatest_partitions = generate_attributes_based_partitions(
                                         metatest_attrs, 
                                         np.array(attrs_counts)[SHAPES3D_ATTRIBUTES_IDX_META_TEST],
@@ -113,12 +104,10 @@ def load_shapes3d(args):
 
     return (
         metatrain_dataset, 
-        metavalid_dataset, 
         metatest_dataset,  
         metatrain_partitions_supervised,  
         metatrain_partitions_supervised_all,
         metatrain_partitions_supervised_oracle,
-        metavalid_partitions,  
         metatest_partitions  
     )
 

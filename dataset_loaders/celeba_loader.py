@@ -83,12 +83,9 @@ def _load_celeba(args, meta_split_type):
 
     # for supervised benchmark, the labels are for attributes different from that for meta-test tasks
     CELEBA_ATTRIBUTES_IDX_META_TRAIN = [i for i in range(40) if i not in CELEBA_ATTRIBUTES_IDX_META_TEST]    
-    # without early stopping, meta validation doesn't matter
-    CELEBA_ATTRIBUTES_IDX_META_VALID = CELEBA_ATTRIBUTES_IDX_META_TRAIN[:10]
 
     # Use disjoint subset of attrs for meta splits
     celeba_meta_train_attrs = celeba_meta_train_attrs_all[:,CELEBA_ATTRIBUTES_IDX_META_TRAIN]
-    celeba_meta_valid_attrs = celeba_meta_valid_attrs[:,CELEBA_ATTRIBUTES_IDX_META_VALID]
     celeba_meta_test_attrs = celeba_meta_test_attrs[:,CELEBA_ATTRIBUTES_IDX_META_TEST]
 
     celeba_meta_train_attrs_oracle = celeba_meta_train_attrs_all[:,CELEBA_ATTRIBUTES_IDX_META_TEST]
@@ -99,11 +96,7 @@ def _load_celeba(args, meta_split_type):
                                             2,
                                             'meta_train', 
                                             args)
-    meta_valid_partitions = generate_attributes_based_partitions(
-                                            celeba_meta_valid_attrs, 
-                                            2,
-                                            'meta_valid', 
-                                            args)
+
     meta_test_partitions = generate_attributes_based_partitions(
                                             celeba_meta_test_attrs, 
                                             2,
@@ -123,13 +116,11 @@ def _load_celeba(args, meta_split_type):
                                                 args)
 
     return (
-        celeba_meta_train,  
-        celeba_meta_valid,  
+        celeba_meta_train,    
         celeba_meta_test,   
         meta_train_partitions_supervised, 
         meta_train_partitions_supervised_all,
         meta_train_partitions_supervised_oracle, 
-        meta_valid_partitions,  
         meta_test_partitions
     )
 

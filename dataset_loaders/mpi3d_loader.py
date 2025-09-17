@@ -34,13 +34,11 @@ def _load_mpi3d(args, meta_split_type):
     
     assert n_imgs == 1_036_800
     n_train_imgs = 1_000_000
-    n_val_imgs = 6_800
     n_test_imgs = 30_000
     # The data is indexed with the following dimension arrangement, 
     # corresponding to the seven factors:
     # 6 X 6 X 2 X 3 X 3 X 40 X 40
     MPI3D_ATTRIBUTES_COUNTS = [6,6,2,3,3,40,40]
-    assert n_imgs == n_train_imgs + n_val_imgs + n_test_imgs
 
     # get the seven factor values of each image by ordered indices
     idx_bases = np.prod(MPI3D_ATTRIBUTES_COUNTS)/np.cumprod(MPI3D_ATTRIBUTES_COUNTS)
@@ -69,32 +67,28 @@ def _load_mpi3d(args, meta_split_type):
     # get meta split indices
     perm = np.arange(n_imgs)
     np.random.shuffle(perm)
-    metatrain_idxs, metavalid_idxs, metatest_idxs = \
-                perm[:n_train_imgs], perm[n_train_imgs:n_train_imgs+n_val_imgs], perm[-n_test_imgs:]
+    metatrain_idxs, metatest_idxs = \
+                perm[:n_train_imgs], perm[-n_test_imgs:]
     
     data_transforms = build_initial_img_transforms(meta_split="meta_train", args=args)
     metatrain_dataset = MPI3D(mpi3d_imgs[metatrain_idxs], mpi3d_attrs[metatrain_idxs], data_transforms)
-    metavalid_dataset = MPI3D(mpi3d_imgs[metavalid_idxs], mpi3d_attrs[metavalid_idxs], data_transforms)
     data_transforms = build_initial_img_transforms(meta_split="meta_test", args=args)
     metatest_dataset = MPI3D(mpi3d_imgs[metatest_idxs], mpi3d_attrs[metatest_idxs], data_transforms)
     
-    metatrain_attrs_all, metavalid_attrs, metatest_attrs = \
-                mpi3d_attrs[metatrain_idxs], mpi3d_attrs[metavalid_idxs], mpi3d_attrs[metatest_idxs]
+    metatrain_attrs_all, metatest_attrs = \
+                mpi3d_attrs[metatrain_idxs], mpi3d_attrs[metatest_idxs]
     
     """
     The attributes with order: object color, object shape, object size, camera height, background color, horizontal axis, vertical axis
     """
     if meta_split_type == "hard":
         MPI3D_ATTRIBUTES_IDX_META_TRAIN = [0,1,2]
-        MPI3D_ATTRIBUTES_IDX_META_VALID = [3,4] # robot arms granularity is too fine, hard to distinguish, thus not used for training or testing for now
         MPI3D_ATTRIBUTES_IDX_META_TEST = [5,6]
     else:
         MPI3D_ATTRIBUTES_IDX_META_TRAIN = [0,1,2]
-        MPI3D_ATTRIBUTES_IDX_META_VALID = [5,6] # robot arms granularity is too fine, hard to distinguish, thus not used for training or testing for now
         MPI3D_ATTRIBUTES_IDX_META_TEST = [3,4]
 
     metatrain_attrs = metatrain_attrs_all[:, MPI3D_ATTRIBUTES_IDX_META_TRAIN]
-    metavalid_attrs = metavalid_attrs[:, MPI3D_ATTRIBUTES_IDX_META_VALID]
     metatest_attrs = metatest_attrs[:, MPI3D_ATTRIBUTES_IDX_META_TEST]
 
     metatrain_attrs_oracle = metatrain_attrs_all[:, MPI3D_ATTRIBUTES_IDX_META_TEST]
@@ -105,11 +99,7 @@ def _load_mpi3d(args, meta_split_type):
                                         np.array(MPI3D_ATTRIBUTES_COUNTS)[MPI3D_ATTRIBUTES_IDX_META_TRAIN], 
                                         'meta_train', 
                                         args)
-    metavalid_partitions = generate_attributes_based_partitions(
-                                        metavalid_attrs, 
-                                        np.array(MPI3D_ATTRIBUTES_COUNTS)[MPI3D_ATTRIBUTES_IDX_META_VALID], 
-                                        'meta_valid', 
-                                        args)
+    
     metatest_partitions = generate_attributes_based_partitions(
                                         metatest_attrs, 
                                         np.array(MPI3D_ATTRIBUTES_COUNTS)[MPI3D_ATTRIBUTES_IDX_META_TEST],
@@ -130,12 +120,10 @@ def _load_mpi3d(args, meta_split_type):
 
     return (
         metatrain_dataset, 
-        metavalid_dataset, 
         metatest_dataset,  
         metatrain_partitions_supervised,  
         metatrain_partitions_supervised_all,
         metatrain_partitions_supervised_oracle,
-        metavalid_partitions,  
         metatest_partitions  
     )
 

@@ -24,7 +24,7 @@ if __name__ == "__main__":
         elif method == 'Ablate-Disentangle':
             latex_table += "DRESS w/o Disent. Repsent. & "
         elif method == 'Ablate-Align':
-            latex_table += "DRESS w/o Latent Dim. Align. & "
+            latex_table += "DRESS w/o Lat. Dim. Align. & "
         elif method == 'Ablate-Individual-Cluster':
             latex_table += "DRESS w/o Ind. Dim. Cluster. & "
         else:
@@ -35,7 +35,7 @@ if __name__ == "__main__":
                 # this ablation study doesn't apply
                 latex_table += "-"
             else:
-                res_vals = res_dict[ds]
+                res_vals = res_dict["five-shot"][ds]
                 if len(res_vals) == 0:
                     latex_table += "TODO"
                 else:

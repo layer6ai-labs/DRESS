@@ -36,9 +36,9 @@ if __name__ == "__main__":
                 if (method == "DRESS" and ds in ['mpi3deasy', 'mpi3dhard', 'smallnorb', 'causal3d']) or \
                     (method == "PsCo" and ds == 'shapes3d'):
                     # bold font
-                    latex_table += f"\\textbf{{{res_avg:.1f}}}\% {{\scriptsize $\pm$ \\textbf{{{res_std:.1f}}}}}\%"
+                    latex_table += f"\\makecell[l]{{\\textbf{{{res_avg:.1f}}}\% \\\\ {{\\tiny $\pm$ \\textbf{{{res_std:.1f}}}}}\%}}"
                 else:
-                    latex_table += f"${res_avg:.1f}\%$ {{\scriptsize $\pm {res_std:.1f}\%$}}"
+                    latex_table += f"\\makecell[l]{{${res_avg:.1f}\%$ \\\\ {{\\tiny $\pm {res_std:.1f}\%$}}}}"
             if ds != "mpi3dhard":
                 latex_table += " & "
             else:
