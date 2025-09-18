@@ -12,7 +12,7 @@ sys.path.append('../')
 from utils import *
 
 
-def contrastive_pretrain(model, optimizer, train_set, valid_set, descriptor, args):
+def contrastive_pretrain(model, optimizer, train_set, descriptor, args):
     print(f"[{descriptor}] Pre-Training the encoder...")
     train_loader =  DataLoader(train_set, 
                                batch_size=PRETRAIN_BATCH_SIZE, 

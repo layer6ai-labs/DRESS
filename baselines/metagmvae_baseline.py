@@ -20,7 +20,7 @@ sys.path.append("../")
 from utils import *
 
 
-def metagmvae_train(gmvae_model, opt, meta_train_set, meta_valid_set, descriptor, args):        
+def metagmvae_train(gmvae_model, opt, meta_train_set, descriptor, args):        
     print(f"[{descriptor}] Pre-Training Meta-GMVAE...")
     tb_writer = SummaryWriter(log_dir=os.path.join(LEARNCURVEDIR, descriptor, str(datetime.datetime.now())))
 
