@@ -16,6 +16,7 @@ if torch.cuda.device_count() > 1:
 # meta-training setup
 METATRAIN_OUTER_EPISODES = 30000 # originally 60000 episodes in cactus paper
 METATRAIN_INNER_UPDATES = 5
+METATEST_INNER_UPDATES = 5
 NUM_TASKS_METATRAIN = 8
 NUM_TASKS_METAVALID = 16
 NUM_TASKS_METATEST = 1000
