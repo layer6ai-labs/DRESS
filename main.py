@@ -41,8 +41,6 @@ def fast_adapt(batch, inner_learner, loss_fn, num_adaptation_steps, meta_split, 
     return test_loss, test_accur
 
 def train(meta_model, task_generator, optimizer, loss_fn, descriptor, args):
-    tb_writer = SummaryWriter(log_dir=os.path.join(LEARNCURVEDIR, descriptor))
-
     for i in tqdm(range(METATRAIN_OUTER_EPISODES), desc='Training Epochs'):
         optimizer.zero_grad()
         meta_train_loss, meta_train_accur = 0.0, 0.0
@@ -70,13 +68,7 @@ def train(meta_model, task_generator, optimizer, loss_fn, descriptor, args):
         for p in meta_model.parameters():
             p.grad.data.mul_(1.0/NUM_TASKS_METATRAIN)
         optimizer.step()
-
-        # log meta-training metrics
-        tb_writer.add_scalar("Loss/meta_train", meta_train_loss, i)
-        tb_writer.add_scalar("Accuracy/meta_train", meta_train_accur, i)
     
-    # within the call of close(), flush() should also be called upon the tensorboard writer
-    tb_writer.close()
     print(f"[{descriptor}] Training function completed!")
     
     return meta_model 
@@ -163,7 +155,7 @@ if __name__ == "__main__":
     loss_fn = nn.CrossEntropyLoss(reduction='mean')
 
     if args.encoder != "scratch":
-        model_path = os.path.join(MODELDIR, f"{descriptor}.ckpt")
+        model_path = os.path.join(MODELDIR, f"seed_{args.seed}", f"{descriptor}.ckpt")
         try:
             if args.encoder in ["simclrpretrain", "metagmvae"]:
                 encoder.load_state_dict(torch.load(model_path))

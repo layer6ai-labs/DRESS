@@ -43,7 +43,7 @@ CLUSTERDIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "cluster_i
 LEARNCURVEDIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "train_ps")
 SANITYCHECKDIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "visualization_checks")
 # The model dir should already be synched within the git repo
-for dirname in [DATADIR, MODELDIR, CLFMODELDIR, ENCODERDIR, CLUSTERDIR, LEARNCURVEDIR, SANITYCHECKDIR]:
+for dirname in [DATADIR, MODELDIR, ENCODERDIR, CLUSTERDIR, SANITYCHECKDIR]:
     os.makedirs(dirname, exist_ok=True)
 
 def fix_seed(seed):
@@ -67,7 +67,6 @@ def get_descriptor(encoder, args):
     else:
         # using self-supervised/unsupervised encoder, doesn't matter what attribute splits are
         descriptor = f'{dsName_base}_{args.encoder}_{encoder.latent_dim}D_latent'
-    descriptor += f'_seed_{args.seed}'
     return descriptor
 
 def accuracy_fn(preds, labels):

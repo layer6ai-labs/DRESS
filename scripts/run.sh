@@ -1,5 +1,5 @@
 # change here for different experimental trials
-seedval=6273
+seedval=1000
 kShotTest=1
 kQueryTest=5
 
@@ -8,77 +8,77 @@ kQueryTest=5
 cd ~/DRESS
 
 ####### Supervised meta-learning (and scratch) baselines #####
-for supmethod in "sup" "supall" "supora" "scratch"; do
-    python main.py --dsName shapes3d  \
-                --encoder $supmethod \
-                --imgSizeToEncoder -1 --imgSizeToMetaModel 84 \
-                --NWay 2 --KShot 5 --KQuery 5 \
-                --KShotTest $kShotTest --KQueryTest $kQueryTest \
-                --seed $seedval
-done
+# for supmethod in "sup" "supall" "supora" "scratch"; do
+#     python main.py --dsName shapes3d  \
+#                 --encoder $supmethod \
+#                 --imgSizeToEncoder -1 --imgSizeToMetaModel 84 \
+#                 --NWay 2 --KShot 5 --KQuery 5 \
+#                 --KShotTest $kShotTest --KQueryTest $kQueryTest \
+#                 --seed $seedval
+# done
 
-for supmethod in "sup" "supall" "supora" "scratch"; do
-    python main.py --dsName mpi3deasy  \
-                --encoder $supmethod \
-                --imgSizeToEncoder -1 --imgSizeToMetaModel 84 \
-                --NWay 2 --KShot 5 --KQuery 5 \
-                --KShotTest $kShotTest --KQueryTest $kQueryTest \
-                --seed $seedval
-done
+# for supmethod in "sup" "supall" "supora" "scratch"; do
+#     python main.py --dsName mpi3deasy  \
+#                 --encoder $supmethod \
+#                 --imgSizeToEncoder -1 --imgSizeToMetaModel 84 \
+#                 --NWay 2 --KShot 5 --KQuery 5 \
+#                 --KShotTest $kShotTest --KQueryTest $kQueryTest \
+#                 --seed $seedval
+# done
 
-for supmethod in "sup" "supall" "supora" "scratch"; do
-    python main.py --dsName mpi3dhard  \
-                --encoder $supmethod \
-                --imgSizeToEncoder -1 --imgSizeToMetaModel 84 \
-                --NWay 2 --KShot 5 --KQuery 5 \
-                --KShotTest $kShotTest --KQueryTest $kQueryTest \
-                --seed $seedval
-done
+# for supmethod in "sup" "supall" "supora" "scratch"; do
+#     python main.py --dsName mpi3dhard  \
+#                 --encoder $supmethod \
+#                 --imgSizeToEncoder -1 --imgSizeToMetaModel 84 \
+#                 --NWay 2 --KShot 5 --KQuery 5 \
+#                 --KShotTest $kShotTest --KQueryTest $kQueryTest \
+#                 --seed $seedval
+# done
 
-for supmethod in "sup" "supall" "supora" "scratch"; do
-    python main.py --dsName norb  \
-                --encoder $supmethod \
-                --imgSizeToEncoder -1 --imgSizeToMetaModel 84 \
-                --NWay 2 --KShot 5 --KQuery 5 \
-                --KShotTest $kShotTest --KQueryTest $kQueryTest \
-                --seed $seedval
-done
+# for supmethod in "sup" "supall" "supora" "scratch"; do
+#     python main.py --dsName norb  \
+#                 --encoder $supmethod \
+#                 --imgSizeToEncoder -1 --imgSizeToMetaModel 84 \
+#                 --NWay 2 --KShot 5 --KQuery 5 \
+#                 --KShotTest $kShotTest --KQueryTest $kQueryTest \
+#                 --seed $seedval
+# done
 
-for supmethod in "sup" "supall" "supora" "scratch"; do
-    python main.py --dsName causal3d  \
-                --encoder $supmethod \
-                --imgSizeToEncoder -1 --imgSizeToMetaModel 84 \
-                --NWay 2 --KShot 5 --KQuery 5 \
-                --KShotTest $kShotTest --KQueryTest $kQueryTest \
-                --seed $seedval
-done
+# for supmethod in "sup" "supall" "supora" "scratch"; do
+#     python main.py --dsName causal3d  \
+#                 --encoder $supmethod \
+#                 --imgSizeToEncoder -1 --imgSizeToMetaModel 84 \
+#                 --NWay 2 --KShot 5 --KQuery 5 \
+#                 --KShotTest $kShotTest --KQueryTest $kQueryTest \
+#                 --seed $seedval
+# done
 
-for supmethod in "sup" "supall" "supora" "scratch"; do
-    python main.py --dsName celebahair  \
-                --encoder $supmethod \
-                --imgSizeToEncoder -1 --imgSizeToMetaModel 84 \
-                --NWay 2 --KShot 5 --KQuery 5 \
-                --KShotTest $kShotTest --KQueryTest $kQueryTest \
-                --seed $seedval
-done
+# for supmethod in "sup" "supall" "supora" "scratch"; do
+#     python main.py --dsName celebahair  \
+#                 --encoder $supmethod \
+#                 --imgSizeToEncoder -1 --imgSizeToMetaModel 84 \
+#                 --NWay 2 --KShot 5 --KQuery 5 \
+#                 --KShotTest $kShotTest --KQueryTest $kQueryTest \
+#                 --seed $seedval
+# done
 
-for supmethod in "sup" "supall" "supora" "scratch"; do
-    python main.py --dsName celebaprimary  \
-                --encoder $supmethod \
-                --imgSizeToEncoder -1 --imgSizeToMetaModel 84 \
-                --NWay 2 --KShot 5 --KQuery 5 \
-                --KShotTest $kShotTest --KQueryTest $kQueryTest \
-                --seed $seedval
-done
+# for supmethod in "sup" "supall" "supora" "scratch"; do
+#     python main.py --dsName celebaprimary  \
+#                 --encoder $supmethod \
+#                 --imgSizeToEncoder -1 --imgSizeToMetaModel 84 \
+#                 --NWay 2 --KShot 5 --KQuery 5 \
+#                 --KShotTest $kShotTest --KQueryTest $kQueryTest \
+#                 --seed $seedval
+# done
 
-for supmethod in "sup" "supall" "supora" "scratch"; do
-    python main.py --dsName celebarand  \
-                --encoder $supmethod \
-                --imgSizeToEncoder -1 --imgSizeToMetaModel 84 \
-                --NWay 2 --KShot 5 --KQuery 5 \
-                --KShotTest $kShotTest --KQueryTest $kQueryTest \
-                --seed $seedval
-done
+# for supmethod in "sup" "supall" "supora" "scratch"; do
+#     python main.py --dsName celebarand  \
+#                 --encoder $supmethod \
+#                 --imgSizeToEncoder -1 --imgSizeToMetaModel 84 \
+#                 --NWay 2 --KShot 5 --KQuery 5 \
+#                 --KShotTest $kShotTest --KQueryTest $kQueryTest \
+#                 --seed $seedval
+# done
 
  
 ############# Dino #############
@@ -89,91 +89,91 @@ python main.py --dsName shapes3d  \
                --KShotTest $kShotTest --KQueryTest $kQueryTest \
                --seed $seedval
 
-python main.py --dsName mpi3deasy  \
-               --encoder dino \
-               --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
-               --NWay 2 --KShot 5 --KQuery 5  \
-               --KShotTest $kShotTest --KQueryTest $kQueryTest \
-               --seed $seedval
+# python main.py --dsName mpi3deasy  \
+#                --encoder dino \
+#                --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
+#                --NWay 2 --KShot 5 --KQuery 5  \
+#                --KShotTest $kShotTest --KQueryTest $kQueryTest \
+#                --seed $seedval
 
-python main.py --dsName mpi3dhard  \
-               --encoder dino \
-               --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
-               --NWay 2 --KShot 5 --KQuery 5  \
-               --KShotTest $kShotTest --KQueryTest $kQueryTest \
-               --seed $seedval
+# python main.py --dsName mpi3dhard  \
+#                --encoder dino \
+#                --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
+#                --NWay 2 --KShot 5 --KQuery 5  \
+#                --KShotTest $kShotTest --KQueryTest $kQueryTest \
+#                --seed $seedval
 
-python main.py --dsName norb  \
-               --encoder dino \
-               --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
-               --NWay 2 --KShot 5 --KQuery 5  \
-               --KShotTest $kShotTest --KQueryTest $kQueryTest \
-               --seed $seedval
+# python main.py --dsName norb  \
+#                --encoder dino \
+#                --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
+#                --NWay 2 --KShot 5 --KQuery 5  \
+#                --KShotTest $kShotTest --KQueryTest $kQueryTest \
+#                --seed $seedval
 
-python main.py --dsName causal3d  \
-               --encoder dino \
-               --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
-               --NWay 2 --KShot 5 --KQuery 5  \
-               --KShotTest $kShotTest --KQueryTest $kQueryTest \
-               --seed $seedval
+# python main.py --dsName causal3d  \
+#                --encoder dino \
+#                --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
+#                --NWay 2 --KShot 5 --KQuery 5  \
+#                --KShotTest $kShotTest --KQueryTest $kQueryTest \
+#                --seed $seedval
 
-python main.py --dsName celebahair  \
-               --encoder dino \
-               --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
-               --NWay 2 --KShot 5 --KQuery 5  \
-               --KShotTest $kShotTest --KQueryTest $kQueryTest \
-               --seed $seedval
+# python main.py --dsName celebahair  \
+#                --encoder dino \
+#                --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
+#                --NWay 2 --KShot 5 --KQuery 5  \
+#                --KShotTest $kShotTest --KQueryTest $kQueryTest \
+#                --seed $seedval
 
-python main.py --dsName celebaprimary  \
-               --encoder dino \
-               --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
-               --NWay 2 --KShot 5 --KQuery 5  \
-               --KShotTest $kShotTest --KQueryTest $kQueryTest \
-               --seed $seedval
+# python main.py --dsName celebaprimary  \
+#                --encoder dino \
+#                --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
+#                --NWay 2 --KShot 5 --KQuery 5  \
+#                --KShotTest $kShotTest --KQueryTest $kQueryTest \
+#                --seed $seedval
 
-python main.py --dsName celebarand  \
-               --encoder dino \
-               --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
-               --NWay 2 --KShot 5 --KQuery 5  \
-               --KShotTest $kShotTest --KQueryTest $kQueryTest \
-               --seed $seedval
+# python main.py --dsName celebarand  \
+#                --encoder dino \
+#                --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
+#                --NWay 2 --KShot 5 --KQuery 5  \
+#                --KShotTest $kShotTest --KQueryTest $kQueryTest \
+#                --seed $seedval
 
 
 ############ DRESS with FDAE ############
-python main.py --dsName shapes3d  \
-               --encoder fdae  \
-               --imgSizeToEncoder 64 --imgSizeToMetaModel 84 \
-               --NWay 2 --KShot 5 --KQuery 5  \
-               --KShotTest $kShotTest --KQueryTest $kQueryTest \
-               --seed $seedval
+# python main.py --dsName shapes3d  \
+#                --encoder fdae  \
+#                --imgSizeToEncoder 64 --imgSizeToMetaModel 84 \
+#                --NWay 2 --KShot 5 --KQuery 5  \
+#                --KShotTest $kShotTest --KQueryTest $kQueryTest \
+#                --seed $seedval
 
-python main.py --dsName mpi3deasy  \
-               --encoder fdae  \
-               --imgSizeToEncoder 64 --imgSizeToMetaModel 84 \
-               --NWay 2 --KShot 5 --KQuery 5  \
-               --KShotTest $kShotTest --KQueryTest $kQueryTest \
-               --seed $seedval
+# python main.py --dsName mpi3deasy  \
+#                --encoder fdae  \
+#                --imgSizeToEncoder 64 --imgSizeToMetaModel 84 \
+#                --NWay 2 --KShot 5 --KQuery 5  \
+#                --KShotTest $kShotTest --KQueryTest $kQueryTest \
+#                --seed $seedval
 
-python main.py --dsName mpi3dhard  \
-               --encoder fdae  \
-               --imgSizeToEncoder 64 --imgSizeToMetaModel 84 \
-               --NWay 2 --KShot 5 --KQuery 5   \
-               --KShotTest $kShotTest --KQueryTest $kQueryTest \
-               --seed $seedval
+# python main.py --dsName mpi3dhard  \
+#                --encoder fdae  \
+#                --imgSizeToEncoder 64 --imgSizeToMetaModel 84 \
+#                --NWay 2 --KShot 5 --KQuery 5   \
+#                --KShotTest $kShotTest --KQueryTest $kQueryTest \
+#                --seed $seedval
 
-python main.py --dsName norb  \
-               --encoder fdae  \
-               --imgSizeToEncoder 96 --imgSizeToMetaModel 84 \
-               --NWay 2 --KShot 5 --KQuery 5   \
-               --KShotTest $kShotTest --KQueryTest $kQueryTest \
-               --seed $seedval
+# python main.py --dsName norb  \
+#                --encoder fdae  \
+#                --imgSizeToEncoder 96 --imgSizeToMetaModel 84 \
+#                --NWay 2 --KShot 5 --KQuery 5   \
+#                --KShotTest $kShotTest --KQueryTest $kQueryTest \
+#                --seed $seedval
 
-python main.py --dsName causal3d  \
-               --encoder fdae  \
-               --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
-               --NWay 2 --KShot 5 --KQuery 5   \
-               --KShotTest $kShotTest --KQueryTest $kQueryTest \
-               --seed $seedval
+# python main.py --dsName causal3d  \
+#                --encoder fdae  \
+#                --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
+#                --NWay 2 --KShot 5 --KQuery 5   \
+#                --KShotTest $kShotTest --KQueryTest $kQueryTest \
+#                --seed $seedval
 
 ########## DRESS with LSD ############
 python main.py --dsName celebahair  \
@@ -183,28 +183,28 @@ python main.py --dsName celebahair  \
                --KShotTest $kShotTest --KQueryTest $kQueryTest \
                --seed $seedval
 
-python main.py --dsName celebaprimary  \
-               --encoder lsd  \
-               --imgSizeToEncoder 128 --imgSizeToMetaModel 84 \
-               --NWay 2 --KShot 5 --KQuery 5  \
-               --KShotTest $kShotTest --KQueryTest $kQueryTest \
-               --seed $seedval
-
-python main.py --dsName celebarand  \
-               --encoder lsd  \
-               --imgSizeToEncoder 128 --imgSizeToMetaModel 84 \
-               --NWay 2 --KShot 5 --KQuery 5  \
-               --KShotTest $kShotTest --KQueryTest $kQueryTest \
-               --seed $seedval
-
-
-########### DeepCluster ###########
-# python main.py --dsName shapes3d  \
-#                --encoder deepcluster \
-#                --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
+# python main.py --dsName celebaprimary  \
+#                --encoder lsd  \
+#                --imgSizeToEncoder 128 --imgSizeToMetaModel 84 \
 #                --NWay 2 --KShot 5 --KQuery 5  \
 #                --KShotTest $kShotTest --KQueryTest $kQueryTest \
 #                --seed $seedval
+
+# python main.py --dsName celebarand  \
+#                --encoder lsd  \
+#                --imgSizeToEncoder 128 --imgSizeToMetaModel 84 \
+#                --NWay 2 --KShot 5 --KQuery 5  \
+#                --KShotTest $kShotTest --KQueryTest $kQueryTest \
+#                --seed $seedval
+
+
+########### DeepCluster ###########
+python main.py --dsName shapes3d  \
+               --encoder deepcluster \
+               --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
+               --NWay 2 --KShot 5 --KQuery 5  \
+               --KShotTest $kShotTest --KQueryTest $kQueryTest \
+               --seed $seedval
             
 # python main.py --dsName mpi3deasy  \
 #                --encoder deepcluster \
