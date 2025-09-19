@@ -13,7 +13,14 @@ if __name__ == "__main__":
     print(f"Processing results...")
 
     latex_table = "\\toprule \n"
-    latex_table += "Method & SmallNORB & Shapes3D & Causal3D & MPI3D-Easy & MPI3D-Hard \\\\ \n\midrule \n"
+    latex_table += "\\multirow{2}{*}{Method} & "
+    latex_table += "\\multicolumn{2}{l}{SmallNORB} & "
+    latex_table += "\\multicolumn{2}{l}{Shapes3D} & "
+    latex_table += "\\multicolumn{2}{l}{Causal3D} & "
+    latex_table += "\\multicolumn{2}{l}{MPI3D-Easy} & "
+    latex_table += "\\multicolumn{2}{l}{MPI3D-Hard} \\\\ \n"
+    latex_table += " & 1-Shot & 5-Shot & 1-Shot & 5-Shot & 1-Shot & 5-Shot & 1-Shot & 5-Shot & 1-Shot & 5-Shot \\\\ \n"
+    latex_table += "\\midrule \n"
 
     for method, res_dict in ACCURACIES_ALL.items():
         if method.startswith("Ablate"):
@@ -27,22 +34,26 @@ if __name__ == "__main__":
         else:
             latex_table += f"{method} & "
         for ds in ['smallnorb', 'shapes3d', 'causal3d', 'mpi3deasy', 'mpi3dhard']:
-            res_vals = res_dict[ds]
-            if len(res_vals) == 0:
-                latex_table += "TODO"
-            else:
-                res_avg = np.mean(res_vals)
-                res_std = np.std(res_vals) / np.sqrt(len(res_vals))
-                if (method == "DRESS" and ds in ['mpi3deasy', 'mpi3dhard', 'smallnorb', 'causal3d']) or \
-                    (method == "PsCo" and ds == 'shapes3d'):
-                    # bold font
-                    latex_table += f"\\makecell[l]{{\\textbf{{{res_avg:.1f}}}\% \\\\ {{\\tiny $\pm$ \\textbf{{{res_std:.1f}}}}}\%}}"
+            for shot in ['one-shot', 'five-shot']:
+                res_vals = res_dict[shot][ds]
+                if len(res_vals) == 0:
+                    latex_table += "TODO"
                 else:
-                    latex_table += f"\\makecell[l]{{${res_avg:.1f}\%$ \\\\ {{\\tiny $\pm {res_std:.1f}\%$}}}}"
-            if ds != "mpi3dhard":
-                latex_table += " & "
-            else:
-                latex_table += "\\\\ \n"
+                    res_avg = np.mean(res_vals)
+                    res_std = np.std(res_vals) / np.sqrt(len(res_vals))
+                    if (method == "DRESS" and ds in ['mpi3deasy', 'mpi3dhard', 'smallnorb', 'causal3d']) or \
+                        (method == "PsCo" and ds == 'shapes3d'):
+                        # bold font
+                        latex_table += f"\\makecell[l]{{\\textbf{{{res_avg:.1f}}}\% \\\\ {{\\tiny $\pm$ \\textbf{{{res_std:.1f}}}}}\%}}"
+                    else:
+                        latex_table += f"\\makecell[l]{{${res_avg:.1f}\%$ \\\\ {{\\tiny $\pm {res_std:.1f}\%$}}}}"
+                if ds != "mpi3dhard":
+                    latex_table += " & "
+                else:
+                    if shot == "one-shot":
+                        latex_table += " & "
+                    else:
+                        latex_table += "\\\\ \n"
         if method in ["Supervised-Oracle", 
                       "Few-Shot Direct Adaptation", 
                       "PsCo"]:

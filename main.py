@@ -17,8 +17,11 @@ from analyze_results.compute_dci import compute_DCI
 from analyze_results.compute_partition_overlap import compute_partition_overlap
 
 
-def fast_adapt(batch, inner_learner, loss_fn, num_adaptation_steps, args):
-    K, K_te = args.KShot, args.KQuery
+def fast_adapt(batch, inner_learner, loss_fn, num_adaptation_steps, meta_split, args):
+    if meta_split == "meta_train":
+        K, K_te = args.KShot, args.KQuery
+    else:
+        K, K_te = args.KShotTest, args.KQueryTest
     train_data, train_labels, _, test_data, test_labels, _ = batch
     assert train_data.size(0) == K * args.NWay, f"{train_data.size(0)} VS {K * args.NWay}"
     assert test_data.size(0) == K_te * args.NWay, f"{test_data.size(0)} VS {K_te * args.NWay}"
@@ -53,6 +56,7 @@ def train(meta_model, task_generator, optimizer, loss_fn, descriptor, args):
                                                              inner_learner,
                                                              loss_fn,
                                                              METATRAIN_INNER_UPDATES,
+                                                             "meta_train",
                                                              args)
             
             # meta training update step
@@ -86,6 +90,7 @@ def test(meta_model, task_generator, loss_fn, args):
                                                        inner_learner,
                                                        loss_fn,
                                                        METATEST_INNER_UPDATES,
+                                                       "meta_test",
                                                        args)
         meta_test_losses.append(inner_test_loss.item())
         meta_test_accurs.append(inner_test_accur.item())
