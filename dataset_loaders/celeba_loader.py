@@ -14,7 +14,7 @@ from utils import *
 def load_celeba_attrs():
     attrs_filename = os.path.join(DATADIR, "celeba", "list_attr_celeba.txt")
     splits_filename = os.path.join(DATADIR, "celeba", "list_eval_partition.txt")
-    attrs_meta_train, attrs_meta_valid, attrs_meta_test = [], [], []
+    attrs_meta_train, attrs_meta_test = [], []
     with open(attrs_filename, "r") as f1, open(splits_filename, 'r') as f2:
         # skip the first two lines as headers
         for _ in range(2):
@@ -30,19 +30,15 @@ def load_celeba_attrs():
             split = int(split_line.strip().split(' ')[-1])
             if split == 0:
                 attrs_meta_train.append(attrs_one_sample)
-            elif split == 1:
-                attrs_meta_valid.append(attrs_one_sample)
+            # combine valid and test splits together for meta-test
             else:
                 attrs_meta_test.append(attrs_one_sample)
-    attrs_meta_train, attrs_meta_valid, attrs_meta_test = np.vstack(attrs_meta_train), \
-                                                          np.vstack(attrs_meta_valid), \
-                                                          np.vstack(attrs_meta_test)
+    attrs_meta_train, attrs_meta_test = np.vstack(attrs_meta_train), np.vstack(attrs_meta_test)
     assert np.shape(attrs_meta_train) == (162770, 40), f"incorrect shape: {np.shape(attrs_meta_train)}" 
-    assert np.shape(attrs_meta_valid) == (19867, 40), f"incorrect shape: {np.shape(attrs_meta_valid)}" 
-    assert np.shape(attrs_meta_test) == (19962, 40), f"incorrect shape: {np.shape(attrs_meta_test)}" 
+    assert np.shape(attrs_meta_test) == (19867+19962, 40), f"incorrect shape: {np.shape(attrs_meta_test)}" 
 
     print("CelebA attributes collected!")
-    return attrs_meta_train, attrs_meta_valid, attrs_meta_test
+    return attrs_meta_train, attrs_meta_test
 
 
 
@@ -54,22 +50,25 @@ def _load_celeba(args, meta_split_type):
                           target_type='attr',
                           transform=data_transforms,
                           download=True)
-    
+
+    data_transforms = build_initial_img_transforms("meta_test", args)    
     celeba_meta_valid = CelebA(DATADIR, 
                           split='valid', 
                           target_type='attr',
                           transform=data_transforms,
                           download=True)
-
-    data_transforms = build_initial_img_transforms("meta_test", args)    
+    
     celeba_meta_test = CelebA(DATADIR, 
                          split='test', 
                          target_type='attr',
                          transform=data_transforms,
                          download=True)
+    
+    # combine the original valid and test splits for meta-test tasks
+    celeba_meta_test = ConcatDataset([celeba_meta_valid, celeba_meta_test])
 
     # collect attributes for creating supervised partitions
-    celeba_meta_train_attrs_all, celeba_meta_valid_attrs, celeba_meta_test_attrs = load_celeba_attrs()
+    celeba_meta_train_attrs_all, celeba_meta_test_attrs = load_celeba_attrs()
 
     if meta_split_type == "hair": 
         CELEBA_ATTRIBUTES_IDX_META_TEST = [5, 8, 9, 11, 17, 28, 32, 33]

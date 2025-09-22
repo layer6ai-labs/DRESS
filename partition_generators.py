@@ -33,7 +33,8 @@ def generate_attributes_based_partitions(attributes, code_sizes_per_attributes, 
 
     num_partitions = 0
     partitions = []   
-    n_samples_minimal = args.KShot + args.KQuery    
+    n_samples_minimal = args.KShot + args.KQuery if meta_split == "meta_train" \
+                            else args.KShotTest + args.KQueryTest   
  
     for attr_idxs in tqdm(combinations(range(attributes.shape[1]), order), 
                           desc=f'[{args.dsName}] get_task_from_attributes', 
@@ -57,7 +58,7 @@ def generate_attributes_based_partitions(attributes, code_sizes_per_attributes, 
                                f'{attr_idxs}_{list(pos_attr_patterns)}': list(pos_smpl_idxs)})
             num_partitions += 1
     print(f'[{meta_split}] Generated {num_partitions} partitions by using {order}/{attributes.shape[1]} attributes')
-
+    
     assert len(partitions) > 0, "At least one partition needed"
     return partitions
 

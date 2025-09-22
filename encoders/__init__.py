@@ -112,7 +112,7 @@ def get_encoder(args, device):
         encoder = GMVAE(input_size=[3, args.imgSizeToEncoder, args.imgSizeToEncoder],
                         hidden_size=64,
                         component_size=args.NWay,        
-                        latent_size=args.latent_dim, 
+                        latent_size=64, 
                         args=args).to(DEVICE)
     else:
         print(f"Encoder model {args.encoder} hasn't been implemented yet!")

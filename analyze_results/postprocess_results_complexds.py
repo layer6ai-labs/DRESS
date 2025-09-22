@@ -11,7 +11,12 @@ if __name__ == "__main__":
     print(f"Processing results...")
 
     latex_table = "\\toprule \n"
-    latex_table += "Method & CelebA-Hair & CelebA-Primary & CelebA-Random \\\\ \n\midrule \n"
+    latex_table += "\\multirow{2}{*}{Method} & "
+    latex_table += "\\multicolumn{2}{l}{CelebA-Hair} & "
+    latex_table += "\\multicolumn{2}{l}{CelebA-Primary} & "
+    latex_table += "\\multicolumn{2}{l}{CelebA-Random} \\\\ \n"
+    latex_table += " & 5-Shot & 10-Shot & 5-Shot & 10-Shot & 5-Shot & 10-Shot \\\\ \n"
+    latex_table += "\\midrule \n"
 
     for method, res_dict in ACCURACIES_ALL.items():
         if method.startswith("Ablate"):
@@ -25,22 +30,26 @@ if __name__ == "__main__":
         else:
             latex_table += f"{method} & "
         for ds in ['celebahair', 'celebaprimary', 'celebarand']:
-            res_vals = res_dict[ds]
-            if len(res_vals) == 0:
-                latex_table += "TODO"
-            else:
-                res_avg = np.mean(res_vals)
-                res_std = np.std(res_vals) / np.sqrt(len(res_vals))
-                if (method == "DRESS" and ds in ['celebahair', 'celebaprimary']) or \
-                    (method == "CACTUS-DINO" and ds in ['celebarand']):
-                    # bold font
-                    latex_table += f"\\textbf{{{res_avg:.1f}}}\% {{\scriptsize $\pm$ \\textbf{{{res_std:.1f}}}}}\%"
+            for shot in ['five-shot', "ten-shot"]:
+                res_vals = res_dict[shot][ds]
+                if len(res_vals) == 0:
+                    latex_table += "TODO"
                 else:
-                    latex_table += f"${res_avg:.1f}\%$ {{\scriptsize $\pm {res_std:.1f}\%$}}"
-            if ds != "celebarand":
-                latex_table += " & "
-            else:
-                latex_table += "\\\\ \n"
+                    res_avg = np.mean(res_vals)
+                    res_std = np.std(res_vals) / np.sqrt(len(res_vals))
+                    if (method == "DRESS" and ds in ['celebahair', 'celebaprimary']) or \
+                        (method == "CACTUS-DINO" and ds in ['celebarand']):
+                        # bold font
+                        latex_table += f"\\makecell[l]{{\\textbf{{{res_avg:.1f}}}\% \\\\ {{\\tiny $\pm$ \\textbf{{{res_std:.1f}}}}}\%}}"
+                    else:
+                        latex_table += f"\\makecell[l]{{${res_avg:.1f}\%$ \\\\ {{\\tiny $\pm {res_std:.1f}\%$}}}}"
+                if ds != "celebarand":
+                    latex_table += " & "
+                else:
+                    if shot == "five-shot":
+                        latex_table += " & "
+                    else:
+                        latex_table += "\\\\ \n"
         if method in ["Supervised-Oracle", 
                       "Few-Shot Direct Adaptation", 
                       "PsCo"]:

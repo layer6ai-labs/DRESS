@@ -35,13 +35,11 @@ class TaskGenerator():
         clses_in_partition = list(partition.keys())
         assert len(clses_in_partition) >= n_way, \
             f"Partition has {len(clses_in_partition)} cls, while expecting {n_way}"
-        try:
-            sampled_clses = random.sample(clses_in_partition, n_way)
-        except ValueError:
-            print(f"Insufficient number of classes in the partition: {len(clses_in_partition)}")
-            exit(1)
+        sampled_clses = random.sample(clses_in_partition, n_way)
         random.shuffle(sampled_clses)
         for label, cls in enumerate(sampled_clses):
+            assert len(partition[cls]) >= n_train_samples+n_test_samples, \
+                f"Class {cls} has {len(partition[cls])} samples, while expecting {n_train_samples+n_test_samples}"
             idxs = random.sample(partition[cls], n_train_samples+n_test_samples)
             train_idxs.extend(idxs[:n_train_samples])
             train_labels.extend([label for _ in range(n_train_samples)])

@@ -195,6 +195,9 @@ def get_args_parser():
     parser.add_argument('--dsName', 
                         help='dataset for meta-learning',
                         required=True)
+    parser.add_argument('--dsNameTest',
+                        help='dataset for meta-testing, if different from meta-training',
+                        default=None)
     parser.add_argument('--encoder',
                         help='encoder for encodings to be clustered',
                         choices=["sup",

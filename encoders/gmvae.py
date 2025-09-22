@@ -434,7 +434,7 @@ class GMVAE(nn.Module):
 
         #kl_loss = torch.mean(log_qz.mean(dim=-1) - log_pz.mean(dim=-1))
         kl_loss = torch.mean(log_qz - log_pz)
-        breakpoint()
+
 
         return rec_loss, kl_loss
 
@@ -488,6 +488,6 @@ class GMVAE(nn.Module):
         )
         # batch_size, sample_size
         y_te_pred = posteriors.mean(dim=-2).argmax(dim=-1)
-        breakpoint()
+
 
         return y_te_pred

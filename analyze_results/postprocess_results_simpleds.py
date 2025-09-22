@@ -19,7 +19,7 @@ if __name__ == "__main__":
     latex_table += "\\multicolumn{2}{l}{Causal3D} & "
     latex_table += "\\multicolumn{2}{l}{MPI3D-Easy} & "
     latex_table += "\\multicolumn{2}{l}{MPI3D-Hard} \\\\ \n"
-    latex_table += " & 1-Shot & 5-Shot & 1-Shot & 5-Shot & 1-Shot & 5-Shot & 1-Shot & 5-Shot & 1-Shot & 5-Shot \\\\ \n"
+    latex_table += " & 5-Shot & 10-Shot & 5-Shot & 10-Shot & 5-Shot & 10-Shot & 5-Shot & 10-Shot & 5-Shot & 10-Shot \\\\ \n"
     latex_table += "\\midrule \n"
 
     for method, res_dict in ACCURACIES_ALL.items():
@@ -34,7 +34,7 @@ if __name__ == "__main__":
         else:
             latex_table += f"{method} & "
         for ds in ['smallnorb', 'shapes3d', 'causal3d', 'mpi3deasy', 'mpi3dhard']:
-            for shot in ['one-shot', 'five-shot']:
+            for shot in ['five-shot', "ten-shot"]:
                 res_vals = res_dict[shot][ds]
                 if len(res_vals) == 0:
                     latex_table += "TODO"
@@ -50,7 +50,7 @@ if __name__ == "__main__":
                 if ds != "mpi3dhard":
                     latex_table += " & "
                 else:
-                    if shot == "one-shot":
+                    if shot == "five-shot":
                         latex_table += " & "
                     else:
                         latex_table += "\\\\ \n"

@@ -95,7 +95,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
     fix_seed(args.seed)
 
-    # Load meta-train/meta-test datasets
+    # Load meta-train datasets
     (
         meta_train_set, 
         meta_test_set, 
@@ -104,6 +104,17 @@ if __name__ == "__main__":
         meta_train_partitions_supervised_oracle, 
         meta_test_partitions
     ) = LOAD_DATASET[args.dsName](args)
+    if args.dsNameTest is not None:
+        assert args.dsNameTest != args.dsName
+        print(f"Using different dataset for meta-testing: {args.dsNameTest}")
+        (
+            _, 
+            meta_test_set, 
+            _, 
+            _, 
+            _, 
+            meta_test_partitions
+    ) = LOAD_DATASET[args.dsNameTest](args)
     
     encoder = get_encoder(args, DEVICE)        
     descriptor = get_descriptor(encoder, args)
@@ -191,8 +202,8 @@ if __name__ == "__main__":
 
     with open("res.txt", "a") as f:
         f.write(str(datetime.datetime.now())+f' under seed {args.seed}'+'\n')
-        f.write(f"[{descriptor} on {args.dsName} {args.NWay}-way {args.KShot}-shot {args.KQuery}-query meteTrain " + \
-                f"{args.NWay}-way {args.KShotTest}-shot {args.KQueryTest}-query metaTest]: \n" + \
+        f.write(f"[{descriptor} trained on {args.dsName} {args.NWay}-way {args.KShot}-shot {args.KQuery}-query meteTrain \n" + \
+                f"on {args.dsNameTest if args.dsNameTest else args.dsName} {args.NWay}-way {args.KShotTest}-shot {args.KQueryTest}-query metaTest]: \n" + \
                 f"Mean meta test accuracy: {np.mean(meta_test_accurs)*100:.2f}%\n")
     print(f"[{descriptor} on {args.dsName}] testing completed!")
     
