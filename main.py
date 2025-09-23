@@ -13,7 +13,6 @@ from partition_generators import generate_unsupervised_partitions
 from task_generator import TaskGenerator
 from baselines.pretraining_baseline import contrastive_pretrain, test_pretrain
 from baselines.metagmvae_baseline import metagmvae_train, metagmvae_test
-from analyze_results.compute_dci import compute_DCI
 from analyze_results.compute_partition_overlap import compute_partition_overlap
 
 
@@ -114,7 +113,7 @@ if __name__ == "__main__":
             _, 
             _, 
             meta_test_partitions
-    ) = LOAD_DATASET[args.dsNameTest](args)
+        ) = LOAD_DATASET[args.dsNameTest](args)
     
     encoder = get_encoder(args, DEVICE)        
     descriptor = get_descriptor(encoder, args)

@@ -135,10 +135,9 @@ def load_celeba_primary(args):
 
 if __name__ == "__main__":
     data_transforms = transforms.Compose([
-        transforms.ToTensor(),
-        # remove margins
-        transforms.Resize(256),
-        transforms.CenterCrop(224)
+        transforms.CenterCrop(60),
+        transforms.Resize((128,128)),  # resize shorter side to 128
+        transforms.ToTensor()
     ])
     celeba_set = CelebA(DATADIR, 
                         split='valid', 
@@ -148,18 +147,9 @@ if __name__ == "__main__":
     
     n_samples = 9
     img_idxs = np.random.choice(a=len(celeba_set), size=9, replace=False)
-    imgs_orig = torch.stack([celeba_set[i][0] for i in img_idxs],dim=0)
-    dt = transforms.Compose([
-        transforms.Resize(256),
-        transforms.CenterCrop(224)
-    ])
-    imgs_proc = torch.stack([dt(celeba_set[i][0]) for i in img_idxs],dim=0)
-    dt = transforms.Resize((84,84))
-    imgs_maml = torch.stack([dt(celeba_set[i][0]) for i in img_idxs],dim=0)
+    imgs_orig = torch.stack([celeba_set[i][0] for i in img_idxs],dim=0)    
 
     os.makedirs("misc", exist_ok=True)
-    save_image(imgs_orig, "misc/original_celeba_imgs.png", nrow=3)
-    save_image(imgs_proc, "misc/processed_celeba_imgs.png", nrow=3)
-    save_image(imgs_maml, "misc/maml_imgs.png", nrow=3)
+    save_image(imgs_orig, "misc/celeba_imgs.png", nrow=3)
 
     print("Script finished successfully!")

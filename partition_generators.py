@@ -35,9 +35,13 @@ def generate_attributes_based_partitions(attributes, code_sizes_per_attributes, 
     partitions = []   
     n_samples_minimal = args.KShot + args.KQuery if meta_split == "meta_train" \
                             else args.KShotTest + args.KQueryTest   
- 
+    if meta_split=="meta_train":
+        dsName_to_partition = args.dsName
+    else:   
+        dsName_to_partition = args.dsNameTest if args.dsNameTest  \
+                                else args.dsName
     for attr_idxs in tqdm(combinations(range(attributes.shape[1]), order), 
-                          desc=f'[{args.dsName}] get_task_from_attributes', 
+                          desc=f'[{dsName_to_partition}] get_task_from_attributes', 
                           total=comb(attributes.shape[1], order)):
         code_sizes_per_attributes_subset = code_sizes_per_attributes[list(attr_idxs)]
         # ensure no repeatitive patterns generated for binary attributes (simply flipped)
@@ -57,7 +61,7 @@ def generate_attributes_based_partitions(attributes, code_sizes_per_attributes, 
             partitions.append({f'{attr_idxs}_{np.array2string(neg_attr_patterns)}': list(neg_smpl_idxs), 
                                f'{attr_idxs}_{list(pos_attr_patterns)}': list(pos_smpl_idxs)})
             num_partitions += 1
-    print(f'[{meta_split}] Generated {num_partitions} partitions by using {order}/{attributes.shape[1]} attributes')
+    print(f'[{meta_split} {dsName_to_partition}] Generated {num_partitions} partitions by using {order}/{attributes.shape[1]} attributes')
     
     assert len(partitions) > 0, "At least one partition needed"
     return partitions

@@ -145,6 +145,11 @@ class CropCelebA(object):
     def __call__(self, img):
         new_img = T_F.crop(img, 57, 35, 128, 100)
         return new_img
+    
+class CropLFWA(object):
+    def __call__(self, img):
+        new_img = T_F.center_crop(img, (150, 150))
+        return new_img
 
 class TwoCropsTransform:
     """Take two random crops of one image as the query and key."""
@@ -157,15 +162,25 @@ class TwoCropsTransform:
         return [q, k]
     
 def build_initial_img_transforms(meta_split, args):
+    if not args.dsNameTest:
+        dsName_to_transform = args.dsName
+    else:
+        dsName_to_transform = args.dsName if meta_split=="meta_train" \
+                                else args.dsNameTest
     # Resize happens later in the pipeline
     img_transforms = []
-    if args.dsName.startswith("celeba"):
+    if dsName_to_transform.startswith("celeba") or \
+        dsName_to_transform.startswith("lfwa"):
         # for these datasets, images loaded are already in PIL format
         pass
     else:
         img_transforms.append(T.ToPILImage())
-    if args.dsName.startswith("celeba"):
+    if dsName_to_transform.startswith("celeba"):
         img_transforms.append(CropCelebA())
+        img_transforms.append(T.Resize(size=(128,128)))
+    elif dsName_to_transform.startswith("lfwa"):
+        # make it the same size as celebA
+        img_transforms.append(CropLFWA())
         img_transforms.append(T.Resize(size=(128,128)))
     if args.encoder == "simclrpretrain" and meta_split == "meta_train":
         # MoCo v2's aug: similar to SimCLR https://arxiv.org/abs/2002.05709
@@ -181,7 +196,7 @@ def build_initial_img_transforms(meta_split, args):
     if args.encoder == "metagmvae":
         img_transforms.append(T.Resize((args.imgSizeToEncoder, args.imgSizeToEncoder)))
     img_transforms.append(T.ToTensor())
-    if args.dsName == "norb":
+    if dsName_to_transform == "norb":
         # turn gray-scale single channel into 3 channels
         img_transforms.append(T.Lambda(lambda x: x.repeat(3,1,1)))
     img_transforms = T.Compose(img_transforms)

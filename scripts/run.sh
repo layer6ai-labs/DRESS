@@ -80,6 +80,16 @@ for supmethod in "sup" "supall" "supora" "scratch"; do
                 --seed $seedval
 done
 
+for supmethod in "sup" "supall" "supora" "scratch"; do
+    python main.py --dsName celebaprimary  \
+                --dsNameTest lfwa  \
+                --encoder $supmethod \
+                --imgSizeToEncoder -1 --imgSizeToMetaModel 84 \
+                --NWay 2 --KShot 5 --KQuery 5 \
+                --KShotTest $kShotTest --KQueryTest $kQueryTest \
+                --seed $seedval
+done
+
  
 ############# Dino #############
 python main.py --dsName shapes3d  \
@@ -138,6 +148,14 @@ python main.py --dsName celebarand  \
                --KShotTest $kShotTest --KQueryTest $kQueryTest \
                --seed $seedval
 
+python main.py --dsName celebaprimary  \
+               --dsNameTest lfwa  \
+               --encoder dino \
+               --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
+               --NWay 2 --KShot 5 --KQuery 5  \
+               --KShotTest $kShotTest --KQueryTest $kQueryTest \
+               --seed $seedval    
+
 
 ############ DRESS with FDAE ############
 python main.py --dsName shapes3d  \
@@ -191,6 +209,14 @@ python main.py --dsName celebaprimary  \
                --seed $seedval
 
 python main.py --dsName celebarand  \
+               --encoder lsd  \
+               --imgSizeToEncoder 128 --imgSizeToMetaModel 84 \
+               --NWay 2 --KShot 5 --KQuery 5  \
+               --KShotTest $kShotTest --KQueryTest $kQueryTest \
+               --seed $seedval
+
+python main.py --dsName celebaprimary  \
+               --dsNameTest lfwa  \
                --encoder lsd  \
                --imgSizeToEncoder 128 --imgSizeToMetaModel 84 \
                --NWay 2 --KShot 5 --KQuery 5  \
@@ -255,6 +281,14 @@ python main.py --dsName celebarand  \
                --KShotTest $kShotTest --KQueryTest $kQueryTest \
                --seed $seedval
 
+python main.py --dsName celebaprimary  \
+               --dsNameTest lfwa  \
+               --encoder deepcluster  \
+               --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
+               --NWay 2 --KShot 5 --KQuery 5  \
+               --KShotTest $kShotTest --KQueryTest $kQueryTest \
+               --seed $seedval
+
 ############ PreTrain and FineTune ############
 python main.py --dsName shapes3d  \
                --encoder simclrpretrain  \
@@ -312,6 +346,14 @@ python main.py --dsName celebarand  \
                --KShotTest $kShotTest --KQueryTest $kQueryTest \
                --seed $seedval
 
+python main.py --dsName celebaprimary  \
+               --dsNameTest lfwa  \
+               --encoder simclrpretrain  \
+               --imgSizeToEncoder 128 --imgSizeToMetaModel 128  \
+               --NWay 2 --KShot 5 --KQuery 5 \
+               --KShotTest $kShotTest --KQueryTest $kQueryTest \
+               --seed $seedval
+
 ############## Meta-GMVAE #############
 python main.py --dsName shapes3d  \
                --encoder metagmvae  \
@@ -363,6 +405,14 @@ python main.py --dsName celebaprimary  \
                --seed $seedval
             
 python main.py --dsName celebarand  \
+               --encoder metagmvae  \
+               --imgSizeToEncoder 128 --imgSizeToMetaModel 128 \
+               --NWay 2 --KQuery 5 --KShot 5 \
+               --KShotTest $kShotTest --KQueryTest $kQueryTest \
+               --seed $seedval
+    
+python main.py --dsName celebaprimary  \
+               --dsNameTest lfwa  \
                --encoder metagmvae  \
                --imgSizeToEncoder 128 --imgSizeToMetaModel 128 \
                --NWay 2 --KQuery 5 --KShot 5 \

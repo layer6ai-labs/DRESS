@@ -3,7 +3,6 @@ import os
 import sys
 import numpy as np
 from torch.utils.data import Dataset
-from torchvision import transforms as T
 
 sys.path.append("../")
 from partition_generators import generate_attributes_based_partitions
