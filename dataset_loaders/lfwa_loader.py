@@ -104,8 +104,8 @@ def create_dataset_with_attributes(meta_split_type):
 def load_lfwa(args):
     # Use significant and primary attributes for meta-testing
     # attributes selected: 
-    # white, blonde hair, sunglasses, bangs, big nose, big lips, wearing hat, pale skin
-    LFWA_ATTRIBUTES_IDX_META_TEST = [2, 10, 15, 29, 38, 40, 49, 63] 
+    # white, blonde hair, sunglasses, bangs, big nose, mouth closed, rosy cheeks, pale skin
+    LFWA_ATTRIBUTES_IDX_META_TEST = [2, 10, 15, 29, 38, 41, 61, 63] 
     # load the pre-constructed attribute file
     meta_test_filenames_attrs = pd.read_csv(os.path.join(DATADIR,
                                                "lfwa",

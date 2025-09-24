@@ -15,7 +15,7 @@ if __name__ == "__main__":
     latex_table += "\\multicolumn{2}{c}{CelebA-Hair} & "
     latex_table += "\\multicolumn{2}{c}{CelebA-Primary} & "
     latex_table += "\\multicolumn{2}{c}{CelebA-Random} & "
-    latex_table += "\\multicolumn{2}{c}{LFWA-Transfer} \\\\ \n"
+    latex_table += "\\multicolumn{2}{c}{LFWA-Cross-Domain} \\\\ \n"
     latex_table += " & 5-Shot & 10-Shot & 5-Shot & 10-Shot & 5-Shot & 10-Shot & 5-Shot & 10-Shot \\\\ \n"
     latex_table += "\\midrule \n"
 
@@ -42,7 +42,7 @@ if __name__ == "__main__":
             latex_table += "\\textbf{DRESS} & "
         else:
             latex_table += f"{method} & "
-        for ds in ['celebahair', 'celebaprimary', 'celebarand', 'lfwatransfer']:
+        for ds in ['celebahair', 'celebaprimary', 'celebarand', 'lfwacrossdomain']:
             for shot in ['five-shot', "ten-shot"]:
                 res_vals = res_dict[shot][ds]
                 if len(res_vals) == 0:
@@ -50,13 +50,13 @@ if __name__ == "__main__":
                 else:
                     res_avg = np.mean(res_vals)
                     res_std = np.std(res_vals) / np.sqrt(len(res_vals))
-                    if (method == "DRESS" and ds in ['celebahair', 'celebaprimary']) or \
+                    if (method == "DRESS" and ds in ['celebahair', 'celebaprimary', 'lfwacrossdomain']) or \
                         (method == "CACTUS-DINO" and ds in ['celebarand']):
                         # bold font
                         latex_table += f"\\makecell[l]{{\\textbf{{{res_avg:.1f}}}\% \\\\ {{\\tiny $\pm$ \\textbf{{{res_std:.1f}}}}}\%}}"
                     else:
                         latex_table += f"\\makecell[l]{{${res_avg:.1f}\%$ \\\\ {{\\tiny $\pm {res_std:.1f}\%$}}}}"
-                if ds != "lfwatransfer":
+                if ds != "lfwacrossdomain":
                     latex_table += " & "
                 else:
                     if shot == "five-shot":
