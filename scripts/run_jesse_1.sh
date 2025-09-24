@@ -1,5 +1,5 @@
 # change here for different experimental trials
-seedval=3000
+seedval=1000
 kShotTest=10
 kQueryTest=5
 
@@ -8,14 +8,14 @@ kQueryTest=5
 cd ~/DRESS
 
 ####### Supervised meta-learning (and scratch) baselines #####
-for supmethod in "sup" "supall" "supora" "scratch"; do
-    python main.py --dsName shapes3d  \
-                --encoder $supmethod \
-                --imgSizeToEncoder -1 --imgSizeToMetaModel 84 \
-                --NWay 2 --KShot 5 --KQuery 5 \
-                --KShotTest $kShotTest --KQueryTest $kQueryTest \
-                --seed $seedval
-done
+# for supmethod in "sup" "supall" "supora" "scratch"; do
+#     python main.py --dsName shapes3d  \
+#                 --encoder $supmethod \
+#                 --imgSizeToEncoder -1 --imgSizeToMetaModel 84 \
+#                 --NWay 2 --KShot 5 --KQuery 5 \
+#                 --KShotTest $kShotTest --KQueryTest $kQueryTest \
+#                 --seed $seedval
+# done
 
 # for supmethod in "sup" "supall" "supora" "scratch"; do
 #     python main.py --dsName mpi3deasy  \
@@ -140,12 +140,12 @@ python main.py --dsName shapes3d  \
 
 
 ############ DRESS with FDAE ############
-python main.py --dsName shapes3d  \
-               --encoder fdae  \
-               --imgSizeToEncoder 64 --imgSizeToMetaModel 84 \
-               --NWay 2 --KShot 5 --KQuery 5  \
-               --KShotTest $kShotTest --KQueryTest $kQueryTest \
-               --seed $seedval
+# python main.py --dsName shapes3d  \
+#                --encoder fdae  \
+#                --imgSizeToEncoder 64 --imgSizeToMetaModel 84 \
+#                --NWay 2 --KShot 5 --KQuery 5  \
+#                --KShotTest $kShotTest --KQueryTest $kQueryTest \
+#                --seed $seedval
 
 # python main.py --dsName mpi3deasy  \
 #                --encoder fdae  \
@@ -199,12 +199,12 @@ python main.py --dsName shapes3d  \
 
 
 ########### DeepCluster ###########
-python main.py --dsName shapes3d  \
-               --encoder deepcluster \
-               --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
-               --NWay 2 --KShot 5 --KQuery 5  \
-               --KShotTest $kShotTest --KQueryTest $kQueryTest \
-               --seed $seedval
+# python main.py --dsName shapes3d  \
+#                --encoder deepcluster \
+#                --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
+#                --NWay 2 --KShot 5 --KQuery 5  \
+#                --KShotTest $kShotTest --KQueryTest $kQueryTest \
+#                --seed $seedval
             
 # python main.py --dsName mpi3deasy  \
 #                --encoder deepcluster \

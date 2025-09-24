@@ -14,11 +14,11 @@ if __name__ == "__main__":
 
     latex_table = "\\toprule \n"
     latex_table += "\\multirow{2}{*}{Method} & "
-    latex_table += "\\multicolumn{2}{l}{SmallNORB} & "
-    latex_table += "\\multicolumn{2}{l}{Shapes3D} & "
-    latex_table += "\\multicolumn{2}{l}{Causal3D} & "
-    latex_table += "\\multicolumn{2}{l}{MPI3D-Easy} & "
-    latex_table += "\\multicolumn{2}{l}{MPI3D-Hard} \\\\ \n"
+    latex_table += "\\multicolumn{2}{c}{SmallNORB} & "
+    latex_table += "\\multicolumn{2}{c}{Shapes3D} & "
+    latex_table += "\\multicolumn{2}{c}{Causal3D} & "
+    latex_table += "\\multicolumn{2}{c}{MPI3D-Easy} & "
+    latex_table += "\\multicolumn{2}{c}{MPI3D-Hard} \\\\ \n"
     latex_table += " & 5-Shot & 10-Shot & 5-Shot & 10-Shot & 5-Shot & 10-Shot & 5-Shot & 10-Shot & 5-Shot & 10-Shot \\\\ \n"
     latex_table += "\\midrule \n"
 
@@ -29,6 +29,18 @@ if __name__ == "__main__":
             latex_table += "FSDA & "
         elif method == 'Pre-Training and Fine-Tuning':
             latex_table += "PTFT & "
+        elif method == "Supervised-Original":
+            latex_table += "\\makecell[r]{Supervised-\\\\ \hspace{8pt} Original} & "
+        elif method == "Supervised-All":
+            latex_table += "\\makecell[r]{Supervised-\\\\ \hspace{8pt} All} & "
+        elif method == "Supervised-Oracle":
+            latex_table += "\\makecell[r]{Supervised-\\\\ \hspace{8pt} Oracle} & "
+        elif method == "Meta-GMVAE":
+            latex_table += "\\makecell[r]{Meta-\\\\ \hspace{8pt} GMVAE} & "
+        elif method == "CACTUS-DC":
+            latex_table += "\\makecell[r]{CACTUS-\\\\ \hspace{8pt} DC} & "
+        elif method == "CACTUS-DINO":
+            latex_table += "\\makecell[r]{CACTUS-\\\\ \hspace{8pt} DINO} & "
         elif method == 'DRESS':
             latex_table += "\\textbf{DRESS} & "
         else:

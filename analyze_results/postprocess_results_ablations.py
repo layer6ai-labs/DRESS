@@ -22,11 +22,11 @@ if __name__ == "__main__":
         if method == 'DRESS':
             latex_table += "DRESS & "
         elif method == 'Ablate-Disentangle':
-            latex_table += "DRESS w/o Disent. Repsent. & "
+            latex_table += "\\makecell[l]{DRESS w/o \\\\ \hspace{8pt} Disent. Repsent.} & "
         elif method == 'Ablate-Align':
-            latex_table += "DRESS w/o Lat. Dim. Align. & "
+            latex_table += "\\makecell[l]{DRESS w/o \\\\ \hspace{8pt} Lat. Dim. Align.} & "
         elif method == 'Ablate-Individual-Cluster':
-            latex_table += "DRESS w/o Ind. Dim. Cluster. & "
+            latex_table += "\\makecell[l]{DRESS w/o \\\\ \hspace{8pt} Ind. Dim. Cluster.} & "
         else:
             continue
         # full ablation table
