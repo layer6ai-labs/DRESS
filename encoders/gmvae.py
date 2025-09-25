@@ -442,15 +442,10 @@ class GMVAE(nn.Module):
         batch_size, tr_sample_size = X_tr.shape[:2]
         te_sample_size = X_te.shape[1]
 
-        print("X_tr.shape:", X_tr.shape)
-        print("X_te.shape:", X_te.shape)
-        print(batch_size, tr_sample_size, te_sample_size)
         # batch_size, tr_sample_size+te_sample_size, 1, 28, 28
         X = torch.cat([X_tr, X_te], dim=1)
-        print("X.shape:", X.shape)
         # encode
         H = self.encoder(X.view(-1, *self.input_size))
-        print("H.shape:", H.shape)
         H = H.view(batch_size, tr_sample_size+te_sample_size, self.last_hidden_size)
 
         # q_z
