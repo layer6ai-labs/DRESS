@@ -53,8 +53,11 @@ if __name__ == "__main__":
                 else:
                     res_avg = np.mean(res_vals)
                     res_std = np.std(res_vals) / np.sqrt(len(res_vals))
-                    if (method == "DRESS" and ds in ['mpi3deasy', 'mpi3dhard', 'smallnorb', 'causal3d']) or \
-                        (method == "PsCo" and ds == 'shapes3d'):
+                    if (method == "DRESS" and ds in ['mpi3deasy', 'smallnorb', 'causal3d']) or \
+                        (method == "DRESS" and ds == "shapes3d" and shot == 'ten-shot') or \
+                        (method == "DRESS" and ds == "mpi3dhard" and shot == 'five-shot') or \
+                        (method == "PsCo" and ds == 'shapes3d' and shot == 'five-shot') or \
+                        (method == "CACTUS-DINO" and ds == "mpi3dhard" and shot == "ten-shot"):
                         # bold font
                         latex_table += f"\\makecell[l]{{\\textbf{{{res_avg:.1f}}}\% \\\\ {{\\tiny $\pm$ \\textbf{{{res_std:.1f}}}}}\%}}"
                     else:

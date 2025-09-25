@@ -45,7 +45,10 @@ if __name__ == "__main__":
         for ds in ['celebahair', 'celebaprimary', 'celebarand', 'lfwacrossdomain']:
             for shot in ['five-shot', "ten-shot"]:
                 res_vals = res_dict[shot][ds]
-                if len(res_vals) == 0:
+                if ds == "lfwacrossdomain" and method == "Supervised-Oracle":
+                    # Supervised-Oracle does not apply on lfwacrossdomain
+                    latex_table += "-"
+                elif len(res_vals) == 0:
                     latex_table += "TODO"
                 else:
                     res_avg = np.mean(res_vals)
