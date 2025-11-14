@@ -12,14 +12,14 @@ if __name__ == "__main__":
     print(f"Processing results...")
 
     latex_table = "\\toprule \n"
-    latex_table += "Method & Shapes3D & MPI3D-Hard & SmallNORB & Causal3D & CelebA-Hair \\\\ \n\midrule \n"
+    latex_table += "Method & SmallNORB & Shapes3D & Causal3D & MPI3D-Hard & CelebA-Hair \\\\ \n\midrule \n"
 
     for method, res_dict in DIVERSITIES_ALL.items():
         if method == 'DRESS':
             latex_table += "\\textbf{DRESS} & "
         else:
             latex_table += f"{method} & "
-        for ds in ['shapes3d', 'mpi3dhard', 'smallnorb', 'causal3d', 'celebahair']:
+        for ds in ['smallnorb', 'shapes3d', 'causal3d', 'mpi3dhard', 'celebahair']:
             res_vals = res_dict[ds]
             if len(res_vals) == 0:
                 latex_table += "TODO"
