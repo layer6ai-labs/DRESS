@@ -265,6 +265,9 @@ def get_args_parser():
                         help='Visualize the constructed meta-learning tasks',
                         action='store_true')
     parser.add_argument('--computePartitionOverlap',
-                        help='Whether computing the partition overlap metric',
+                        help='Whether computing the partition overlap metric within meta-train partitions',
+                        action='store_true')
+    parser.add_argument('--computePartitionOverlapToMetatest',
+                        help='Whether computing the partition overlap metric between meta-train and meta-test partitions',
                         action='store_true')
     return parser

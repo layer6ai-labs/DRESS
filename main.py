@@ -13,7 +13,7 @@ from partition_generators import generate_unsupervised_partitions
 from task_generator import TaskGenerator
 from baselines.pretraining_baseline import contrastive_pretrain, test_pretrain
 from baselines.metagmvae_baseline import metagmvae_train, metagmvae_test
-from analyze_results.compute_partition_overlap import compute_partition_overlap
+from analyze_results.compute_partition_overlap import compute_partition_overlap, compute_partition_overlap_to_metatest
 
 
 def fast_adapt(batch, inner_learner, loss_fn, num_adaptation_steps, meta_split, args):
@@ -152,7 +152,14 @@ if __name__ == "__main__":
         visualize_constructed_tasks(task_generator, descriptor, args, n_imgs=50)
         exit(0)
     elif args.computePartitionOverlap:
-        compute_partition_overlap(meta_train_partitions, descriptor)
+        compute_partition_overlap(meta_train_partitions, descriptor, args)
+        exit(0)
+    elif args.computePartitionOverlapToMetatest:
+        # equivalent to compare against the supervised-orcacle partitions on meta-training
+        compute_partition_overlap_to_metatest(meta_train_partitions, 
+                                              meta_train_partitions_supervised_oracle, 
+                                              descriptor,
+                                              args)
         exit(0)
     else:
         pass
