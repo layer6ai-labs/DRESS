@@ -35,11 +35,11 @@ if __name__ == "__main__":
         for method in methods_to_include:
             # for adaptation performance sharing the meta-training set
             if ds == "mpi3deasy":
-                diversity_vals_all_methods.append(1-np.mean(DIVERSITIES_ALL[method]['within-metatrain']['mpi3dhard']))
+                diversity_vals_all_methods.append(1-np.mean(DIVERSITIES_ALL[method]['mpi3dhard']))
             elif ds in ["celebaprimary", "lfwacrossdomain"]:
-                diversity_vals_all_methods.append(1-np.mean(DIVERSITIES_ALL[method]['within-metatrain']['celebahair']))
+                diversity_vals_all_methods.append(1-np.mean(DIVERSITIES_ALL[method]['celebahair']))
             else:
-                diversity_vals_all_methods.append(1-np.mean(DIVERSITIES_ALL[method]['within-metatrain'][ds]))
+                diversity_vals_all_methods.append(1-np.mean(DIVERSITIES_ALL[method][ds]))
             # take average of the performance across different shots
             accurs_vals_all_shots = []
             for shot in ['five-shot', 'ten-shot']:
@@ -55,8 +55,8 @@ if __name__ == "__main__":
                             performances=accur_vals_all_methods, 
                             metrics=diversity_vals_all_methods
                         )
-        ax.text(0.05, 0.85, f"Corr: {correlation:.2f}", 
-                transform=ax.transAxes, fontsize=20, verticalalignment='top')
+        ax.text(0.05, 0.87, f"Corr: {correlation:.2f}", 
+                transform=ax.transAxes, fontsize=23, verticalalignment='top')
         # fit the line
         slope, intercept = np.polyfit(diversity_vals_all_methods, accur_vals_all_methods, 1)
         x_line = np.array([min(diversity_vals_all_methods), max(diversity_vals_all_methods)])

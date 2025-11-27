@@ -5,7 +5,7 @@ import numpy as np
 from torch.utils.data import Dataset
 
 sys.path.append("../")
-from partition_generators import generate_attributes_based_partitions
+from partition_generators import generate_supervised_partitions_multi_attributes
 from utils import *
 
 
@@ -93,25 +93,25 @@ def _load_mpi3d(args, meta_split_type):
     metatrain_attrs_oracle = metatrain_attrs_all[:, MPI3D_ATTRIBUTES_IDX_META_TEST]
 
     # generate partitions with binary classification on celeba attributes
-    metatrain_partitions_supervised = generate_attributes_based_partitions(
+    metatrain_partitions_supervised = generate_supervised_partitions_multi_attributes(
                                         metatrain_attrs, 
                                         np.array(MPI3D_ATTRIBUTES_COUNTS)[MPI3D_ATTRIBUTES_IDX_META_TRAIN], 
                                         'meta_train', 
                                         args)
     
-    metatest_partitions = generate_attributes_based_partitions(
+    metatest_partitions = generate_supervised_partitions_multi_attributes(
                                         metatest_attrs, 
                                         np.array(MPI3D_ATTRIBUTES_COUNTS)[MPI3D_ATTRIBUTES_IDX_META_TEST],
                                         'meta_test', 
                                         args)
     
-    metatrain_partitions_supervised_all = generate_attributes_based_partitions(
+    metatrain_partitions_supervised_all = generate_supervised_partitions_multi_attributes(
                                         metatrain_attrs_all,
                                         np.array(MPI3D_ATTRIBUTES_COUNTS),
                                         'meta_train',
                                         args)
 
-    metatrain_partitions_supervised_oracle = generate_attributes_based_partitions(
+    metatrain_partitions_supervised_oracle = generate_supervised_partitions_multi_attributes(
                                         metatrain_attrs_oracle,
                                         np.array(MPI3D_ATTRIBUTES_COUNTS)[MPI3D_ATTRIBUTES_IDX_META_TEST],
                                         'meta_train',

@@ -154,13 +154,6 @@ if __name__ == "__main__":
     elif args.computePartitionOverlap:
         compute_partition_overlap(meta_train_partitions, descriptor, args)
         exit(0)
-    elif args.computePartitionOverlapToMetatest:
-        # equivalent to compare against the supervised-orcacle partitions on meta-training
-        compute_partition_overlap_to_metatest(meta_train_partitions, 
-                                              meta_train_partitions_supervised_oracle, 
-                                              descriptor,
-                                              args)
-        exit(0)
     else:
         pass
 

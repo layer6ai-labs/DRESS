@@ -7,7 +7,7 @@ from torchvision import transforms as T
 import h5py
 
 sys.path.append("../")
-from partition_generators import generate_attributes_based_partitions
+from partition_generators import generate_supervised_partitions_multi_attributes
 from utils import *
 
 
@@ -78,25 +78,25 @@ def load_shapes3d(args):
     metatrain_attrs_oracle = metatrain_attrs_all[:, SHAPES3D_ATTRIBUTES_IDX_META_TEST]
 
     # generate partitions with binary classification on celeba attributes
-    metatrain_partitions_supervised = generate_attributes_based_partitions(
+    metatrain_partitions_supervised = generate_supervised_partitions_multi_attributes(
                                         metatrain_attrs, 
                                         np.array(attrs_counts)[SHAPES3D_ATTRIBUTES_IDX_META_TRAIN], 
                                         'meta_train', 
                                         args)
 
-    metatest_partitions = generate_attributes_based_partitions(
+    metatest_partitions = generate_supervised_partitions_multi_attributes(
                                         metatest_attrs, 
                                         np.array(attrs_counts)[SHAPES3D_ATTRIBUTES_IDX_META_TEST],
                                         'meta_test', 
                                         args)
     
-    metatrain_partitions_supervised_all = generate_attributes_based_partitions(
+    metatrain_partitions_supervised_all = generate_supervised_partitions_multi_attributes(
                                         metatrain_attrs_all,
                                         np.array(attrs_counts),
                                         'meta_train',
                                         args)
 
-    metatrain_partitions_supervised_oracle = generate_attributes_based_partitions(
+    metatrain_partitions_supervised_oracle = generate_supervised_partitions_multi_attributes(
                                         metatrain_attrs_oracle,
                                         np.array(attrs_counts)[SHAPES3D_ATTRIBUTES_IDX_META_TEST],
                                         'meta_train',

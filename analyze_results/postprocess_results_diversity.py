@@ -20,7 +20,7 @@ if __name__ == "__main__":
         else:
             latex_table += f"{method} & "
         for ds in ['smallnorb', 'shapes3d', 'causal3d', 'mpi3dhard', 'celebahair']:
-            res_vals = res_dict['within-metatrain'][ds]
+            res_vals = res_dict[ds]
             if len(res_vals) == 0:
                 latex_table += "TODO"
             else:

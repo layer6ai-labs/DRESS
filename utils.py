@@ -170,7 +170,8 @@ def build_initial_img_transforms(meta_split, args):
     # Resize happens later in the pipeline
     img_transforms = []
     if dsName_to_transform.startswith("celeba") or \
-        dsName_to_transform.startswith("lfwa"):
+        dsName_to_transform.startswith("lfwa") or \
+          dsName_to_transform.startswith("omniglot"):
         # for these datasets, images loaded are already in PIL format
         pass
     else:
@@ -196,7 +197,8 @@ def build_initial_img_transforms(meta_split, args):
     if args.encoder == "metagmvae":
         img_transforms.append(T.Resize((args.imgSizeToEncoder, args.imgSizeToEncoder)))
     img_transforms.append(T.ToTensor())
-    if dsName_to_transform == "norb":
+    if dsName_to_transform == "norb" or \
+        dsName_to_transform.startswith("omniglot"):
         # turn gray-scale single channel into 3 channels
         img_transforms.append(T.Lambda(lambda x: x.repeat(3,1,1)))
     img_transforms = T.Compose(img_transforms)
@@ -266,8 +268,5 @@ def get_args_parser():
                         action='store_true')
     parser.add_argument('--computePartitionOverlap',
                         help='Whether computing the partition overlap metric within meta-train partitions',
-                        action='store_true')
-    parser.add_argument('--computePartitionOverlapToMetatest',
-                        help='Whether computing the partition overlap metric between meta-train and meta-test partitions',
                         action='store_true')
     return parser

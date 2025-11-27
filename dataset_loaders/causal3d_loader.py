@@ -8,7 +8,7 @@ from torch.utils.data import Dataset
 from torchvision import transforms
 
 sys.path.append("../")
-from partition_generators import generate_attributes_based_partitions
+from partition_generators import generate_supervised_partitions_multi_attributes
 from utils import *
 
 CAUSAL3D_DIR = {
@@ -95,25 +95,25 @@ def load_causal3d(args):
     metatrain_attrs_oracle = ds_train.attrs[:,CAUSAL3D_ATTRIBUTES_IDX_META_TEST]
 
     # generate partitions with binary classification on attributes
-    metatrain_partitions_supervised = generate_attributes_based_partitions(
+    metatrain_partitions_supervised = generate_supervised_partitions_multi_attributes(
                                             metatrain_attrs, 
                                             N_LEVELS_PER_ATTR,
                                             'meta_train', 
                                             args)
 
-    metatest_partitions = generate_attributes_based_partitions(
+    metatest_partitions = generate_supervised_partitions_multi_attributes(
                                             metatest_attrs, 
                                             N_LEVELS_PER_ATTR,
                                             'meta_test', 
                                             args)
 
-    metatrain_partitions_supervised_all = generate_attributes_based_partitions(
+    metatrain_partitions_supervised_all = generate_supervised_partitions_multi_attributes(
                                             metatrain_attrs_all, 
                                             N_LEVELS_PER_ATTR,
                                             'meta_train', 
                                             args)
     
-    metatrain_partitions_supervised_oracle = generate_attributes_based_partitions(
+    metatrain_partitions_supervised_oracle = generate_supervised_partitions_multi_attributes(
                                                 metatrain_attrs_oracle,
                                                 N_LEVELS_PER_ATTR,
                                                 'meta_train',

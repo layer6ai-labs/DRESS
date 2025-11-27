@@ -15,7 +15,7 @@ from utils import *
 Supervised partition generator methods
 This method is extended from the original one for celebA for allowing more than binary attributes
 '''
-def generate_attributes_based_partitions(attributes, code_sizes_per_attributes, meta_split, args):
+def generate_supervised_partitions_multi_attributes(attributes, code_sizes_per_attributes, meta_split, args):
     """
     Produces partitions for binary classification tasks: 
     a list of dictionaries (key: 0 or 1, value: list of data indices).
@@ -66,17 +66,13 @@ def generate_attributes_based_partitions(attributes, code_sizes_per_attributes, 
     assert len(partitions) > 0, "At least one partition needed"
     return partitions
 
-def generate_label_based_partition(dataset):
+
+# Generates partitions based on single attribute labels.
+# Input: - attributes: a list of scalar attribute labels, corresponding to the data in order.
+def generate_supervised_partitions_single_attribute(attributes):
     partitions = []
     partition = defaultdict(list)
-    for i in range(len(dataset)):
-        try:
-            label = dataset[i][1]
-            # if label is a Tensor, then take get the scalar value
-            if hasattr(label, 'item'):
-                label = dataset[i][1].item()
-        except ValueError as e:
-            raise ValueError('Requires scalar labels. \n' + str(e))
+    for i, label in enumerate(attributes):
         partition[label].append(i)
     
     # just one partition based on ground truth labels

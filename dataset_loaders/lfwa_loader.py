@@ -9,7 +9,7 @@ from torchvision import transforms
 from torchvision.utils import save_image
 
 sys.path.append("../")
-from partition_generators import generate_attributes_based_partitions
+from partition_generators import generate_supervised_partitions_multi_attributes
 from utils import *
 
 # in total 13233 images, but only use a subset for meta-test experiments
@@ -118,7 +118,7 @@ def load_lfwa(args):
     meta_test_attrs = ds_meta_test.df_attributes.iloc[:, LFWA_ATTRIBUTES_IDX_META_TEST].to_numpy()
     print(f"LFWA meta-test attributes shape: {meta_test_attrs.shape}")
 
-    meta_test_partitions = generate_attributes_based_partitions(
+    meta_test_partitions = generate_supervised_partitions_multi_attributes(
                                 meta_test_attrs,
                                 2,
                                 'meta_test',

@@ -8,7 +8,7 @@ from torchvision.datasets.celeba import CelebA
 from torchvision.utils import save_image
 
 sys.path.append("../")
-from partition_generators import generate_attributes_based_partitions
+from partition_generators import generate_supervised_partitions_multi_attributes
 from utils import *
 
 def load_celeba_attrs():
@@ -90,25 +90,25 @@ def _load_celeba(args, meta_split_type):
     celeba_meta_train_attrs_oracle = celeba_meta_train_attrs_all[:,CELEBA_ATTRIBUTES_IDX_META_TEST]
 
     # generate partitions with binary classification on celeba attrs
-    meta_train_partitions_supervised = generate_attributes_based_partitions(
+    meta_train_partitions_supervised = generate_supervised_partitions_multi_attributes(
                                             celeba_meta_train_attrs, 
                                             2,
                                             'meta_train', 
                                             args)
 
-    meta_test_partitions = generate_attributes_based_partitions(
+    meta_test_partitions = generate_supervised_partitions_multi_attributes(
                                             celeba_meta_test_attrs, 
                                             2,
                                             'meta_test', 
                                             args)
 
-    meta_train_partitions_supervised_all = generate_attributes_based_partitions(
+    meta_train_partitions_supervised_all = generate_supervised_partitions_multi_attributes(
                                             celeba_meta_train_attrs_all, 
                                             2,
                                             'meta_train', 
                                             args)
     
-    meta_train_partitions_supervised_oracle = generate_attributes_based_partitions(
+    meta_train_partitions_supervised_oracle = generate_supervised_partitions_multi_attributes(
                                                 celeba_meta_train_attrs_oracle,
                                                 2,
                                                 'meta_train',

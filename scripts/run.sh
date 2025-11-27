@@ -90,6 +90,15 @@ for supmethod in "sup" "supall" "supora" "scratch"; do
                 --seed $seedval
 done
 
+for supmethod in "sup" "supall" "supora" "scratch"; do
+    python main.py --dsName omniglot  \
+                --encoder $supmethod \
+                --imgSizeToEncoder -1 --imgSizeToMetaModel 84 \
+                --NWay 2 --KShot 5 --KQuery 5 \
+                --KShotTest $kShotTest --KQueryTest $kQueryTest \
+                --seed $seedval
+done
+
  
 ############# Dino #############
 python main.py --dsName shapes3d  \
@@ -156,6 +165,13 @@ python main.py --dsName celebaprimary  \
                --KShotTest $kShotTest --KQueryTest $kQueryTest \
                --seed $seedval    
 
+python main.py --dsName omniglot  \
+               --encoder dino \
+               --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
+               --NWay 2 --KShot 5 --KQuery 5  \
+               --KShotTest $kShotTest --KQueryTest $kQueryTest \
+               --seed $seedval
+
 
 ############ DRESS with FDAE ############
 python main.py --dsName shapes3d  \
@@ -189,6 +205,13 @@ python main.py --dsName norb  \
 python main.py --dsName causal3d  \
                --encoder fdae  \
                --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
+               --NWay 2 --KShot 5 --KQuery 5   \
+               --KShotTest $kShotTest --KQueryTest $kQueryTest \
+               --seed $seedval
+
+python main.py --dsName omniglot  \
+               --encoder fdae  \
+               --imgSizeToEncoder 105 --imgSizeToMetaModel 84 \
                --NWay 2 --KShot 5 --KQuery 5   \
                --KShotTest $kShotTest --KQueryTest $kQueryTest \
                --seed $seedval
@@ -289,6 +312,13 @@ python main.py --dsName celebaprimary  \
                --KShotTest $kShotTest --KQueryTest $kQueryTest \
                --seed $seedval
 
+python main.py --dsName omniglot  \
+               --encoder deepcluster \
+               --imgSizeToEncoder 224 --imgSizeToMetaModel 84 \
+               --NWay 2 --KShot 5 --KQuery 5  \
+               --KShotTest $kShotTest --KQueryTest $kQueryTest \
+               --seed $seedval
+
 ############ PreTrain and FineTune ############
 python main.py --dsName shapes3d  \
                --encoder simclrpretrain  \
@@ -354,6 +384,13 @@ python main.py --dsName celebaprimary  \
                --KShotTest $kShotTest --KQueryTest $kQueryTest \
                --seed $seedval
 
+python main.py --dsName omniglot  \
+               --encoder simclrpretrain  \
+               --imgSizeToEncoder 64 --imgSizeToMetaModel 64  \
+               --NWay 2 --KShot 5 --KQuery 5 \
+               --KShotTest $kShotTest --KQueryTest $kQueryTest \
+               --seed $seedval
+
 ############## Meta-GMVAE #############
 python main.py --dsName shapes3d  \
                --encoder metagmvae  \
@@ -415,6 +452,13 @@ python main.py --dsName celebaprimary  \
                --dsNameTest lfwa  \
                --encoder metagmvae  \
                --imgSizeToEncoder 128 --imgSizeToMetaModel 128 \
+               --NWay 2 --KQuery 5 --KShot 5 \
+               --KShotTest $kShotTest --KQueryTest $kQueryTest \
+               --seed $seedval
+            
+python main.py --dsName omniglot  \
+               --encoder metagmvae  \
+               --imgSizeToEncoder 64 --imgSizeToMetaModel 64 \
                --NWay 2 --KQuery 5 --KShot 5 \
                --KShotTest $kShotTest --KQueryTest $kQueryTest \
                --seed $seedval

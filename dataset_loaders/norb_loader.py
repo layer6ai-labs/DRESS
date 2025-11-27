@@ -8,7 +8,7 @@ from torch.utils.data import Dataset
 from torchvision import transforms as T
 
 sys.path.append("../")
-from partition_generators import generate_attributes_based_partitions
+from partition_generators import generate_supervised_partitions_multi_attributes
 from utils import *
 
 class Norb(Dataset):
@@ -81,25 +81,25 @@ def load_norb(args):
     norb_meta_train_attrs_oracle = ds_train.attrs[:,NORB_ATTRIBUTES_IDX_META_TEST]
 
     # generate partitions with binary classification on celeba attrs
-    meta_train_partitions_supervised = generate_attributes_based_partitions(
+    meta_train_partitions_supervised = generate_supervised_partitions_multi_attributes(
                                             norb_meta_train_attrs, 
                                             np.array(NORB_ATTRIBUTES_COUNTS)[NORB_ATTRIBUTES_IDX_META_TRAIN],
                                             'meta_train', 
                                             args)
 
-    meta_test_partitions = generate_attributes_based_partitions(
+    meta_test_partitions = generate_supervised_partitions_multi_attributes(
                                             norb_meta_test_attrs, 
                                             np.array(NORB_ATTRIBUTES_COUNTS)[NORB_ATTRIBUTES_IDX_META_TEST],
                                             'meta_test', 
                                             args)
 
-    meta_train_partitions_supervised_all = generate_attributes_based_partitions(
+    meta_train_partitions_supervised_all = generate_supervised_partitions_multi_attributes(
                                             norb_meta_train_attrs_all, 
                                             np.array(NORB_ATTRIBUTES_COUNTS),
                                             'meta_train', 
                                             args)
     
-    meta_train_partitions_supervised_oracle = generate_attributes_based_partitions(
+    meta_train_partitions_supervised_oracle = generate_supervised_partitions_multi_attributes(
                                                 norb_meta_train_attrs_oracle,
                                                 np.array(NORB_ATTRIBUTES_COUNTS)[NORB_ATTRIBUTES_IDX_META_TEST],
                                                 'meta_train',
