@@ -5,6 +5,7 @@ from .norb_loader import load_norb
 from .causal3d_loader import load_causal3d
 from .lfwa_loader import load_lfwa
 from .omniglot_loader import load_omniglot
+from .cifar_loader import load_cifar
 
 LOAD_DATASET = {
     'mpi3deasy': load_mpi3d_easy,
@@ -16,5 +17,6 @@ LOAD_DATASET = {
     'norb': load_norb,
     'causal3d': load_causal3d,
     'lfwa': load_lfwa,
-    'omniglot': load_omniglot
+    'omniglot': load_omniglot,
+    'cifar': load_cifar
 }

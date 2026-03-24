@@ -90,7 +90,9 @@ for supmethod in "sup" "supall" "supora" "scratch"; do
                 --seed $seedval
 done
 
-for supmethod in "sup" "supall" "supora" "scratch"; do
+# for omniglot, there is only one set of classes per set, so 
+# only the vanilla supervised baseline applies
+for supmethod in "sup" "scratch"; do
     python main.py --dsName omniglot  \
                 --encoder $supmethod \
                 --imgSizeToEncoder -1 --imgSizeToMetaModel 84 \
@@ -211,7 +213,7 @@ python main.py --dsName causal3d  \
 
 python main.py --dsName omniglot  \
                --encoder fdae  \
-               --imgSizeToEncoder 105 --imgSizeToMetaModel 84 \
+               --imgSizeToEncoder 96 --imgSizeToMetaModel 84 \
                --NWay 2 --KShot 5 --KQuery 5   \
                --KShotTest $kShotTest --KQueryTest $kQueryTest \
                --seed $seedval

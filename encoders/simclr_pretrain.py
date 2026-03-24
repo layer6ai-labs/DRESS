@@ -22,6 +22,12 @@ class SimCLR(nn.Module):
         model =  torchvision.models.__dict__["resnet18"](pretrained=False, 
                                                         num_classes=latent_dim, 
                                                         zero_init_residual=True)
+
+        # Adapt resnet stem for small images (CIFAR/Omniglot) to prevent early spatial collapse
+        if args.imgSizeToEncoder <= 64:
+            model.conv1 = nn.Conv2d(3, 64, kernel_size=3, stride=1, padding=1, bias=False)
+            model.maxpool = nn.Identity()
+
         # add projection head
         self.feature_dim =  model.fc.in_features
 
@@ -41,8 +47,8 @@ class SimCLR(nn.Module):
         """
 
         # compute features for one view
-        h1 = self.backbone(x1).squeeze() # NxC
-        h2 = self.backbone(x2).squeeze() # NxC
+        h1 = self.backbone(x1).flatten(start_dim=1) # NxC
+        h2 = self.backbone(x2).flatten(start_dim=1) # NxC
 
         z1 = self.projector(h1) # NxC
         z2 = self.projector(h2) # NxC
@@ -56,7 +62,7 @@ class SimCLR(nn.Module):
         Output:
             z: features
         """
-        return self.backbone(x).squeeze()
+        return self.backbone(x).flatten(start_dim=1)
 
     def info_nce_loss(self, z1, z2, device, temperature=0.07):
         features = torch.cat([z1, z2], dim=0)
@@ -90,4 +96,3 @@ class SimCLR(nn.Module):
 
         logits = logits / temperature
         return logits, labels
-

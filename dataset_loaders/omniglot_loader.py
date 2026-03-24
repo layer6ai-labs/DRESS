@@ -34,7 +34,7 @@ def load_omniglot(args):
     # there is no common labels among meta splits, so for SupAll and SupOra there 
     # is no corresponding labels and partitions
     return (
-        meta_test_ds, 
+        meta_train_ds, 
         meta_test_ds,  
         meta_train_partitions_supervised,  
         None,

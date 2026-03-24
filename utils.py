@@ -23,9 +23,9 @@ NUM_TASKS_METATEST = 1000
 METATRAIN_OUTER_LR = 0.001
 METATRAIN_INNER_LR = 0.05
 # pre-training & fine-tuning setup
-PRETRAIN_EPOCHS = 10
+PRETRAIN_EPOCHS = 200
 PRETRAIN_BATCH_SIZE = 1024
-PRETRAIN_LR = 0.05
+PRETRAIN_LR = 1e-3
 FINETUNE_STEPS = 5
 FINETUNE_LR = 0.05
 # Meta-GMVAE setup
@@ -171,7 +171,8 @@ def build_initial_img_transforms(meta_split, args):
     img_transforms = []
     if dsName_to_transform.startswith("celeba") or \
         dsName_to_transform.startswith("lfwa") or \
-          dsName_to_transform.startswith("omniglot"):
+          dsName_to_transform.startswith("omniglot") or \
+            dsName_to_transform.startswith("cifar"):
         # for these datasets, images loaded are already in PIL format
         pass
     else:
@@ -185,15 +186,20 @@ def build_initial_img_transforms(meta_split, args):
         img_transforms.append(T.Resize(size=(128,128)))
     if args.encoder == "simclrpretrain" and meta_split == "meta_train":
         # MoCo v2's aug: similar to SimCLR https://arxiv.org/abs/2002.05709
+        crop_scale = (0.5, 1.0) if dsName_to_transform.startswith("omniglot") else (0.2, 1.0)
         img_transforms.extend([
-            T.RandomResizedCrop(64, scale=(0.2, 1.0)),
+            T.RandomResizedCrop(args.imgSizeToEncoder, scale=crop_scale),
             T.RandomApply(
                 [T.ColorJitter(0.4, 0.4, 0.4, 0.1)], p=0.8  # not strengthened
             ),
             T.RandomGrayscale(p=0.2),
-            T.RandomApply([GaussianBlur([0.1, 2.0])], p=0.5),
-            T.RandomHorizontalFlip(),
         ])
+        if not dsName_to_transform.startswith("omniglot"):
+            img_transforms.append(T.RandomApply([GaussianBlur([0.1, 2.0])], p=0.5))
+        if not dsName_to_transform.startswith("omniglot") and \
+                not dsName_to_transform == "mpi3dhard":
+            # for these two datasets, class might change with horizontal reflection
+            img_transforms.append(T.RandomHorizontalFlip())
     if args.encoder == "metagmvae":
         img_transforms.append(T.Resize((args.imgSizeToEncoder, args.imgSizeToEncoder)))
     img_transforms.append(T.ToTensor())

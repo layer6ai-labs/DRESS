@@ -79,13 +79,6 @@ class DeepCluster(nn.Module):
     def __init__(self, latent_dim, args):
         super().__init__()
         self.latent_dim = latent_dim
-        self.deepCluster_model = AlexNet(make_layers_features(CFG['2012'], 
-                                                              input_dim=3, 
-                                                              bn=True), 
-                                         sobel=False)
-        # wrap feature layers with nn.DataParallel to load the weights correctly
-        self.deepCluster_model.features = torch.nn.DataParallel(self.deepCluster_model.features)
-        # load the checkpoint from deepCluster training run
         if args.dsName.startswith("mpi3d"):
             dsName_base = "mpi3d"
         elif args.dsName.startswith("celeba"):
@@ -93,6 +86,18 @@ class DeepCluster(nn.Module):
         else:
             dsName_base = args.dsName
         checkpoint = torch.load(os.path.join(ENCODERDIR, f"deepcluster_{dsName_base}.pth.tar"))['state_dict']
+
+        # Determine configuration from checkpoint
+        has_sobel = any(k.startswith('sobel') for k in checkpoint.keys())
+        has_dataparallel = any('features.module' in k for k in checkpoint.keys())
+
+        self.deepCluster_model = AlexNet(make_layers_features(CFG['2012'], 
+                                                              input_dim=2 if has_sobel else 3, 
+                                                              bn=True), 
+                                         sobel=has_sobel)
+        # wrap feature layers with nn.DataParallel to load the weights correctly
+        if has_dataparallel:
+            self.deepCluster_model.features = torch.nn.DataParallel(self.deepCluster_model.features)
         # remove top_layer parameters from checkpoint
         # have to cast the retured odict_keys into list to prevent "mutated during iteration" error
         lyr_keys = list(checkpoint.keys())

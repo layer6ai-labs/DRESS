@@ -50,6 +50,16 @@ def get_encoder(args, device):
             code_length = 80
             code_length_reduced = 40
             levels_per_dim = 200
+        elif args.dsName == "omniglot":
+            n_semantic_groups = 5
+            code_length = 60
+            code_length_reduced = 20
+            levels_per_dim = 100
+        elif args.dsName == "cifar":
+            n_semantic_groups = 6
+            code_length = 80
+            code_length_reduced = 40
+            levels_per_dim = 200
         else:
             print(f"FDAE unprepared for {args.dsName}!")
             exit(1)
