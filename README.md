@@ -1,6 +1,8 @@
 <p align="center">
 <a href="https://layer6.ai/"><img src="https://github.com/layer6ai-labs/DropoutNet/blob/master/logs/logobox.jpg" width="180"></a>
-</p> 
+</p>
+
+[![Paper](https://img.shields.io/badge/arXiv-2503.09679-b31b1b?logo=arxiv&logoWidth=10&link=https://arxiv.org/abs/2503.09679)](https://arxiv.org/abs/2503.09679)
 
 ### DRESS: Disentangled Representation-based Self-Supervised Meta-Learning for Diverse Tasks [[arXiv]](https://arxiv.org/abs/2503.09679)
 Authors: Wei Cui, Tongzi Wu, Jesse C. Cresswell, Yi Sui, Keyvan Golestan
@@ -35,3 +37,19 @@ The datasets experimented are loaded from their respective dataset loader script
 
 ## Running Environment
 Simply install an anaconda environment using the `environment.yml` file under this repository.
+
+## Citation
+
+```bibtex
+@article{cui2025dress,
+  title={DRESS: Disentangled Representation-based Self-Supervised Meta-Learning for Diverse Tasks
+},
+  author={Cui, Wei and Wu, Tongzi and Cresswell, Jesse C and Sui, Yi and Golestan, Keyvan},
+  journal={arXiv:2503.09679},
+  year={2025}
+}
+```
+
+## License
+
+This data and code is licensed under the MIT License, copyright by Layer 6 AI.
